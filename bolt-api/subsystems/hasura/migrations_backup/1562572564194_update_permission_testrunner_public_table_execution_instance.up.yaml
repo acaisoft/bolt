@@ -1,0 +1,33 @@
+- args:
+    role: testrunner
+    table:
+      name: execution_instance
+      schema: public
+  type: drop_insert_permission
+- args:
+    permission:
+      check:
+        execution_id:
+          _eq: X-Hasura-Testruner-Id
+      columns:
+      - created_at
+      - execution_id
+      - expect_slaves
+      - host
+      - instance_type
+      - job_id
+      - port
+      - status
+      - updated_at
+      localPresets:
+      - key: execution_id
+        value: x-hasura-Testruner-Id
+      - key: ""
+        value: ""
+      set:
+        execution_id: x-hasura-Testruner-Id
+    role: testrunner
+    table:
+      name: execution_instance
+      schema: public
+  type: create_insert_permission

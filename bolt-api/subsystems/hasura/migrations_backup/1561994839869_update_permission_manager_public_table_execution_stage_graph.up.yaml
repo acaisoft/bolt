@@ -1,0 +1,15 @@
+- args:
+    permission:
+      allow_aggregations: true
+      columns:
+      - id
+      - execution_id
+      - data
+      - timestamp
+      filter: {}
+      limit: null
+    role: manager
+    table:
+      name: execution_stage_graph
+      schema: public
+  type: create_select_permission

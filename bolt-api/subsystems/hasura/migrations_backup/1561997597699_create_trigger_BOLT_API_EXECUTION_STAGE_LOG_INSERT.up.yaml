@@ -1,0 +1,15 @@
+- args:
+    enable_manual: false
+    headers: []
+    insert:
+      columns: '*'
+    name: BOLT_API_EXECUTION_STAGE_LOG_INSERT
+    retry_conf:
+      interval_sec: 10
+      num_retries: 0
+      timeout_sec: 60
+    table:
+      name: execution_stage_log
+      schema: public
+    webhook_from_env: BOLT_API_EXECUTION_STAGE_LOG_INSERT
+  type: create_event_trigger

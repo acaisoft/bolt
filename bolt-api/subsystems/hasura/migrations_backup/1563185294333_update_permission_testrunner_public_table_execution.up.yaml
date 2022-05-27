@@ -1,0 +1,33 @@
+- args:
+    role: testrunner
+    table:
+      name: execution
+      schema: public
+  type: drop_select_permission
+- args:
+    permission:
+      allow_aggregations: false
+      columns:
+      - argo_name
+      - commit_hash
+      - configuration_id
+      - configuration_snapshot
+      - created_by_id
+      - end
+      - id
+      - start
+      - status
+      - test_job_error
+      - test_job_id
+      - test_preparation_job_error
+      - test_preparation_job_id
+      - test_preparation_job_status
+      - test_preparation_job_statuscheck_timestamp
+      filter:
+        id:
+          _eq: X-Hasura-Testruner-Id
+    role: testrunner
+    table:
+      name: execution
+      schema: public
+  type: create_select_permission

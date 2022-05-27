@@ -1,0 +1,85 @@
+table:
+  name: argo_execution_log
+  schema: public
+insert_permissions:
+- permission:
+    check: {}
+    columns:
+    - argo_id
+    - created_at
+    - data
+    - id
+  role: manager
+- permission:
+    check: {}
+    columns:
+    - argo_id
+    - created_at
+    - data
+    - id
+  role: reader
+- permission:
+    check: {}
+    columns:
+    - argo_id
+    - created_at
+    - data
+    - id
+  role: tenantadmin
+- permission:
+    check: {}
+    columns:
+    - argo_id
+    - created_at
+    - data
+    - id
+  role: tester
+- permission:
+    check: {}
+    columns:
+    - argo_id
+    - created_at
+    - data
+    - id
+  role: testrunner
+select_permissions:
+- permission:
+    columns:
+    - argo_id
+    - created_at
+    - data
+    - id
+    filter: {}
+  role: manager
+- permission:
+    columns:
+    - argo_id
+    - created_at
+    - data
+    - id
+    filter: {}
+  role: reader
+- permission:
+    columns:
+    - argo_id
+    - created_at
+    - data
+    - id
+    filter: {}
+  role: tenantadmin
+- permission:
+    columns:
+    - argo_id
+    - created_at
+    - data
+    - id
+    filter: {}
+  role: tester
+- permission:
+    columns:
+    - argo_id
+    - created_at
+    - data
+    - id
+    filter: {}
+  role: testrunner

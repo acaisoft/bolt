@@ -1,0 +1,7 @@
+table:
+  name: user_registration_token
+  schema: public
+object_relationships:
+- name: project
+  using:
+    foreign_key_constraint_on: project_id

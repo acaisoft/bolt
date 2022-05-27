@@ -1,0 +1,98 @@
+version: '3.6'
+# TODO: make test_runs executable inside
+services:
+  dockerhost:
+    # supposedly should enable docker host forwarder ports access from inside container, does not seem to work
+    image: qoomon/docker-host
+    cap_add: [ 'NET_ADMIN', 'NET_RAW' ]
+    restart: on-failure
+  postgres:
+#    image: postgres:10.9
+    image: postgres:14.2
+    restart: always
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+  prom:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./subsystems/prometheus/:/etc/prometheus/
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    depends_on:
+      - "cadvisor"
+    links:
+      - cadvisor
+      - api
+  cadvisor:
+    image: google/cadvisor
+    command: -port=9998
+    ports:
+      - "9998:9998"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+  hasura:
+#    image: hasura/graphql-engine:v1.0.0-alpha44
+#    image: hasura/graphql-engine:v1.0.0-beta.2.cli-migrations
+    image: hasura/graphql-engine:v2.4.0.cli-migrations-v3
+    ports:
+      - "8080:8080"
+    depends_on:
+      - "postgres"
+    restart: always
+    environment:
+      HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:postgres@postgres:5432/postgres
+      HASURA_GRAPHQL_ENABLE_CONSOLE: "true" # set to "false" to disable console
+      HASURA_GRAPHQL_MIGRATIONS_DIR:
+      ## execute ./toos/encode_jwt_secret.py to obtain HASURA_GRAPHQL_JWT_SECRET from Flask config
+#      HASURA_GRAPHQL_JWT_SECRET: '{"type": "HS256", "key": "slkd1o8wnO*#LUFHNO4islkd1o8wnO*#"}'
+# kc     HASURA_GRAPHQL_JWT_SECRET: '{"type": "RS256", "key": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1h9OC3K+qotCs3gmpiSgFVFxhqtx1l2pM3GEaRH6jn4twF55Icm8obObLRo2j9IT5VnFJrAv762NAN+koXh03TgbDEi2WH57A/ZBv5CZJXs3HzCyNnAztIv9jQ2urxKnF29tmavTNvBgs6mzRPh/mMVaREpcWgZP8L2vr3/9Y9g+miVzEDt09QbYszC79mrDS/Vr9r1akacjJkFVCf+SXeSPFU9bHBhsk3oxdt+xRsQxEKTkXOMYn8HwWDZYm60T3eapuuqnRTWy2oFnTH1U+dk30DTh4tHx2bvcRmZ2LaozSoNsqlXC61l/LgD8YaOsJv7bqCjvGr2EbZSKeXOQ2QIDAQAB\n-----END PUBLIC KEY-----\n"}'
+      HASURA_GRAPHQL_JWT_SECRET: '{"type": "RS256", "key": "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDAMt/Gzl1Y02lFQt5SJvoDBAcY\n0FPqq643xrsQO7k1xyVrWYJ5leA807EnZkr+dJ9QbrSInY8+ZXX1uDWUy8qZF6IO\nL3TrqEjLyWxNbsnp645+8uibC7zrbjWAnDRRr2yAt+7Fzrjdpg4VohcxAZ2hU946\nWqUaY/CuVE4gZ/mOoQIDAQAB\n-----END PUBLIC KEY-----"}'
+      ## uncomment next line to set an access key
+      HASURA_GRAPHQL_ACCESS_KEY: devaccess
+      BOLT_API_GRAPHQL: http://api:5000/graphql
+      BOLT_API_EXECUTION_STATE_CHANGE: http://api:5000/webhooks/execution/update
+      BOLT_API_CONFIGURATION_PARAM_CHANGE: http://api:5000/webhooks/configuration_param/update
+      BOLT_API_EXECUTION_REQUESTS_INSERT: http://api:5000/webhooks/execution_requests/insert
+      BOLT_API_EXECUTION_STAGE_LOG_INSERT: http://api:5000/webhooks/execution_stage_log/insert
+    volumes:
+      - ./subsystems/hasura/metadata:/hasura-metadata
+      - ./subsystems/hasura/migrations:/hasura-migrations
+    links:
+      - postgres
+  api:
+    build:
+      context: .
+      dockerfile: apps/bolt_api/Dockerfile
+    volumes:
+      - ./apps:/apps
+      - ./services:/services
+    ports:
+      - "5000:5000"
+    depends_on:
+      - "postgres"
+    restart: always
+    environment:
+      CONFIG_FILE_PATH: docker-compose-config.py
+      FLASK_ENV: development
+    links:
+      - hasura
+    entrypoint: ["flask", "run", "--eager-loading", "--host", "0.0.0.0", "--port", "5000"]
+volumes:
+  hasura_migrations:
+  db_data:
+  prometheus_data:

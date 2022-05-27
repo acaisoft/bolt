@@ -1,0 +1,152 @@
+{
+  "test_type": "set",
+  "global_headers": {
+    "Token": "Bearer ${token}",
+    "HASURA_GRAPHQL_JWT_SECRET": "secret-key"
+  },
+  "on_start": {
+    "endpoints": [
+      {
+        "name": "Auth",
+        "url": "/auth-response",
+        "method": "post_post",
+        "payload": {
+          "username": "my_user",
+          "password": "my_password"
+        },
+        "actions": [
+          {
+            "action_type": "set_variables",
+            "location": "response",
+            "variable_name": "token",
+            "variable_path": "auth.token"
+          },
+          {
+            "action_type": "set_variable",
+            "location": "response",
+            "variable_name": "token_type",
+            "variable_path": "auth.type"
+          }
+        ],
+        "asserts": [
+          {
+            "assert_type": "response_time_test",
+            "value": "1000",
+            "message": "Bad response time"
+          },
+          {
+            "assert_type": "body_text_equal",
+            "value": "hello world",
+            "message": "Bad body"
+          }
+        ]
+      }
+    ]
+  },
+  "on_stop": {
+    "endpoints" : [
+      {
+        "name": "Delete token",
+        "url": "/delete-token",
+        "method": "delete_123"
+      }
+    ]
+  },
+  "setup": {
+    "endpoints": [
+      {
+        "name": "Send message",
+        "url": "/send-token",
+        "method": "post",
+        "payload": {
+          "hello": "world"
+        },
+        "actions": [
+          {
+            "action_type": "set_variable",
+            "location": "response",
+            "variable_name": "message",
+            "variable_path": "message"
+          }
+        ]
+      }
+    ]
+  },
+  "teardown": {
+    "endpoints": [
+      {
+        "name": "Delete token",
+        "url": "/delete-token",
+        "method": "delete",
+        "asserts": [
+          {
+            "assert_type": "body_text_contains",
+            "value": "lo wo",
+            "message": "Wrong text"
+          }
+        ],
+        "actions": [
+          {
+            "action_type": "set_variable",
+            "location": "cookies",
+            "variable_name": "token",
+            "variable_path": "token.auth"
+          }
+        ]
+      }
+    ]
+  },
+  "endpoints": [
+    {
+      "name": "User info",
+      "url": "/user/info",
+      "method": "get",
+      "task_value": 1,
+      "headers": {
+        "Content-Type": "application/json",
+        "Test-Data-Key": "Test data value"
+      },
+      "payload": [],
+      "asserts": [
+        {
+          "assert_type": "response_code",
+          "value": "200",
+          "message": "Eh... Not 200"
+        }
+      ]
+    },
+    {
+      "name": "User save",
+      "url": "/user/save",
+      "method": "post",
+      "task_value": 2,
+      "payload": {
+        "my_name": "Hello, my name is ${name}",
+        "my_token_type": "JWT"
+      },
+      "asserts": [
+        {
+          "assert_type": "response_code",
+          "value": "200",
+          "message": "Eh... Not 200"
+        }
+      ]
+    },
+    {
+      "name": "User delete",
+      "url": "/user/delete",
+      "method": "delete",
+      "task_value": "3",
+      "headers": {
+        "TokenType": "token ${token_type}"
+      },
+      "asserts": [
+        {
+          "assert_type": "response_code",
+          "value": "204",
+          "message": "Status code is not 204 for delete"
+        }
+      ]
+    }
+  ]
+}

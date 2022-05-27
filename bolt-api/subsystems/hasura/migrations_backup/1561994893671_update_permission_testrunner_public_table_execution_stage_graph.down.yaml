@@ -1,0 +1,6 @@
+- args:
+    role: testrunner
+    table:
+      name: execution_stage_graph
+      schema: public
+  type: drop_select_permission

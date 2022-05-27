@@ -1,0 +1,182 @@
+{
+  "test_type": "unknown",
+  "global_headers": {
+    "username": "username",
+    "password": "password",
+    "HASURA_GRAPHQL_JWT_SECRET": "secret-key"
+  },
+  "setup": {
+    "endpoints": [
+      {
+        "name": "Auth",
+        "url": "/auth/token",
+        "method": "post",
+        "payload": {
+          "username": "user",
+          "password": "pass",
+          "roles": ["admin", "moderator"]
+        },
+        "headers": {
+          "Content-Type": "application/json",
+          "Auth-Type": "JWT"
+        }
+      }
+    ]
+  },
+  "teardown": {
+    "endpoints": [
+      {
+        "name": "Logout",
+        "url": "/auth/logout",
+        "method": "post",
+        "payload": {
+          "user_id": "1",
+          "tenant_ids": [1, 2, 3]
+        }
+      },
+      {
+        "name": "Clear database",
+        "url": "/database/clear",
+        "method": "post",
+        "payload": {
+          "tenant_ids": ["1", "2", "3"],
+          "role": "Admin",
+          "user_id": 1
+        },
+        "headers": {
+          "Content-Type": "application/json",
+          "User-Role": "Admin"
+        }
+      }
+    ]
+  },
+  "on_start": {
+    "endpoints": [
+      {
+        "name": "Send message",
+        "url": "/send/message",
+        "method": "post",
+        "payload": {
+          "user_id": "1",
+          "tenant_ids": [1, 2, 3]
+        },
+        "headers": {
+          "key": "value"
+        },
+        "actions": [
+          {
+            "action_type": "set_variable",
+            "location": "response",
+            "variable_name": "token",
+            "variable_path": "data.auth.token"
+          },
+          {
+            "action_type": "set_variable",
+            "location": "headers",
+            "variable_name": "location",
+            "variable_path": "LocationName"
+          }
+        ]
+      }
+    ]
+  },
+  "on_stop": {
+    "endpoints": [
+      {
+        "name": "Sleep",
+        "url": "/sleep/start",
+        "method": "get"
+      }
+    ]
+  },
+  "endpoints": [
+    {
+      "name": "Home page",
+      "url": "/get-endpoint",
+      "method": "get",
+      "task_value": 1,
+      "headers": {
+        "Content-Type": "application/json",
+        "Test-Data-Key": "Test data value"
+      },
+      "asserts": [{
+        "assert_type": "body_text_equal",
+        "value": "ok",
+        "message": "Wrong value for get request."
+      }]
+    },
+    {
+      "name": "Post endpoint",
+      "url": "/post-endpoint",
+      "method": "post",
+      "task_value": 5,
+      "payload": {
+        "key": "value",
+        "structure": {
+          "key1": "value1",
+          "integer-key": 1
+        },
+        "list": [1, 2, 3]
+      },
+      "headers": {
+        "Content-Type": "application/json",
+        "User-Role": "Admin"
+      },
+      "asserts": [
+        {
+          "assert_type": "response_code",
+          "value": "400",
+          "message": "Validation error for POST"
+        },
+        {
+          "assert_type": "body_text_equal",
+          "value": "Hello world",
+          "message": "Unknown body response (equal)"
+        },
+        {
+          "assert_type": "body_text_contains",
+          "value": "does not exist",
+          "message": "Unknown body response (contains)"
+        },
+        {
+          "assert_type": "response_time",
+          "value": "500",
+          "message": "Response time is too big"
+        }
+      ]
+    },
+    {
+      "name": "Put endpoint",
+      "url": "/put-endpoint",
+      "method": "put",
+      "task_value": 10,
+      "payload": {
+        "update-fields": ["name", "logo", "description"],
+        "id": 55
+      },
+      "headers": {
+        "Content-Type": "application/json",
+        "User-Role": "Moderator"
+      }
+    },
+    {
+      "name": "Patch endpoint",
+      "url": "/patch-endpoint",
+      "method": "patch",
+      "task_value": 20,
+      "payload": {
+        "ids": [1, 2, "55"]
+      },
+      "headers": {
+        "Content-Type": "application/json",
+        "User-Role": "Moderator"
+      }
+    },
+    {
+      "name": "Delete endpoint",
+      "url": "/delete-endpoint",
+      "method": "delete",
+      "task_value": 40
+    }
+  ]
+}

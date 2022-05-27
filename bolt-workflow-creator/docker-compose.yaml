@@ -1,0 +1,19 @@
+version: '3.6'
+
+services:
+  workflow-creator:
+    build:
+      context: .
+    volumes:
+      - ./src:/app/src
+      - ~/.kube:/root/.kube
+    ports:
+      - "5010:5000"
+    restart: always
+    environment:
+      WDB_SOCKET_SERVER: wdb
+      WDB_NO_BROWSER_AUTO_OPEN: 'true'
+  wdb: # add wdb==3.3.0 to requirements in order to use the debugger
+    image: shepilovvladislav/wdb
+    ports:
+      - "1985:1984"

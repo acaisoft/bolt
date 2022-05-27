@@ -1,0 +1,123 @@
+{
+    "version": 1,
+    "interactions": [
+        {
+            "request": {
+                "method": "POST",
+                "uri": "http://localhost:8080/v1alpha1/graphql",
+                "body": "{\"query\": \"query ($confName: String, $sourceId: uuid!, $fetchSource: Boolean!, $projId: uuid!, $userId: uuid!, $type_slug: String!) {\\n  test_source(where: {id: {_eq: $sourceId}, project: {userProjects: {user_id: {_eq: $userId}}, is_deleted: {_eq: false}}}) @include(if: $fetchSource) {\\n    source_type\\n    project {\\n      userProjects {\\n        user_id\\n      }\\n    }\\n    repository {\\n      name\\n      url\\n      configuration_type {\\n        slug_name\\n      }\\n      project {\\n        userProjects {\\n          user_id\\n        }\\n      }\\n    }\\n    test_creator {\\n      name\\n      data\\n      min_wait\\n      max_wait\\n      project {\\n        userProjects {\\n          user_id\\n        }\\n      }\\n    }\\n  }\\n  parameter(where: {configuration_type: {slug_name: {_eq: $type_slug}}}) {\\n    slug_name\\n    default_value\\n    param_name\\n    name\\n  }\\n  user_project(where: {user_id: {_eq: $userId}, project_id: {_eq: $projId}}) {\\n    id\\n  }\\n  project_by_pk(id: $projId) {\\n    id\\n  }\\n  configuration(where: {is_deleted: {_eq: false}, name: {_eq: $confName}, project_id: {_eq: $projId}, project: {userProjects: {user_id: {_eq: $userId}}, is_deleted: {_eq: false}}}) {\\n    id\\n  }\\n}\\n\", \"variables\": {\"type_slug\": \"load_tests\", \"confName\": \"test config 12345\", \"projId\": \"04ce4055-5278-4fd5-aab9-2148faa58cdd\", \"userId\": \"7f1aab7a-e941-46a2-b63a-5b28b80ad384\", \"sourceId\": \"04ce4055-5278-4fd5-aab9-2148faa58cdd\", \"fetchSource\": true}}",
+                "headers": {
+                    "User-Agent": [
+                        "python-requests/2.21.0"
+                    ],
+                    "Accept-Encoding": [
+                        "gzip, deflate"
+                    ],
+                    "Accept": [
+                        "*/*"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "X-Hasura-Access-Key": [
+                        "devaccess"
+                    ],
+                    "X-Hasura-User-Id": [
+                        "7f1aab7a-e941-46a2-b63a-5b28b80ad384"
+                    ],
+                    "X-Hasura-Role": [
+                        "admin"
+                    ],
+                    "Content-Length": [
+                        "1456"
+                    ],
+                    "Content-Type": [
+                        "application/json"
+                    ]
+                }
+            },
+            "response": {
+                "status": {
+                    "code": 200,
+                    "message": "OK"
+                },
+                "headers": {
+                    "Content-Type": [
+                        "application/json; charset=utf-8"
+                    ],
+                    "Transfer-Encoding": [
+                        "chunked"
+                    ],
+                    "Server": [
+                        "Warp/3.2.26"
+                    ],
+                    "Date": [
+                        "Wed, 29 May 2019 11:34:43 GMT"
+                    ]
+                },
+                "body": {
+                    "string": "{\"data\":{\"test_source\":[{\"source_type\":\"repository\",\"project\":{\"userProjects\":[{\"user_id\":\"7f1aab7a-e941-46a2-b63a-5b28b80ad384\"}]},\"repository\":{\"name\":\"updated repository\",\"url\":\"git@mockbitbucket.org:repo/two.git\",\"configuration_type\":{\"slug_name\":\"load_tests\"},\"project\":{\"userProjects\":[{\"user_id\":\"7f1aab7a-e941-46a2-b63a-5b28b80ad384\"}]}},\"test_creator\":null}],\"parameter\":[{\"slug_name\":\"load_tests_duration\",\"default_value\":\"10\",\"param_name\":\"-t\",\"name\":\"time\"}, {\"slug_name\":\"load_tests_rampup\",\"default_value\":\"500\",\"param_name\":\"-r\",\"name\":\"users/second\"}, {\"slug_name\":\"load_tests_users\",\"default_value\":\"1000\",\"param_name\":\"-u\",\"name\":\"users\"}, {\"slug_name\":\"load_tests_host\",\"default_value\":\"\",\"param_name\":\"-H\",\"name\":\"host\"}, {\"slug_name\":\"monitoring_duration\",\"default_value\":null,\"param_name\":\"-md\",\"name\":\"Monitoring duration\"}, {\"slug_name\":\"monitoring_interval\",\"default_value\":\"5\",\"param_name\":\"-mi\",\"name\":\"monitoring interval\"}],\"user_project\":[{\"id\":\"758680c5-926a-4600-82b1-586ecfe90ebd\"}],\"project_by_pk\":{\"id\":\"04ce4055-5278-4fd5-aab9-2148faa58cdd\"},\"configuration\":[]}}"
+                }
+            }
+        },
+        {
+            "request": {
+                "method": "POST",
+                "uri": "http://localhost:8080/v1alpha1/graphql",
+                "body": "{\"query\": \"mutation ($data: [configuration_insert_input!]!) {\\n  insert_configuration(objects: $data) {\\n    returning {\\n      id\\n      name\\n      type_slug\\n      project_id\\n      test_source_id\\n      has_pre_test\\n      has_post_test\\n      has_load_tests\\n      has_monitoring\\n      configuration_parameters {\\n        parameter_slug\\n        value\\n      }\\n      configuration_envvars {\\n        name\\n        value\\n      }\\n    }\\n  }\\n}\\n\", \"variables\": {\"data\": {\"name\": \"test config 12345\", \"project_id\": \"04ce4055-5278-4fd5-aab9-2148faa58cdd\", \"has_pre_test\": false, \"has_post_test\": false, \"has_load_tests\": true, \"has_monitoring\": true, \"monitoring_chart_configuration\": {\"charts\": [{\"title\": \"Global Throughput\", \"type\": \"line\", \"node_name\": \"global_throughput\", \"x_data_key\": \"timestamp\", \"x_format\": \"number\", \"y_data_key\": \"value\", \"y_format\": \"number\", \"y_label\": \"name\"}, {\"title\": \"Global CPU usage\", \"type\": \"line\", \"node_name\": \"global_cpu\", \"x_data_key\": \"timestamp\", \"x_format\": \"number\", \"y_data_key\": \"value\", \"y_format\": \"percent\", \"y_label\": \"name\"}, {\"title\": \"Global Memory Usage\", \"type\": \"line\", \"node_name\": \"global_memory\", \"x_data_key\": \"timestamp\", \"x_format\": \"number\", \"y_data_key\": \"value\", \"y_format\": \"bytes\", \"y_label\": \"name\"}, {\"title\": \"Global Disk Usage\", \"type\": \"line\", \"node_name\": \"global_disc_data\", \"x_data_key\": \"timestamp\", \"x_format\": \"number\", \"y_data_key\": \"value\", \"y_format\": \"bytes\", \"y_label\": \"name\"}, {\"title\": \"Source Input per App\", \"type\": \"line\", \"node_name\": \"apps_source_input\", \"x_data_key\": \"timestamp\", \"x_format\": \"number\", \"y_data_key\": \"source_input\", \"y_format\": \"number\", \"y_label\": \"app_name\"}, {\"title\": \"Threads per App\", \"type\": \"line\", \"node_name\": \"apps_threads\", \"x_data_key\": \"timestamp\", \"x_format\": \"number\", \"y_data_key\": \"threads_num\", \"y_format\": \"number\", \"y_label\": \"app_name\"}, {\"title\": \"CPU Usage per App\", \"type\": \"line\", \"node_name\": \"apps_cpu\", \"x_data_key\": \"timestamp\", \"x_format\": \"number\", \"y_data_key\": \"cpu\", \"y_format\": \"percent\", \"y_label\": \"app_name\"}, {\"title\": \"WActions per App\", \"type\": \"line\", \"node_name\": \"apps_wactions\", \"x_data_key\": \"timestamp\", \"x_format\": \"number\", \"y_data_key\": \"wactions_created\", \"y_format\": \"number\", \"y_label\": \"app_name\"}, {\"title\": \"Latency per App\", \"type\": \"line\", \"node_name\": \"apps_latency\", \"x_data_key\": \"timestamp\", \"x_format\": \"number\", \"y_data_key\": \"latency\", \"y_format\": \"number\", \"y_label\": \"app_component\"}]}, \"created_by_id\": \"7f1aab7a-e941-46a2-b63a-5b28b80ad384\", \"type_slug\": \"load_tests\", \"configuration_envvars\": {\"data\": [{\"name\": \"testvar\", \"value\": \"testvarvalue\"}]}, \"configuration_parameters\": {\"data\": [{\"parameter_slug\": \"load_tests_host\", \"value\": \"https://test-target.dev.bolt.acaisoft.io\"}, {\"parameter_slug\": \"load_tests_duration\", \"value\": \"30\"}, {\"parameter_slug\": \"load_tests_rampup\", \"value\": \"500\"}, {\"parameter_slug\": \"load_tests_users\", \"value\": \"1000\"}, {\"parameter_slug\": \"monitoring_duration\", \"value\": \"5\"}, {\"parameter_slug\": \"monitoring_interval\", \"value\": \"5\"}]}, \"instances\": 2, \"test_source_id\": \"04ce4055-5278-4fd5-aab9-2148faa58cdd\"}}}",
+                "headers": {
+                    "User-Agent": [
+                        "python-requests/2.21.0"
+                    ],
+                    "Accept-Encoding": [
+                        "gzip, deflate"
+                    ],
+                    "Accept": [
+                        "*/*"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "X-Hasura-Access-Key": [
+                        "devaccess"
+                    ],
+                    "X-Hasura-User-Id": [
+                        "7f1aab7a-e941-46a2-b63a-5b28b80ad384"
+                    ],
+                    "X-Hasura-Role": [
+                        "admin"
+                    ],
+                    "Content-Length": [
+                        "3132"
+                    ],
+                    "Content-Type": [
+                        "application/json"
+                    ]
+                }
+            },
+            "response": {
+                "status": {
+                    "code": 200,
+                    "message": "OK"
+                },
+                "headers": {
+                    "Content-Type": [
+                        "application/json; charset=utf-8"
+                    ],
+                    "Transfer-Encoding": [
+                        "chunked"
+                    ],
+                    "Server": [
+                        "Warp/3.2.26"
+                    ],
+                    "Date": [
+                        "Wed, 29 May 2019 11:34:43 GMT"
+                    ]
+                },
+                "body": {
+                    "string": "{\"data\":{\"insert_configuration\":{\"returning\":[{\"type_slug\":\"load_tests\",\"test_source_id\":\"04ce4055-5278-4fd5-aab9-2148faa58cdd\",\"has_post_test\":false,\"configuration_envvars\":[{\"value\":\"testvarvalue\",\"name\":\"testvar\"}],\"name\":\"test config 12345\",\"project_id\":\"04ce4055-5278-4fd5-aab9-2148faa58cdd\",\"id\":\"7262d765-4d18-48a9-9d08-dd142ce8dab5\",\"configuration_parameters\":[{\"value\":\"https://test-target.dev.bolt.acaisoft.io\",\"parameter_slug\":\"load_tests_host\"},{\"value\":\"30\",\"parameter_slug\":\"load_tests_duration\"},{\"value\":\"500\",\"parameter_slug\":\"load_tests_rampup\"},{\"value\":\"1000\",\"parameter_slug\":\"load_tests_users\"},{\"value\":\"5\",\"parameter_slug\":\"monitoring_duration\"},{\"value\":\"5\",\"parameter_slug\":\"monitoring_interval\"}],\"has_pre_test\":false,\"has_monitoring\":true,\"has_load_tests\":true}]}}}"
+                }
+            }
+        }
+    ]
+}

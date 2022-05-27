@@ -1,0 +1,54 @@
+version: '3.6'
+# starts minimum of services, with networking=host, for debugging and development
+services:
+  postgres:
+    image: postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+  hasura:
+#    image: hasura/graphql-engine:v1.0.0-alpha44
+    image: hasura/graphql-engine:v1.0.0-alpha44.cli-migrations
+    ports:
+      - "8080:8080"
+    depends_on:
+      - "postgres"
+      - "api"
+    restart: always
+    environment:
+      HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:@postgres:5432/postgres
+      HASURA_GRAPHQL_ENABLE_CONSOLE: "true" # set to "false" to disable console
+      HASURA_GRAPHQL_MIGRATIONS_DIR:
+      ## execute ./toos/encode_jwt_secret.py to obtain HASURA_GRAPHQL_JWT_SECRET from Flask config
+#      HASURA_GRAPHQL_JWT_SECRET: '{"type": "HS256", "key": "slkd1o8wnO*#LUFHNO4islkd1o8wnO*#"}'
+      HASURA_GRAPHQL_JWT_SECRET: '{"type": "RS256", "key": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1h9OC3K+qotCs3gmpiSgFVFxhqtx1l2pM3GEaRH6jn4twF55Icm8obObLRo2j9IT5VnFJrAv762NAN+koXh03TgbDEi2WH57A/ZBv5CZJXs3HzCyNnAztIv9jQ2urxKnF29tmavTNvBgs6mzRPh/mMVaREpcWgZP8L2vr3/9Y9g+miVzEDt09QbYszC79mrDS/Vr9r1akacjJkFVCf+SXeSPFU9bHBhsk3oxdt+xRsQxEKTkXOMYn8HwWDZYm60T3eapuuqnRTWy2oFnTH1U+dk30DTh4tHx2bvcRmZ2LaozSoNsqlXC61l/LgD8YaOsJv7bqCjvGr2EbZSKeXOQ2QIDAQAB\n-----END PUBLIC KEY-----\n"}'
+      ## uncomment next line to set an access key
+      HASURA_GRAPHQL_ACCESS_KEY: devaccess
+      BOLT_API_GRAPHQL: http://api:5000/graphql
+      BOLT_API_EXECUTION_STATE_CHANGE: http://api:5000/webhooks/execution/update
+      BOLT_API_CONFIGURATION_PARAM_CHANGE: http://api:5000/webhooks/configuration_param/update
+      BOLT_API_EXECUTION_REQUESTS_INSERT: http://api:5000/webhooks/execution_requests/insert
+    volumes:
+      - ./subsystems/hasura/migrations:/hasura-migrations
+  api:
+    build:
+      context: .
+      dockerfile: apps/bolt_api/Dockerfile
+    volumes:
+      - ./apps:/apps
+      - ./services:/services
+    ports:
+      - "5000:5000"
+    depends_on:
+      - "postgres"
+    restart: always
+    environment:
+      CONFIG_FILE_PATH: docker-compose-config.py
+      FLASK_ENV: development
+    entrypoint: ["flask", "run", "--eager-loading", "--host", "0.0.0.0", "--port", "5000"]
+volumes:
+  hasura_migrations:
+  db_data:
+  prometheus_data:

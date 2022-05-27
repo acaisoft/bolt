@@ -1,0 +1,49 @@
+- args:
+    role: manager
+    table:
+      name: execution
+      schema: public
+  type: drop_select_permission
+- args:
+    permission:
+      allow_aggregations: true
+      columns:
+      - argo_name
+      - commit_hash
+      - configuration_id
+      - configuration_snapshot
+      - created_by_id
+      - end
+      - end_locust
+      - failed_requests
+      - id
+      - passed_requests
+      - start
+      - start_locust
+      - status
+      - test_job_error
+      - test_job_id
+      - test_preparation_job_error
+      - test_preparation_job_id
+      - test_preparation_job_status
+      - test_preparation_job_statuscheck_timestamp
+      - total_requests
+      filter:
+        _and:
+        - configuration:
+            is_deleted:
+              _eq: false
+        - configuration:
+            project:
+              is_deleted:
+                _eq: false
+        - configuration:
+            project:
+              userProjects:
+                user_id:
+                  _eq: X-Hasura-User-Id
+    role: manager
+    table:
+      name: execution
+      schema: public
+  type: create_select_permission

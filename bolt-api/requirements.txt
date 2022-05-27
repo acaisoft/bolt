@@ -1,0 +1,3 @@
+-r apps/bolt_metrics_api/requirements/core.txt
+-r apps/bolt_api/requirements/core.txt
+vcrpy==2.0.1

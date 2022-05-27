@@ -1,0 +1,10 @@
+google-cloud-pubsub==0.41.0
+google-api-core==1.11.0
+google-auth==1.6.3
+google-cloud-core==1.0.0
+google-cloud-pubsub==0.41.0
+google-cloud-storage==1.16.0
+google-resumable-media==0.3.2
+googleapis-common-protos==1.5.10
+grpc-google-iam-v1==0.11.4
+Pillow==9.1.0

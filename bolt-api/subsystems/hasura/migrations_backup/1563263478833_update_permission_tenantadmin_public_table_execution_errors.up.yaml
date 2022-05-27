@@ -1,0 +1,19 @@
+- args:
+    permission:
+      allow_aggregations: true
+      columns:
+      - id
+      - number_of_occurrences
+      - exception_data
+      - identifier
+      - method
+      - name
+      - timestamp
+      - execution_id
+      filter: {}
+      limit: null
+    role: tenantadmin
+    table:
+      name: execution_errors
+      schema: public
+  type: create_select_permission

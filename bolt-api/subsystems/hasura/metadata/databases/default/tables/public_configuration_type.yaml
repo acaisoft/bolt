@@ -1,0 +1,62 @@
+table:
+  name: configuration_type
+  schema: public
+array_relationships:
+- name: configurations
+  using:
+    foreign_key_constraint_on:
+      column: type_slug
+      table:
+        name: configuration
+        schema: public
+- name: parameters
+  using:
+    foreign_key_constraint_on:
+      column: type_slug
+      table:
+        name: parameter
+        schema: public
+- name: repositories
+  using:
+    foreign_key_constraint_on:
+      column: type_slug
+      table:
+        name: repository
+        schema: public
+select_permissions:
+- permission:
+    allow_aggregations: true
+    columns:
+    - id
+    - name
+    - description
+    - slug_name
+    filter: {}
+  role: manager
+- permission:
+    allow_aggregations: true
+    columns:
+    - description
+    - id
+    - name
+    - slug_name
+    filter: {}
+  role: reader
+- permission:
+    allow_aggregations: true
+    columns:
+    - id
+    - name
+    - description
+    - slug_name
+    filter: {}
+  role: tenantadmin
+- permission:
+    allow_aggregations: true
+    columns:
+    - description
+    - id
+    - name
+    - slug_name
+    filter: {}
+  role: tester

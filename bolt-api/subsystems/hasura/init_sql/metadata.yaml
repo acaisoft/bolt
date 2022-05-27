@@ -1,0 +1,876 @@
+functions: []
+query_templates: []
+remote_schemas:
+- comment: null
+  definition:
+    forward_client_headers: true
+    headers: []
+    url_from_env: BOLT_API_GRAPHQL
+  name: test
+tables:
+- array_relationships:
+  - comment: null
+    name: configurations
+    using:
+      foreign_key_constraint_on:
+        column: project_id
+        table: configuration
+  - comment: null
+    name: userProjects
+    using:
+      foreign_key_constraint_on:
+        column: project_id
+        table: user_project
+  - comment: null
+    name: repositorysByprojectId
+    using:
+      foreign_key_constraint_on:
+        column: project_id
+        table: repository
+  delete_permissions: []
+  event_triggers: []
+  insert_permissions: []
+  object_relationships: []
+  select_permissions:
+  - comment: null
+    permission:
+      allow_aggregations: false
+      columns:
+      - id
+      - name
+      - contact
+      - description
+      - image_url
+      filter:
+        _and:
+        - userProjects:
+            user_id:
+              _eq: X-Hasura-User-Id
+        - is_deleted:
+            _eq: false
+    role: reader
+  - comment: null
+    permission:
+      allow_aggregations: false
+      columns:
+      - id
+      - name
+      - contact
+      - description
+      - image_url
+      filter:
+        _and:
+        - userProjects:
+            user_id:
+              _eq: X-Hasura-User-Id
+        - is_deleted:
+            _eq: false
+    role: manager
+  table: project
+  update_permissions:
+  - comment: null
+    permission:
+      columns:
+      - contact
+      - description
+      - image_url
+      - name
+      filter:
+        _and:
+        - userProjects:
+            user_id:
+              _eq: X-Hasura-User-Id
+        - is_deleted:
+            _eq: false
+      set: {}
+    role: manager
+- array_relationships: []
+  delete_permissions:
+  - comment: null
+    permission:
+      filter:
+        configuration:
+          project:
+            userProjects:
+              user_id:
+                _eq: X-HASURA-USER-ID
+    role: manager
+  event_triggers: []
+  insert_permissions:
+  - comment: null
+    permission:
+      check:
+        configuration:
+          project:
+            userProjects:
+              user_id:
+                _eq: X-HASURA-USER-ID
+      columns:
+      - configuration_id
+      - parameter_id
+      - value
+      set: {}
+    role: manager
+  object_relationships:
+  - comment: null
+    name: configuration
+    using:
+      foreign_key_constraint_on: configuration_id
+  - comment: null
+    name: parameter
+    using:
+      foreign_key_constraint_on: parameter_id
+  select_permissions:
+  - comment: null
+    permission:
+      allow_aggregations: false
+      columns:
+      - configuration_id
+      - id
+      - parameter_id
+      - value
+      filter:
+        configuration:
+          project:
+            userProjects:
+              user_id:
+                _eq: X-HASURA-USER-ID
+    role: reader
+  - comment: null
+    permission:
+      allow_aggregations: false
+      columns:
+      - id
+      - configuration_id
+      - value
+      - parameter_id
+      filter:
+        configuration:
+          project:
+            userProjects:
+              user_id:
+                _eq: X-HASURA-USER-ID
+    role: manager
+  table: configuration_parameter
+  update_permissions:
+  - comment: null
+    permission:
+      columns:
+      - value
+      filter:
+        configuration:
+          project:
+            userProjects:
+              user_id:
+                _eq: X-HASURA-USER-ID
+    role: manager
+- array_relationships: []
+  delete_permissions: []
+  event_triggers: []
+  insert_permissions: []
+  object_relationships:
+  - comment: null
+    name: execution
+    using:
+      foreign_key_constraint_on: execution_id
+  - comment: null
+    name: jobStatus
+    using:
+      foreign_key_constraint_on: status_code
+  select_permissions:
+  - comment: null
+    permission:
+      allow_aggregations: false
+      columns:
+      - execution_id
+      - status_code
+      filter:
+        execution:
+          configuration:
+            project:
+              userProjects:
+                user_id:
+                  _eq: X-HASURA-USER-ID
+    role: manager
+  - comment: null
+    permission:
+      allow_aggregations: false
+      columns:
+      - execution_id
+      - status_code
+      filter:
+        execution:
+          configuration:
+            project:
+              userProjects:
+                user_id:
+                  _eq: X-HASURA-USER-ID
+    role: reader
+  table: job_status
+  update_permissions: []
+- array_relationships: []
+  delete_permissions: []
+  event_triggers: []
+  insert_permissions: []
+  object_relationships:
+  - comment: null
+    name: executions
+    using:
+      foreign_key_constraint_on: execution_id
+  select_permissions:
+  - comment: null
+    permission:
+      allow_aggregations: false
+      columns:
+      - id
+      - execution_id
+      - request_result
+      - distribution_result
+      - start
+      - end
+      filter:
+        executions:
+          configuration:
+            project:
+              userProjects:
+                user_id:
+                  _eq: X-HASURA-USER-ID
+    role: reader
+  - comment: null
+    permission:
+      allow_aggregations: false
+      columns:
+      - id
+      - execution_id
+      - request_result
+      - distribution_result
+      - start
+      - end
+      filter:
+        executions:
+          configuration:
+            project:
+              userProjects:
+                user_id:
+                  _eq: X-HASURA-USER-ID
+    role: manager
+  table: result_distribution
+  update_permissions: []
+- array_relationships: []
+  delete_permissions: []
+  event_triggers: []
+  insert_permissions: []
+  object_relationships: []
+  select_permissions:
+  - comment: null
+    permission:
+      allow_aggregations: false
+      columns:
+      - id
+      - name
+      - public
+      filter: {}
+    role: manager
+  - comment: null
+    permission:
+      allow_aggregations: false
+      columns:
+      - id
+      - name
+      - public
+      filter: {}
+    role: reader
+  table: repository_keys
+  update_permissions: []
+- array_relationships: []
+  delete_permissions: []
+  event_triggers: []
+  insert_permissions: []
+  object_relationships:
+  - comment: null
+    name: execution
+    using:
+      foreign_key_constraint_on: execution_id
+  select_permissions:
+  - comment: null
+    permission:
+      allow_aggregations: false
+      columns:
+      - id
+      - execution_id
+      - average_response_time
+      - number_of_successes
+      - number_of_errors
+      - number_of_fails
+      - average_response_size
+      - timestamp
+      filter:
+        execution:
+          configuration:
+            project:
+              userProjects:
+                user_id:
+                  _eq: X-HASURA-USER-ID
+    role: manager
+  - comment: null
+    permission:
+      allow_aggregations: false
+      columns:
+      - average_response_size
+      - average_response_time
+      - execution_id
+      - id
+      - number_of_errors
+      - number_of_fails
+      - number_of_successes
+      - timestamp
+      filter:
+        execution:
+          configuration:
+            project:
+              userProjects:
+                user_id:
+                  _eq: X-HASURA-USER-ID
+    role: reader
+  table: result_aggregate
+  update_permissions: []
+- array_relationships: []
+  delete_permissions: []
+  event_triggers: []
+  insert_permissions: []
+  object_relationships:
+  - comment: null
+    name: execution
+    using:
+      foreign_key_constraint_on: execution_id
+  select_permissions:
+  - comment: null
+    permission:
+      allow_aggregations: false
+      columns:
+      - error_type
+      - exception_data
+      - execution_id
+      - id
+      - name
+      - number_of_occurrences
+      filter:
+        execution:
+          configuration:
+            project:
+              userProjects:
+                user_id:
+                  _eq: X-HASURA-USER-ID
+    role: manager
+  - comment: null
+    permission:
+      allow_aggregations: false
+      columns:
+      - error_type
+      - exception_data
+      - execution_id
+      - id
+      - name
+      - number_of_occurrences
+      filter:
+        execution:
+          configuration:
+            project:
+              userProjects:
+                user_id:
+                  _eq: X-HASURA-USER-ID
+    role: reader
+  table: result_error
+  update_permissions: []
+- array_relationships: []
+  delete_permissions: []
+  event_triggers: []
+  insert_permissions: []
+  object_relationships:
+  - comment: null
+    name: project
+    using:
+      foreign_key_constraint_on: project_id
+  - comment: null
+    name: user
+    using:
+      foreign_key_constraint_on: user_id
+  select_permissions:
+  - comment: null
+    permission:
+      allow_aggregations: false
+      columns:
+      - id
+      - project_id
+      - user_id
+      filter:
+        user_id:
+          _eq: X-HASURA-USER-ID
+    role: reader
+  - comment: null
+    permission:
+      allow_aggregations: false
+      columns:
+      - id
+      - user_id
+      - project_id
+      filter:
+        user_id:
+          _eq: X-HASURA-USER-ID
+    role: manager
+  table: user_project
+  update_permissions: []
+- array_relationships: []
+  delete_permissions: []
+  event_triggers: []
+  insert_permissions: []
+  object_relationships:
+  - comment: null
+    name: execution
+    using:
+      foreign_key_constraint_on: execution_id
+  select_permissions:
+  - comment: null
+    permission:
+      allow_aggregations: false
+      columns:
+      - id
+      - execution_id
+      - request_type
+      - endpoint
+      - response_time
+      - response_length
+      - status
+      - exception
+      - timestamp
+      filter:
+        execution:
+          configuration:
+            project:
+              userProjects:
+                user_id:
+                  _eq: X-HASURA-USER-ID
+    role: reader
+  - comment: null
+    permission:
+      allow_aggregations: false
+      columns:
+      - id
+      - execution_id
+      - request_type
+      - endpoint
+      - response_time
+      - response_length
+      - status
+      - exception
+      - timestamp
+      filter:
+        execution:
+          configuration:
+            project:
+              userProjects:
+                user_id:
+                  _eq: X-HASURA-USER-ID
+    role: manager
+  table: execution_result
+  update_permissions: []
+- array_relationships:
+  - comment: null
+    name: configurationParameters
+    using:
+      foreign_key_constraint_on:
+        column: parameter_id
+        table: configuration_parameter
+  delete_permissions: []
+  event_triggers: []
+  insert_permissions: []
+  object_relationships:
+  - comment: null
+    name: configurationTypes
+    using:
+      foreign_key_constraint_on: type_id
+  select_permissions:
+  - comment: null
+    permission:
+      allow_aggregations: false
+      columns:
+      - id
+      - name
+      - param_type
+      - default_value
+      - param_name
+      filter: {}
+    role: reader
+  - comment: null
+    permission:
+      allow_aggregations: false
+      columns:
+      - default_value
+      - id
+      - name
+      - param_name
+      - param_type
+      filter: {}
+    role: manager
+  table: parameter
+  update_permissions: []
+- array_relationships:
+  - comment: null
+    name: repositories
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table: repository
+  - comment: null
+    name: userProjects
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table: user_project
+  delete_permissions: []
+  event_triggers: []
+  insert_permissions: []
+  object_relationships: []
+  select_permissions:
+  - comment: null
+    permission:
+      allow_aggregations: false
+      columns:
+      - id
+      - email
+      - active
+      - created
+      - is_admin
+      - is_reader
+      - is_manager
+      filter:
+        _or:
+        - id:
+            _eq: X-HASURA-USER-ID
+        - userProjects:
+            user_id:
+              _eq: X-HASURA-USER-ID
+    role: manager
+  - comment: null
+    permission:
+      allow_aggregations: false
+      columns:
+      - id
+      - email
+      - active
+      - created
+      - is_admin
+      - is_reader
+      - is_manager
+      filter:
+        id:
+          _eq: X-HASURA-USER-ID
+    role: reader
+  table: user
+  update_permissions: []
+- array_relationships: []
+  delete_permissions: []
+  event_triggers: []
+  insert_permissions: []
+  object_relationships: []
+  select_permissions:
+  - comment: null
+    permission:
+      allow_aggregations: false
+      columns:
+      - code
+      - name
+      filter: {}
+    role: reader
+  - comment: null
+    permission:
+      allow_aggregations: false
+      columns:
+      - code
+      - name
+      filter: {}
+    role: manager
+  table: job_status_dict
+  update_permissions: []
+- array_relationships:
+  - comment: null
+    name: configurations
+    using:
+      foreign_key_constraint_on:
+        column: repository_id
+        table: configuration
+  delete_permissions:
+  - comment: null
+    permission:
+      filter:
+        _and:
+        - project:
+            userProjects:
+              user_id:
+                _eq: X-Hasura-User-Id
+        - performed:
+            _eq: false
+    role: manager
+  event_triggers: []
+  insert_permissions:
+  - comment: null
+    permission:
+      check: {}
+      columns:
+      - name
+      - project_id
+      - type_id
+      - url
+      - user_id
+      set:
+        created_by_id: x-hasura-USER-ID
+    role: manager
+  object_relationships:
+  - comment: null
+    name: user
+    using:
+      foreign_key_constraint_on: user_id
+  - comment: null
+    name: project
+    using:
+      foreign_key_constraint_on: project_id
+  - comment: null
+    name: configurationType
+    using:
+      foreign_key_constraint_on: type_id
+  select_permissions:
+  - comment: null
+    permission:
+      allow_aggregations: false
+      columns:
+      - id
+      - name
+      - performed
+      - project_id
+      - type_id
+      - url
+      - user_id
+      filter:
+        project:
+          userProjects:
+            user_id:
+              _eq: X-HASURA-USER-ID
+    role: manager
+  - comment: null
+    permission:
+      allow_aggregations: false
+      columns:
+      - id
+      - name
+      - project_id
+      - url
+      - user_id
+      filter:
+        _or:
+        - project:
+            userProjects:
+              user_id:
+                _eq: X-HASURA-USER-ID
+        - user_id:
+            _eq: X-HASURA-USER-ID
+    role: reader
+  table: repository
+  update_permissions:
+  - comment: null
+    permission:
+      columns:
+      - name
+      filter:
+        project:
+          userProjects:
+            user_id:
+              _eq: X-HASURA-USER-ID
+      set: {}
+    role: manager
+- array_relationships:
+  - comment: null
+    name: executionResults
+    using:
+      foreign_key_constraint_on:
+        column: execution_id
+        table: execution_result
+  - comment: null
+    name: resultAggregates
+    using:
+      foreign_key_constraint_on:
+        column: execution_id
+        table: result_aggregate
+  - comment: null
+    name: resultDistributions
+    using:
+      foreign_key_constraint_on:
+        column: execution_id
+        table: result_distribution
+  delete_permissions: []
+  event_triggers: []
+  insert_permissions:
+  - comment: null
+    permission:
+      check:
+        configuration:
+          project:
+            userProjects:
+              user_id:
+                _eq: X-HASURA-USER-ID
+      columns:
+      - configuration_id
+      set: {}
+    role: manager
+  object_relationships:
+  - comment: null
+    name: configuration
+    using:
+      foreign_key_constraint_on: configuration_id
+  select_permissions:
+  - comment: null
+    permission:
+      allow_aggregations: false
+      columns:
+      - id
+      - configuration_id
+      - start
+      - end
+      - status
+      filter:
+        configuration:
+          project:
+            userProjects:
+              user_id:
+                _eq: X-HASURA-USER-ID
+    role: reader
+  - comment: null
+    permission:
+      allow_aggregations: false
+      columns:
+      - configuration_id
+      - end
+      - id
+      - start
+      - status
+      - test_preparation_job_id
+      filter:
+        configuration:
+          project:
+            userProjects:
+              user_id:
+                _eq: X-HASURA-USER-ID
+    role: manager
+  table: execution
+  update_permissions: []
+- array_relationships:
+  - comment: null
+    name: repositories
+    using:
+      foreign_key_constraint_on:
+        column: type_id
+        table: repository
+  delete_permissions: []
+  event_triggers: []
+  insert_permissions: []
+  object_relationships: []
+  select_permissions:
+  - comment: null
+    permission:
+      allow_aggregations: false
+      columns:
+      - id
+      - name
+      - description
+      filter: {}
+    role: reader
+  - comment: null
+    permission:
+      allow_aggregations: false
+      columns:
+      - id
+      - name
+      - description
+      filter: {}
+    role: manager
+  table: configuration_type
+  update_permissions: []
+- array_relationships:
+  - comment: null
+    name: configurationParameters
+    using:
+      foreign_key_constraint_on:
+        column: configuration_id
+        table: configuration_parameter
+  - comment: null
+    name: executions
+    using:
+      foreign_key_constraint_on:
+        column: configuration_id
+        table: execution
+  delete_permissions: []
+  event_triggers: []
+  insert_permissions:
+  - comment: null
+    permission:
+      check:
+        project:
+          userProjects:
+            user_id:
+              _eq: X-HASURA-USER-ID
+      columns:
+      - name
+      - project_id
+      - repository_id
+      set:
+        created_by_id: x-hasura-USER-ID
+    role: manager
+  object_relationships:
+  - comment: null
+    name: project
+    using:
+      foreign_key_constraint_on: project_id
+  - comment: null
+    name: repository
+    using:
+      foreign_key_constraint_on: repository_id
+  select_permissions:
+  - comment: null
+    permission:
+      allow_aggregations: false
+      columns:
+      - id
+      - name
+      - project_id
+      - repository_id
+      filter:
+        project:
+          userProjects:
+            user_id:
+              _eq: X-HASURA-USER-ID
+    role: manager
+  - comment: null
+    permission:
+      allow_aggregations: false
+      columns:
+      - id
+      - name
+      - project_id
+      - repository_id
+      filter:
+        project:
+          userProjects:
+            user_id:
+              _eq: X-HASURA-USER-ID
+    role: reader
+  table: configuration
+  update_permissions:
+  - comment: null
+    permission:
+      columns:
+      - name
+      filter:
+        project:
+          userProjects:
+            user_id:
+              _eq: X-HASURA-USER-ID
+    role: manager

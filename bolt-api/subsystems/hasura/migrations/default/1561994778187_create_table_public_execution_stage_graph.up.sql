@@ -1,0 +1,2 @@
+
+CREATE TABLE "public"."execution_stage_graph"("id" serial NOT NULL, "execution_id" uuid NOT NULL, "data" json , "timestamp" timestamptz NOT NULL DEFAULT now(), PRIMARY KEY ("id") , FOREIGN KEY ("execution_id") REFERENCES "public"."execution"("id") ON UPDATE cascade ON DELETE cascade, UNIQUE ("id"));

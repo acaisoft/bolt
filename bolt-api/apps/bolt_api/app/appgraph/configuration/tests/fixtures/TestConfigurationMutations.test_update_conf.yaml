@@ -1,0 +1,182 @@
+{
+    "version": 1,
+    "interactions": [
+        {
+            "request": {
+                "method": "POST",
+                "uri": "http://localhost:8080/v1alpha1/graphql",
+                "body": "{\"query\": \"query ($confId: uuid!, $userId: uuid!) {\\n  configuration(where: {id: {_eq: $confId}, project: {userProjects: {user_id: {_eq: $userId}}, is_deleted: {_eq: false}}}) {\\n    performed\\n    name\\n    type_slug\\n    project_id\\n    test_source_id\\n    configuration_parameters {\\n      parameter_slug\\n      value\\n      configuration_id\\n    }\\n    configuration_envvars {\\n      name\\n      value\\n      configuration_id\\n    }\\n    has_pre_test\\n    has_post_test\\n    has_load_tests\\n    has_monitoring\\n  }\\n}\\n\", \"variables\": {\"confId\": \"7262d765-4d18-48a9-9d08-dd142ce8dab5\", \"userId\": \"7f1aab7a-e941-46a2-b63a-5b28b80ad384\"}}",
+                "headers": {
+                    "User-Agent": [
+                        "python-requests/2.21.0"
+                    ],
+                    "Accept-Encoding": [
+                        "gzip, deflate"
+                    ],
+                    "Accept": [
+                        "*/*"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "X-Hasura-Access-Key": [
+                        "devaccess"
+                    ],
+                    "X-Hasura-User-Id": [
+                        "7f1aab7a-e941-46a2-b63a-5b28b80ad384"
+                    ],
+                    "X-Hasura-Role": [
+                        "admin"
+                    ],
+                    "Content-Length": [
+                        "640"
+                    ],
+                    "Content-Type": [
+                        "application/json"
+                    ]
+                }
+            },
+            "response": {
+                "status": {
+                    "code": 200,
+                    "message": "OK"
+                },
+                "headers": {
+                    "Date": [
+                        "Wed, 29 May 2019 11:35:19 GMT"
+                    ],
+                    "Server": [
+                        "Warp/3.2.26"
+                    ],
+                    "Transfer-Encoding": [
+                        "chunked"
+                    ],
+                    "Content-Type": [
+                        "application/json; charset=utf-8"
+                    ]
+                },
+                "body": {
+                    "string": "{\"data\":{\"configuration\":[{\"performed\":false,\"name\":\"updated test config name 1\",\"type_slug\":\"load_tests\",\"project_id\":\"04ce4055-5278-4fd5-aab9-2148faa58cdd\",\"test_source_id\":\"04ce4055-5278-4fd5-aab9-2148faa58cdd\",\"configuration_parameters\":[{\"parameter_slug\":\"load_tests_host\",\"value\":\"https://test-target.dev.bolt.acaisoft.io\",\"configuration_id\":\"7262d765-4d18-48a9-9d08-dd142ce8dab5\"}, {\"parameter_slug\":\"load_tests_duration\",\"value\":\"10\",\"configuration_id\":\"7262d765-4d18-48a9-9d08-dd142ce8dab5\"}, {\"parameter_slug\":\"load_tests_rampup\",\"value\":\"500\",\"configuration_id\":\"7262d765-4d18-48a9-9d08-dd142ce8dab5\"}, {\"parameter_slug\":\"load_tests_users\",\"value\":\"1000\",\"configuration_id\":\"7262d765-4d18-48a9-9d08-dd142ce8dab5\"}],\"configuration_envvars\":[{\"name\":\"testvar_2\",\"value\":\"testvarvalue 2\",\"configuration_id\":\"7262d765-4d18-48a9-9d08-dd142ce8dab5\"}],\"has_pre_test\":false,\"has_post_test\":false,\"has_load_tests\":true,\"has_monitoring\":false}]}}"
+                }
+            }
+        },
+        {
+            "request": {
+                "method": "POST",
+                "uri": "http://localhost:8080/v1alpha1/graphql",
+                "body": "{\"query\": \"query ($confId: uuid!, $confName: String, $sourceId: uuid!, $fetchSource: Boolean!, $userId: uuid!, $type_slug: String!) {\\n  test_source(where: {id: {_eq: $sourceId}, is_deleted: {_eq: false}, project: {userProjects: {user_id: {_eq: $userId}}, is_deleted: {_eq: false}}}) @include(if: $fetchSource) {\\n    source_type\\n    project {\\n      userProjects {\\n        user_id\\n      }\\n    }\\n    repository {\\n      name\\n      url\\n      configuration_type {\\n        slug_name\\n      }\\n      project {\\n        userProjects {\\n          user_id\\n        }\\n      }\\n    }\\n    test_creator {\\n      name\\n      data\\n      min_wait\\n      max_wait\\n      project {\\n        userProjects {\\n          user_id\\n        }\\n      }\\n    }\\n  }\\n  parameter(where: {configuration_type: {slug_name: {_eq: $type_slug}}}) {\\n    id\\n    default_value\\n    param_name\\n    name\\n    slug_name\\n  }\\n  isNameUnique: configuration(where: {name: {_eq: $confName}, project: {userProjects: {user_id: {_eq: $userId}}, is_deleted: {_eq: false}}}) {\\n    id\\n  }\\n  hasUserAccess: configuration(where: {id: {_eq: $confId}, project: {userProjects: {user_id: {_eq: $userId}}}}) {\\n    id\\n  }\\n}\\n\", \"variables\": {\"type_slug\": \"load_tests\", \"confId\": \"7262d765-4d18-48a9-9d08-dd142ce8dab5\", \"confName\": \"updated test config name 12345\", \"userId\": \"7f1aab7a-e941-46a2-b63a-5b28b80ad384\", \"sourceId\": \"None\", \"fetchSource\": false}}",
+                "headers": {
+                    "User-Agent": [
+                        "python-requests/2.21.0"
+                    ],
+                    "Accept-Encoding": [
+                        "gzip, deflate"
+                    ],
+                    "Accept": [
+                        "*/*"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "X-Hasura-Access-Key": [
+                        "devaccess"
+                    ],
+                    "X-Hasura-User-Id": [
+                        "7f1aab7a-e941-46a2-b63a-5b28b80ad384"
+                    ],
+                    "X-Hasura-Role": [
+                        "admin"
+                    ],
+                    "Content-Length": [
+                        "1422"
+                    ],
+                    "Content-Type": [
+                        "application/json"
+                    ]
+                }
+            },
+            "response": {
+                "status": {
+                    "code": 200,
+                    "message": "OK"
+                },
+                "headers": {
+                    "Date": [
+                        "Wed, 29 May 2019 11:35:19 GMT"
+                    ],
+                    "Server": [
+                        "Warp/3.2.26"
+                    ],
+                    "Transfer-Encoding": [
+                        "chunked"
+                    ],
+                    "Content-Type": [
+                        "application/json; charset=utf-8"
+                    ]
+                },
+                "body": {
+                    "string": "{\"data\":{\"parameter\":[{\"id\":\"04e3b56e-06a7-49aa-990b-5685873c548e\",\"default_value\":\"10\",\"param_name\":\"-t\",\"name\":\"time\",\"slug_name\":\"load_tests_duration\"}, {\"id\":\"7134e90a-cc58-4965-88c4-b2ec67a1580c\",\"default_value\":\"500\",\"param_name\":\"-r\",\"name\":\"users/second\",\"slug_name\":\"load_tests_rampup\"}, {\"id\":\"71a7cfc7-a66c-411d-9c91-69f431752b45\",\"default_value\":\"1000\",\"param_name\":\"-c\",\"name\":\"users\",\"slug_name\":\"load_tests_users\"}, {\"id\":\"adba8577-913c-447b-ae4d-3ab8934182e5\",\"default_value\":\"\",\"param_name\":\"-H\",\"name\":\"host\",\"slug_name\":\"load_tests_host\"}, {\"id\":\"c6f009bc-63c8-46a2-a0cd-267b84ff66a0\",\"default_value\":null,\"param_name\":\"-md\",\"name\":\"Monitoring duration\",\"slug_name\":\"monitoring_duration\"}, {\"id\":\"9d9dfd4f-f987-47b9-8f3f-79bbff29c4e2\",\"default_value\":\"5\",\"param_name\":\"-mi\",\"name\":\"monitoring interval\",\"slug_name\":\"monitoring_interval\"}],\"isNameUnique\":[],\"hasUserAccess\":[{\"id\":\"7262d765-4d18-48a9-9d08-dd142ce8dab5\"}]}}"
+                }
+            }
+        },
+        {
+            "request": {
+                "method": "POST",
+                "uri": "http://localhost:8080/v1alpha1/graphql",
+                "body": "{\"query\": \"mutation ($id: uuid!, $data: configuration_set_input!, $params: [configuration_parameter_insert_input!]!, $envs: [configuration_envvars_insert_input!]!) {\\n  delete_configuration_parameter(where: {configuration_id: {_eq: $id}}) {\\n    affected_rows\\n  }\\n  insert_configuration_parameter(objects: $params, on_conflict: {constraint: configuration_parameter_pkey, update_columns: [value]}) {\\n    affected_rows\\n  }\\n  delete_configuration_envvars(where: {configuration_id: {_eq: $id}}) {\\n    affected_rows\\n  }\\n  insert_configuration_envvars(objects: $envs, on_conflict: {constraint: configuration_envvars_pkey, update_columns: [value]}) {\\n    affected_rows\\n  }\\n  update_configuration(where: {id: {_eq: $id}}, _set: $data) {\\n    returning {\\n      id\\n      name\\n      type_slug\\n      project_id\\n      test_source_id\\n      has_pre_test\\n      has_post_test\\n      has_load_tests\\n      has_monitoring\\n      configuration_envvars {\\n        name\\n        value\\n      }\\n      configuration_parameters {\\n        parameter_slug\\n        value\\n      }\\n    }\\n  }\\n}\\n\", \"variables\": {\"id\": \"7262d765-4d18-48a9-9d08-dd142ce8dab5\", \"data\": {\"has_load_tests\": true, \"has_monitoring\": false, \"name\": \"updated test config name 12345\", \"type_slug\": \"load_tests\", \"instances\": 2}, \"params\": [{\"parameter_slug\": \"load_tests_host\", \"value\": \"https://test-target.dev.bolt.acaisoft.io\", \"configuration_id\": \"7262d765-4d18-48a9-9d08-dd142ce8dab5\"}, {\"parameter_slug\": \"load_tests_duration\", \"value\": \"10\", \"configuration_id\": \"7262d765-4d18-48a9-9d08-dd142ce8dab5\"}, {\"parameter_slug\": \"load_tests_rampup\", \"value\": \"500\", \"configuration_id\": \"7262d765-4d18-48a9-9d08-dd142ce8dab5\"}, {\"parameter_slug\": \"load_tests_users\", \"value\": \"1000\", \"configuration_id\": \"7262d765-4d18-48a9-9d08-dd142ce8dab5\"}], \"envs\": [{\"name\": \"testvar_2\", \"value\": \"testvarvalue 2\", \"configuration_id\": \"7262d765-4d18-48a9-9d08-dd142ce8dab5\"}]}}",
+                "headers": {
+                    "User-Agent": [
+                        "python-requests/2.21.0"
+                    ],
+                    "Accept-Encoding": [
+                        "gzip, deflate"
+                    ],
+                    "Accept": [
+                        "*/*"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "X-Hasura-Access-Key": [
+                        "devaccess"
+                    ],
+                    "X-Hasura-User-Id": [
+                        "7f1aab7a-e941-46a2-b63a-5b28b80ad384"
+                    ],
+                    "X-Hasura-Role": [
+                        "admin"
+                    ],
+                    "Content-Length": [
+                        "1931"
+                    ],
+                    "Content-Type": [
+                        "application/json"
+                    ]
+                }
+            },
+            "response": {
+                "status": {
+                    "code": 200,
+                    "message": "OK"
+                },
+                "headers": {
+                    "Date": [
+                        "Wed, 29 May 2019 11:35:19 GMT"
+                    ],
+                    "Server": [
+                        "Warp/3.2.26"
+                    ],
+                    "Transfer-Encoding": [
+                        "chunked"
+                    ],
+                    "Content-Type": [
+                        "application/json; charset=utf-8"
+                    ]
+                },
+                "body": {
+                    "string": "{\"data\":{\"delete_configuration_parameter\":{\"affected_rows\" : 4},\"insert_configuration_parameter\":{\"affected_rows\" : 4},\"delete_configuration_envvars\":{\"affected_rows\" : 1},\"insert_configuration_envvars\":{\"affected_rows\" : 1},\"update_configuration\":{\"returning\" : [{\"id\":\"7262d765-4d18-48a9-9d08-dd142ce8dab5\",\"name\":\"updated test config name 12345\",\"type_slug\":\"load_tests\",\"project_id\":\"04ce4055-5278-4fd5-aab9-2148faa58cdd\",\"test_source_id\":\"04ce4055-5278-4fd5-aab9-2148faa58cdd\",\"has_pre_test\":false,\"has_post_test\":false,\"has_load_tests\":true,\"has_monitoring\":false,\"configuration_envvars\":[{\"name\":\"testvar_2\",\"value\":\"testvarvalue 2\"}],\"configuration_parameters\":[{\"parameter_slug\":\"load_tests_host\",\"value\":\"https://test-target.dev.bolt.acaisoft.io\"}, {\"parameter_slug\":\"load_tests_duration\",\"value\":\"10\"}, {\"parameter_slug\":\"load_tests_rampup\",\"value\":\"500\"}, {\"parameter_slug\":\"load_tests_users\",\"value\":\"1000\"}]}]}}}"
+                }
+            }
+        }
+    ]
+}

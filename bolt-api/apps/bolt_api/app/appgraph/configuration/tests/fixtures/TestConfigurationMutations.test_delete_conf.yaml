@@ -1,0 +1,64 @@
+{
+    "version": 1,
+    "interactions": [
+        {
+            "request": {
+                "method": "POST",
+                "uri": "http://localhost:8080/v1alpha1/graphql",
+                "body": "{\"query\": \"mutation ($pk: uuid!, $userId: uuid!) {\\n  update_configuration(where: {id: {_eq: $pk}, is_deleted: {_eq: false}, project: {userProjects: {user_id: {_eq: $userId}}, is_deleted: {_eq: false}}}, _set: {is_deleted: true}) {\\n    affected_rows\\n    returning {\\n      id\\n      name\\n      type_slug\\n      project_id\\n      test_source_id\\n    }\\n  }\\n}\\n\", \"variables\": {\"pk\": \"7262d765-4d18-48a9-9d08-dd142ce8dab5\", \"userId\": \"7f1aab7a-e941-46a2-b63a-5b28b80ad384\"}}",
+                "headers": {
+                    "User-Agent": [
+                        "python-requests/2.21.0"
+                    ],
+                    "Accept-Encoding": [
+                        "gzip, deflate"
+                    ],
+                    "Accept": [
+                        "*/*"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "X-Hasura-Access-Key": [
+                        "devaccess"
+                    ],
+                    "X-Hasura-User-Id": [
+                        "7f1aab7a-e941-46a2-b63a-5b28b80ad384"
+                    ],
+                    "X-Hasura-Role": [
+                        "admin"
+                    ],
+                    "Content-Length": [
+                        "476"
+                    ],
+                    "Content-Type": [
+                        "application/json"
+                    ]
+                }
+            },
+            "response": {
+                "status": {
+                    "code": 200,
+                    "message": "OK"
+                },
+                "headers": {
+                    "Transfer-Encoding": [
+                        "chunked"
+                    ],
+                    "Content-Type": [
+                        "application/json; charset=utf-8"
+                    ],
+                    "Date": [
+                        "Wed, 29 May 2019 11:36:44 GMT"
+                    ],
+                    "Server": [
+                        "Warp/3.2.26"
+                    ]
+                },
+                "body": {
+                    "string": "{\"data\":{\"update_configuration\":{\"affected_rows\" : 1, \"returning\" : [{\"id\":\"7262d765-4d18-48a9-9d08-dd142ce8dab5\",\"name\":\"updated test config name 12345\",\"type_slug\":\"load_tests\",\"project_id\":\"04ce4055-5278-4fd5-aab9-2148faa58cdd\",\"test_source_id\":\"04ce4055-5278-4fd5-aab9-2148faa58cdd\"}]}}}"
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,26 @@
+- args:
+    role: testrunner
+    table:
+      name: execution_instance
+      schema: public
+  type: drop_select_permission
+- args:
+    permission:
+      allow_aggregations: false
+      columns:
+      - execution_id
+      - expect_slaves
+      - host
+      - id
+      - instance_type
+      - job_id
+      - port
+      - status
+      filter:
+        execution_id:
+          _eq: X-Hasura-Testruner-Id
+    role: testrunner
+    table:
+      name: execution_instance
+      schema: public
+  type: create_select_permission

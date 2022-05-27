@@ -1,0 +1,48 @@
+table:
+  name: user_project
+  schema: public
+object_relationships:
+- name: project
+  using:
+    foreign_key_constraint_on: project_id
+select_permissions:
+- permission:
+    allow_aggregations: true
+    columns:
+    - id
+    - user_id
+    - project_id
+    filter:
+      user_id:
+        _eq: X-HASURA-USER-ID
+  role: manager
+- permission:
+    allow_aggregations: true
+    columns:
+    - id
+    - project_id
+    - user_id
+    filter:
+      user_id:
+        _eq: X-HASURA-USER-ID
+  role: reader
+- permission:
+    allow_aggregations: true
+    columns:
+    - id
+    - user_id
+    - project_id
+    filter:
+      user_id:
+        _eq: X-HASURA-USER-ID
+  role: tenantadmin
+- permission:
+    allow_aggregations: true
+    columns:
+    - id
+    - project_id
+    - user_id
+    filter:
+      user_id:
+        _eq: X-Hasura-User-Id
+  role: tester

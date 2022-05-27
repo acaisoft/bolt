@@ -1,0 +1,136 @@
+table:
+  name: execution_request_totals
+  schema: public
+object_relationships:
+- name: execution
+  using:
+    foreign_key_constraint_on: execution_id
+select_permissions:
+- permission:
+    allow_aggregations: true
+    columns:
+    - execution_id
+    - timestamp
+    - method
+    - name
+    - num_requests
+    - num_failures
+    - median_response_time
+    - average_response_time
+    - min_response_time
+    - max_response_time
+    - average_content_size
+    - requests_per_second
+    - identifier
+    - min_content_size
+    - max_content_size
+    filter:
+      _and:
+      - execution:
+          configuration:
+            project:
+              userProjects:
+                user_id:
+                  _eq: X-Hasura-User-Id
+      - execution:
+          configuration:
+            project:
+              is_deleted:
+                _eq: false
+  role: manager
+- permission:
+    allow_aggregations: true
+    columns:
+    - execution_id
+    - timestamp
+    - method
+    - name
+    - num_requests
+    - num_failures
+    - median_response_time
+    - average_response_time
+    - min_response_time
+    - max_response_time
+    - average_content_size
+    - requests_per_second
+    - identifier
+    - min_content_size
+    - max_content_size
+    filter:
+      _and:
+      - execution:
+          configuration:
+            project:
+              userProjects:
+                user_id:
+                  _eq: X-Hasura-User-Id
+      - execution:
+          configuration:
+            project:
+              is_deleted:
+                _eq: false
+  role: reader
+- permission:
+    allow_aggregations: true
+    columns:
+    - average_content_size
+    - average_response_time
+    - execution_id
+    - identifier
+    - max_content_size
+    - max_response_time
+    - median_response_time
+    - method
+    - min_content_size
+    - min_response_time
+    - name
+    - num_failures
+    - num_requests
+    - requests_per_second
+    - timestamp
+    filter:
+      _and:
+      - execution:
+          configuration:
+            project:
+              userProjects:
+                user_id:
+                  _eq: X-Hasura-User-Id
+      - execution:
+          configuration:
+            project:
+              is_deleted:
+                _eq: false
+  role: tenantadmin
+- permission:
+    allow_aggregations: true
+    columns:
+    - average_content_size
+    - average_response_time
+    - execution_id
+    - identifier
+    - max_content_size
+    - max_response_time
+    - median_response_time
+    - method
+    - min_content_size
+    - min_response_time
+    - name
+    - num_failures
+    - num_requests
+    - requests_per_second
+    - timestamp
+    filter:
+      _and:
+      - execution:
+          configuration:
+            project:
+              userProjects:
+                user_id:
+                  _eq: X-Hasura-User-Id
+      - execution:
+          configuration:
+            project:
+              is_deleted:
+                _eq: false
+  role: tester

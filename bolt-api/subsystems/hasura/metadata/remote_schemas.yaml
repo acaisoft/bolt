@@ -1,0 +1,4 @@
+- name: bolt-api
+  definition:
+    url_from_env: BOLT_API_GRAPHQL
+    forward_client_headers: true

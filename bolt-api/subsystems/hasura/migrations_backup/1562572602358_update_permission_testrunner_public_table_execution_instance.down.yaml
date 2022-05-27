@@ -1,0 +1,27 @@
+- args:
+    role: testrunner
+    table:
+      name: execution_instance
+      schema: public
+  type: drop_update_permission
+- args:
+    permission:
+      columns:
+      - expect_slaves
+      - host
+      - instance_type
+      - job_id
+      - port
+      - status
+      filter:
+        execution_id:
+          _eq: X-Hasura-Testruner-Id
+      localPresets:
+      - key: ""
+        value: ""
+      set: {}
+    role: testrunner
+    table:
+      name: execution_instance
+      schema: public
+  type: create_update_permission

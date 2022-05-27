@@ -1,0 +1,123 @@
+{
+    "version": 1,
+    "interactions": [
+        {
+            "request": {
+                "method": "POST",
+                "uri": "http://localhost:8080/v1alpha1/graphql",
+                "body": "{\"query\": \"query ($repoName: String!, $repoUrl: String!, $repoId: uuid!, $userId: uuid!, $confType: String) {\\n  uniqueName: repository(where: {name: {_eq: $repoName}, is_deleted: {_eq: false}, project: {userProjects: {user_id: {_eq: $userId}}, is_deleted: {_eq: false}}}) {\\n    id\\n  }\\n  uniqueUrl: repository(where: {url: {_eq: $repoUrl}, is_deleted: {_eq: false}, project: {userProjects: {user_id: {_eq: $userId}}, is_deleted: {_eq: false}}}) {\\n    id\\n  }\\n  configuration_type(where: {slug_name: {_eq: $confType}}, limit: 1) {\\n    id\\n  }\\n  repository(where: {id: {_eq: $repoId}, is_deleted: {_eq: false}, project: {userProjects: {user_id: {_eq: $userId}}, is_deleted: {_eq: false}}}) {\\n    name\\n    url\\n    type_slug\\n    performed\\n  }\\n}\\n\", \"variables\": {\"userId\": \"7f1aab7a-e941-46a2-b63a-5b28b80ad384\", \"repoName\": \"updated repository\", \"repoUrl\": \"git@mockbitbucket.org:repo/two.git\", \"repoId\": \"04ce4055-5278-4fd5-aab9-2148faa58cdd\", \"confType\": \"\"}}",
+                "headers": {
+                    "User-Agent": [
+                        "python-requests/2.21.0"
+                    ],
+                    "Accept-Encoding": [
+                        "gzip, deflate"
+                    ],
+                    "Accept": [
+                        "*/*"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "X-Hasura-Access-Key": [
+                        "devaccess"
+                    ],
+                    "X-Hasura-User-Id": [
+                        "7f1aab7a-e941-46a2-b63a-5b28b80ad384"
+                    ],
+                    "X-Hasura-Role": [
+                        "admin"
+                    ],
+                    "Content-Length": [
+                        "971"
+                    ],
+                    "Content-Type": [
+                        "application/json"
+                    ]
+                }
+            },
+            "response": {
+                "status": {
+                    "code": 200,
+                    "message": "OK"
+                },
+                "headers": {
+                    "Server": [
+                        "Warp/3.2.26"
+                    ],
+                    "Content-Type": [
+                        "application/json; charset=utf-8"
+                    ],
+                    "Transfer-Encoding": [
+                        "chunked"
+                    ],
+                    "Date": [
+                        "Tue, 28 May 2019 12:05:23 GMT"
+                    ]
+                },
+                "body": {
+                    "string": "{\"data\":{\"uniqueName\":[],\"uniqueUrl\":[],\"configuration_type\":[],\"repository\":[{\"name\":\"test repository 1\",\"url\":\"git@mockbitbucket.org:repo/one.git\",\"type_slug\":\"load_tests\",\"performed\":false}]}}"
+                }
+            }
+        },
+        {
+            "request": {
+                "method": "POST",
+                "uri": "http://localhost:8080/v1alpha1/graphql",
+                "body": "{\"query\": \"mutation ($id: uuid!, $data: repository_set_input!) {\\n  update_repository(where: {id: {_eq: $id}}, _set: $data) {\\n    returning {\\n      id\\n      name\\n      repository_url: url\\n      project_id\\n      type_slug\\n    }\\n  }\\n}\\n\", \"variables\": {\"id\": \"04ce4055-5278-4fd5-aab9-2148faa58cdd\", \"data\": {\"name\": \"updated repository\", \"url\": \"git@mockbitbucket.org:repo/two.git\"}}}",
+                "headers": {
+                    "User-Agent": [
+                        "python-requests/2.21.0"
+                    ],
+                    "Accept-Encoding": [
+                        "gzip, deflate"
+                    ],
+                    "Accept": [
+                        "*/*"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "X-Hasura-Access-Key": [
+                        "devaccess"
+                    ],
+                    "X-Hasura-User-Id": [
+                        "7f1aab7a-e941-46a2-b63a-5b28b80ad384"
+                    ],
+                    "X-Hasura-Role": [
+                        "admin"
+                    ],
+                    "Content-Length": [
+                        "391"
+                    ],
+                    "Content-Type": [
+                        "application/json"
+                    ]
+                }
+            },
+            "response": {
+                "status": {
+                    "code": 200,
+                    "message": "OK"
+                },
+                "headers": {
+                    "Server": [
+                        "Warp/3.2.26"
+                    ],
+                    "Content-Type": [
+                        "application/json; charset=utf-8"
+                    ],
+                    "Transfer-Encoding": [
+                        "chunked"
+                    ],
+                    "Date": [
+                        "Tue, 28 May 2019 12:05:23 GMT"
+                    ]
+                },
+                "body": {
+                    "string": "{\"data\":{\"update_repository\":{\"returning\" : [{\"id\":\"04ce4055-5278-4fd5-aab9-2148faa58cdd\",\"name\":\"updated repository\",\"repository_url\":\"git@mockbitbucket.org:repo/two.git\",\"project_id\":\"04ce4055-5278-4fd5-aab9-2148faa58cdd\",\"type_slug\":\"load_tests\"}]}}}"
+                }
+            }
+        }
+    ]
+}

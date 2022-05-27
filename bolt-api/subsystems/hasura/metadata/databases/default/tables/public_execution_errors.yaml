@@ -1,0 +1,75 @@
+table:
+  name: execution_errors
+  schema: public
+object_relationships:
+- name: execution
+  using:
+    foreign_key_constraint_on: execution_id
+insert_permissions:
+- permission:
+    check: {}
+    columns:
+    - id
+    - execution_id
+    - timestamp
+    - identifier
+    - method
+    - name
+    - exception_data
+    - number_of_occurrences
+    set:
+      execution_id: x-hasura-Testruner-Id
+  role: testrunner
+select_permissions:
+- permission:
+    allow_aggregations: true
+    columns:
+    - id
+    - execution_id
+    - timestamp
+    - identifier
+    - method
+    - name
+    - exception_data
+    - number_of_occurrences
+    filter: {}
+  role: manager
+- permission:
+    allow_aggregations: true
+    columns:
+    - id
+    - number_of_occurrences
+    - exception_data
+    - identifier
+    - method
+    - name
+    - timestamp
+    - execution_id
+    filter: {}
+  role: reader
+- permission:
+    allow_aggregations: true
+    columns:
+    - id
+    - number_of_occurrences
+    - exception_data
+    - identifier
+    - method
+    - name
+    - timestamp
+    - execution_id
+    filter: {}
+  role: tenantadmin
+- permission:
+    allow_aggregations: true
+    columns:
+    - id
+    - number_of_occurrences
+    - exception_data
+    - identifier
+    - method
+    - name
+    - timestamp
+    - execution_id
+    filter: {}
+  role: tester

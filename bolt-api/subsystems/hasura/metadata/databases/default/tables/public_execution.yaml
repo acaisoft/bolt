@@ -1,0 +1,291 @@
+table:
+  name: execution
+  schema: public
+object_relationships:
+- name: configuration
+  using:
+    foreign_key_constraint_on: configuration_id
+array_relationships:
+- name: execution_additional_data
+  using:
+    foreign_key_constraint_on:
+      column: execution_id
+      table:
+        name: execution_additional_data
+        schema: public
+- name: execution_distributions
+  using:
+    foreign_key_constraint_on:
+      column: execution_id
+      table:
+        name: execution_distribution
+        schema: public
+- name: execution_errors
+  using:
+    foreign_key_constraint_on:
+      column: execution_id
+      table:
+        name: execution_errors
+        schema: public
+- name: execution_export_tokens
+  using:
+    foreign_key_constraint_on:
+      column: execution_id
+      table:
+        name: execution_export_token
+        schema: public
+- name: execution_instances
+  using:
+    foreign_key_constraint_on:
+      column: execution_id
+      table:
+        name: execution_instance
+        schema: public
+- name: execution_metrics_data
+  using:
+    foreign_key_constraint_on:
+      column: execution_id
+      table:
+        name: execution_metrics_data
+        schema: public
+- name: execution_metrics_metadata
+  using:
+    foreign_key_constraint_on:
+      column: execution_id
+      table:
+        name: execution_metrics_metadata
+        schema: public
+- name: execution_request_totals
+  using:
+    foreign_key_constraint_on:
+      column: execution_id
+      table:
+        name: execution_request_totals
+        schema: public
+- name: execution_requests
+  using:
+    foreign_key_constraint_on:
+      column: execution_id
+      table:
+        name: execution_requests
+        schema: public
+- name: execution_stage_logs
+  using:
+    foreign_key_constraint_on:
+      column: execution_id
+      table:
+        name: execution_stage_log
+        schema: public
+- name: execution_users
+  using:
+    foreign_key_constraint_on:
+      column: execution_id
+      table:
+        name: execution_users
+        schema: public
+- name: result_aggregate
+  using:
+    foreign_key_constraint_on:
+      column: execution_id
+      table:
+        name: result_aggregate
+        schema: public
+- name: result_errors
+  using:
+    foreign_key_constraint_on:
+      column: execution_id
+      table:
+        name: result_error
+        schema: public
+select_permissions:
+- permission:
+    allow_aggregations: true
+    columns:
+    - argo_name
+    - commit_hash
+    - configuration_id
+    - configuration_snapshot
+    - created_by_id
+    - end
+    - end_locust
+    - failed_requests
+    - id
+    - passed_requests
+    - start
+    - start_locust
+    - status
+    - test_job_error
+    - test_job_id
+    - test_preparation_job_error
+    - test_preparation_job_id
+    - test_preparation_job_status
+    - test_preparation_job_statuscheck_timestamp
+    - total_requests
+    filter:
+      _and:
+      - configuration:
+          is_deleted:
+            _eq: false
+      - configuration:
+          project:
+            is_deleted:
+              _eq: false
+      - configuration:
+          project:
+            userProjects:
+              user_id:
+                _eq: X-Hasura-User-Id
+  role: manager
+- permission:
+    allow_aggregations: true
+    columns:
+    - argo_name
+    - commit_hash
+    - configuration_id
+    - configuration_snapshot
+    - created_by_id
+    - end
+    - end_locust
+    - id
+    - start
+    - start_locust
+    - status
+    - test_job_error
+    - test_job_id
+    - test_preparation_job_error
+    - test_preparation_job_id
+    - test_preparation_job_status
+    - test_preparation_job_statuscheck_timestamp
+    filter:
+      _and:
+      - configuration:
+          is_deleted:
+            _eq: false
+      - configuration:
+          project:
+            is_deleted:
+              _eq: false
+      - configuration:
+          project:
+            userProjects:
+              user_id:
+                _eq: X-Hasura-User-Id
+  role: reader
+- permission:
+    allow_aggregations: true
+    columns:
+    - argo_name
+    - commit_hash
+    - configuration_id
+    - configuration_snapshot
+    - created_by_id
+    - end
+    - end_locust
+    - failed_requests
+    - id
+    - passed_requests
+    - start
+    - start_locust
+    - status
+    - test_job_error
+    - test_job_id
+    - test_preparation_job_error
+    - test_preparation_job_id
+    - test_preparation_job_status
+    - test_preparation_job_statuscheck_timestamp
+    - total_requests
+    filter:
+      _and:
+      - configuration:
+          is_deleted:
+            _eq: false
+      - configuration:
+          project:
+            is_deleted:
+              _eq: false
+      - configuration:
+          project:
+            userProjects:
+              user_id:
+                _eq: X-Hasura-User-Id
+  role: tenantadmin
+- permission:
+    allow_aggregations: true
+    columns:
+    - argo_name
+    - commit_hash
+    - configuration_id
+    - configuration_snapshot
+    - created_by_id
+    - end
+    - end_locust
+    - id
+    - start
+    - start_locust
+    - status
+    - test_job_error
+    - test_job_id
+    - test_preparation_job_error
+    - test_preparation_job_id
+    - test_preparation_job_status
+    - test_preparation_job_statuscheck_timestamp
+    filter:
+      _and:
+      - configuration:
+          is_deleted:
+            _eq: false
+      - configuration:
+          project:
+            is_deleted:
+              _eq: false
+      - configuration:
+          project:
+            userProjects:
+              user_id:
+                _eq: X-Hasura-User-Id
+  role: tester
+- permission:
+    columns:
+    - argo_name
+    - commit_hash
+    - configuration_id
+    - configuration_snapshot
+    - created_by_id
+    - end
+    - id
+    - start
+    - status
+    - test_job_error
+    - test_job_id
+    - test_preparation_job_error
+    - test_preparation_job_id
+    - test_preparation_job_status
+    - test_preparation_job_statuscheck_timestamp
+    filter:
+      id:
+        _eq: X-Hasura-Testruner-Id
+  role: testrunner
+update_permissions:
+- permission:
+    check: null
+    columns:
+    - end
+    - end_locust
+    - start
+    - start_locust
+    - status
+    filter:
+      id:
+        _eq: X-Hasura-Testruner-Id
+  role: testrunner
+event_triggers:
+- definition:
+    update:
+      columns:
+      - status
+  name: execution_update
+  retry_conf:
+    interval_sec: 5
+    num_retries: 1
+    timeout_sec: 10
+  webhook_from_env: BOLT_API_EXECUTION_STATE_CHANGE

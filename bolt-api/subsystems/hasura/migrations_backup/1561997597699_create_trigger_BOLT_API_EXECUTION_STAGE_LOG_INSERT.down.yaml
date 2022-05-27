@@ -1,0 +1,3 @@
+- args:
+    name: BOLT_API_EXECUTION_STAGE_LOG_INSERT
+  type: delete_event_trigger

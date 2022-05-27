@@ -1,0 +1,3 @@
+- args:
+    sql: DROP TABLE "public"."execution_stage_graph"
+  type: run_sql

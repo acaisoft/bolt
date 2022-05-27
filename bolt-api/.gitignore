@@ -1,0 +1,8 @@
+*.pyc
+.DS_store
+.idea
+hasura-prod/
+hasura-dev/
+charts/bolt-api/files/secrets.py
+instance/localhost-secrets.py
+instance/acai-bolt-356aea83d223.json

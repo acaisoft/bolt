@@ -1,0 +1,64 @@
+{
+    "version": 1,
+    "interactions": [
+        {
+            "request": {
+                "method": "POST",
+                "uri": "http://localhost:8080/v1alpha1/graphql",
+                "body": "{\"query\": \"query ($uid: uuid!) {\\n  project(where: {is_deleted: {_eq: false}, userProjects: {user_id: {_eq: $uid}}}) {\\n    id\\n    name\\n    description\\n    image_url\\n    scenarios: configurations_aggregate(where: {is_deleted: {_eq: false}, project: {is_deleted: {_eq: false}, userProjects: {user_id: {_eq: $uid}}}}) {\\n      aggregate {\\n        count\\n      }\\n    }\\n    sources: test_sources_aggregate(where: {is_deleted: {_eq: false}, project: {is_deleted: {_eq: false}, userProjects: {user_id: {_eq: $uid}}}}) {\\n      aggregate {\\n        count\\n      }\\n    }\\n  }\\n  tests: execution_aggregate(distinct_on: configuration_id, where: {configuration: {is_deleted: {_eq: false}, project: {is_deleted: {_eq: false}, userProjects: {user_id: {_eq: $uid}}}}}) {\\n    nodes {\\n      configuration {\\n        project_id\\n        executions_aggregate {\\n          aggregate {\\n            sum {\\n              passed_requests\\n              failed_requests\\n            }\\n          }\\n        }\\n      }\\n    }\\n  }\\n}\\n\", \"variables\": {\"uid\": \"7f1aab7a-e941-46a2-b63a-5b28b80ad384\"}}",
+                "headers": {
+                    "User-Agent": [
+                        "python-requests/2.21.0"
+                    ],
+                    "Accept-Encoding": [
+                        "gzip, deflate"
+                    ],
+                    "Accept": [
+                        "*/*"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "X-Hasura-Access-Key": [
+                        "devaccess"
+                    ],
+                    "X-Hasura-User-Id": [
+                        "7f1aab7a-e941-46a2-b63a-5b28b80ad384"
+                    ],
+                    "X-Hasura-Role": [
+                        "admin"
+                    ],
+                    "Content-Length": [
+                        "1086"
+                    ],
+                    "Content-Type": [
+                        "application/json"
+                    ]
+                }
+            },
+            "response": {
+                "status": {
+                    "code": 200,
+                    "message": "OK"
+                },
+                "headers": {
+                    "Server": [
+                        "Warp/3.2.26"
+                    ],
+                    "Date": [
+                        "Tue, 28 May 2019 11:39:10 GMT"
+                    ],
+                    "Content-Type": [
+                        "application/json; charset=utf-8"
+                    ],
+                    "Transfer-Encoding": [
+                        "chunked"
+                    ]
+                },
+                "body": {
+                    "string": "{\"data\":{\"project\":[{\"id\":\"99031225-b7e7-4039-af3c-1567cadaa8b6\",\"name\":\"abc\",\"description\":\"demo project\",\"image_url\":\"https://storage.googleapis.com/media.bolt.acaisoft.io/75ad7d47-edad-4997-896f-aeb4d42701bf\",\"scenarios\":{\"aggregate\" : {\"count\" : 12}},\"sources\":{\"aggregate\" : {\"count\" : 2}}}, {\"id\":\"5a472dff-a8ba-40e3-9196-97fd995c21b9\",\"name\":\"57d4e5a3-c872-4bbf-af7d-ae3ecedf1dcb\",\"description\":\"demo project\",\"image_url\":null,\"scenarios\":{\"aggregate\" : {\"count\" : 0}},\"sources\":{\"aggregate\" : {\"count\" : 0}}}, {\"id\":\"d634e9b8-e287-4fe7-ba4e-8120308221d1\",\"name\":\"17d4e5a3-c872-4bbf-af7d-ae3ecedf1dcb\",\"description\":\"demo project\",\"image_url\":null,\"scenarios\":{\"aggregate\" : {\"count\" : 0}},\"sources\":{\"aggregate\" : {\"count\" : 0}}}, {\"id\":\"06f7af61-8e9e-4ac5-9cd7-1f7b902a8307\",\"name\":\"test project\",\"description\":\"demo project\",\"image_url\":null,\"scenarios\":{\"aggregate\" : {\"count\" : 0}},\"sources\":{\"aggregate\" : {\"count\" : 0}}}, {\"id\":\"536e70fa-3bd0-4905-b513-2922c0a90a8a\",\"name\":\"test project 1\",\"description\":\"test project description\",\"image_url\":null,\"scenarios\":{\"aggregate\" : {\"count\" : 0}},\"sources\":{\"aggregate\" : {\"count\" : 0}}}, {\"id\":\"04ce4055-5278-4fd5-aab9-2148faa58cdd\",\"name\":\"new name\",\"description\":\"new description\",\"image_url\":null,\"scenarios\":{\"aggregate\" : {\"count\" : 0}},\"sources\":{\"aggregate\" : {\"count\" : 1}}}],\"tests\":{\"nodes\" : [{\"configuration\":{\"project_id\":\"99031225-b7e7-4039-af3c-1567cadaa8b6\",\"executions_aggregate\":{\"aggregate\" : {\"sum\" : {\"passed_requests\" : 0, \"failed_requests\" : 0}}}}}, {\"configuration\":{\"project_id\":\"99031225-b7e7-4039-af3c-1567cadaa8b6\",\"executions_aggregate\":{\"aggregate\" : {\"sum\" : {\"passed_requests\" : 0, \"failed_requests\" : 237104}}}}}]}}}"
+                }
+            }
+        }
+    ]
+}

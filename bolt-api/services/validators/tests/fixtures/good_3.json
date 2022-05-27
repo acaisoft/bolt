@@ -1,0 +1,11 @@
+{
+  "test_type": "sequence",
+  "endpoints": [
+    {
+      "name": "Send message",
+      "url": "/send/message?message=hello_world",
+      "method": "get",
+      "task_value": 1
+    }
+  ]
+}

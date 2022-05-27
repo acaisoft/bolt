@@ -1,0 +1,19 @@
+- args:
+    permission:
+      allow_aggregations: true
+      columns:
+      - id
+      - execution_id
+      - timestamp
+      - identifier
+      - method
+      - name
+      - exception_data
+      - number_of_occurrences
+      filter: {}
+      limit: null
+    role: manager
+    table:
+      name: execution_errors
+      schema: public
+  type: create_select_permission

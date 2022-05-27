@@ -1,0 +1,109 @@
+table:
+  name: repository
+  schema: public
+object_relationships:
+- name: configuration_type
+  using:
+    foreign_key_constraint_on: type_slug
+- name: project
+  using:
+    foreign_key_constraint_on: project_id
+array_relationships:
+- name: test_sources
+  using:
+    foreign_key_constraint_on:
+      column: repository_id
+      table:
+        name: test_source
+        schema: public
+select_permissions:
+- permission:
+    allow_aggregations: true
+    columns:
+    - id
+    - name
+    - url
+    - project_id
+    - performed
+    - created_by_id
+    - type_slug
+    - is_deleted
+    filter:
+      _and:
+      - project:
+          userProjects:
+            user_id:
+              _eq: X-Hasura-User-Id
+      - project:
+          is_deleted:
+            _eq: false
+      - is_deleted:
+          _eq: false
+  role: manager
+- permission:
+    columns:
+    - created_by_id
+    - id
+    - is_deleted
+    - name
+    - performed
+    - project_id
+    - type_slug
+    - url
+    filter:
+      _and:
+      - project:
+          userProjects:
+            user_id:
+              _eq: X-Hasura-User-Id
+      - project:
+          is_deleted:
+            _eq: false
+      - is_deleted:
+          _eq: false
+  role: reader
+- permission:
+    allow_aggregations: true
+    columns:
+    - id
+    - name
+    - url
+    - project_id
+    - performed
+    - created_by_id
+    - type_slug
+    - is_deleted
+    filter:
+      _and:
+      - project:
+          userProjects:
+            user_id:
+              _eq: X-Hasura-User-Id
+      - project:
+          is_deleted:
+            _eq: false
+      - is_deleted:
+          _eq: false
+  role: tenantadmin
+- permission:
+    columns:
+    - created_by_id
+    - id
+    - is_deleted
+    - name
+    - performed
+    - project_id
+    - type_slug
+    - url
+    filter:
+      _and:
+      - project:
+          userProjects:
+            user_id:
+              _eq: X-Hasura-User-Id
+      - project:
+          is_deleted:
+            _eq: false
+      - is_deleted:
+          _eq: false
+  role: tester
