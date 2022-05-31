@@ -13,7 +13,6 @@ bp = Blueprint('auth-login', __name__)
 def login():
     redirect_url = request.args.get('redirect_url', False)
     priv_key = current_app.config.get(const.JWT_AUTH_PRIV_KEY, False)
-    logger.info(current_app.config.get(const.AUTH_LOGIN))
 
     if request.method == 'POST':
         login = request.form['login']
