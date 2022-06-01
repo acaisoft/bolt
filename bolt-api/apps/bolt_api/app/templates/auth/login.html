@@ -13,9 +13,6 @@
     <title>Bolt</title>
 
     <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/patternfly.css') }}" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/patternfly-additions.css') }}" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/zocial.css') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
   </head>
 
@@ -32,8 +29,6 @@
 
             <div id="kc-content">
               <div id="kc-content-wrapper">
-                <!-- Remove class alert-error-hide to show error message -->
-                  <!-- Error message goes in span below -->
                 {% for message in get_flashed_messages() %}
                   <div class="alert alert-error">
                     <span class="pficon pficon-error-circle-o"></span>
