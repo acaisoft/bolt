@@ -35,37 +35,37 @@ class TestTestCreatorValidation(unittest.TestCase):
         # all fields None
         with self.assertRaises(AssertionError) as context:
             validate_test_creator(None, None, None)
-        self.assertEqual(str(context.exception), 'json data is required')
+        self.assertEqual(str(context.exception), 'json data is required\nassert None')
         # JSON data is empty
         with self.assertRaises(AssertionError) as context:
             validate_test_creator('', None, None)
-        self.assertEqual(str(context.exception), 'json data is required')
+        self.assertEqual(str(context.exception), 'json data is required\nassert \'\'')
         # wrong JSON structure
         with self.assertRaises(AssertionError) as context:
             validate_test_creator('hello world', None, None)
-        self.assertEqual(str(context.exception), 'Error during converting JSON data to python Dict')
+        self.assertEqual(str(context.exception), 'Error during converting JSON data to python Dict\nassert None')
 
     def test_validate_min_and_max_wait(self):
         # string min wait
         with self.assertRaises(AssertionError) as context:
             validate_test_creator('{}', '100', 200)
-        self.assertEqual(str(context.exception), 'Min wait and Max wait must be integers')
+        self.assertEqual(str(context.exception), 'Min wait and Max wait must be integers\nassert None')
         # string max wait
         with self.assertRaises(AssertionError) as context:
             validate_test_creator('{}', 100, '200')
-        self.assertEqual(str(context.exception), 'Min wait and Max wait must be integers')
+        self.assertEqual(str(context.exception), 'Min wait and Max wait must be integers\nassert None')
         # Max wait < Min wait
         with self.assertRaises(AssertionError) as context:
             validate_test_creator('{}', 200, 150)
-        self.assertEqual(str(context.exception), 'Max wait should be greater than Min wait')
+        self.assertEqual(str(context.exception), 'Max wait should be greater than Min wait\nassert None')
         # Min wait < 50
         with self.assertRaises(AssertionError) as context:
             validate_test_creator('{}', 49, 100)
-        self.assertEqual(str(context.exception), 'Min wait value should be greater than or equal 50 ms')
+        self.assertEqual(str(context.exception), 'Min wait value should be greater than or equal 50 ms\nassert None')
         # Max wait < 100
         with self.assertRaises(AssertionError) as context:
             validate_test_creator('{}', 50, 99)
-        self.assertEqual(str(context.exception), 'Max wait value should be greater than or equal 100 ms')
+        self.assertEqual(str(context.exception), 'Max wait value should be greater than or equal 100 ms\nassert None')
 
     def test_validate_json_fixtures(self):
         # good 1

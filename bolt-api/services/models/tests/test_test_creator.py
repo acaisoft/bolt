@@ -37,27 +37,30 @@ class TestActionModel(unittest.TestCase):
         })
 
     def test_model_with_wrong_action_type_field(self):
+        action_type = 'unknown'
         action = Action({
-            'action_type': 'unknown',
+            'action_type': action_type,
             'location': 'response',
             'variable_name': 'token',
             'variable_path': 'auth.token'
         })
         with self.assertRaises(exceptions.DataError) as context:
             action.validate()
-        self.assertEqual(context.exception.to_primitive(), {'action_type': ["Value must be one of ('set_variable',)."]})
+        self.assertEqual(context.exception.to_primitive(), {'action_type': [f"Value ({action_type}) must be one of "
+                                                                            f"('set_variable',)."]})
 
     def test_model_with_wrong_location_field(self):
+        location = 'unknown'
         action = Action({
             'action_type': 'set_variable',
-            'location': 'unknown',
+            'location': location,
             'variable_name': 'token',
             'variable_path': 'auth.token'
         })
         with self.assertRaises(exceptions.DataError) as context:
             action.validate()
         self.assertEqual(context.exception.to_primitive(), {
-            'location': ["Value must be one of ('response', 'headers', 'cookies')."]})
+            'location': [f"Value ({location}) must be one of ('response', 'headers', 'cookies')."]})
 
     def test_model_with_valid_data(self):
         action = Action({
@@ -81,12 +84,14 @@ class TestAssertModel(unittest.TestCase):
         })
 
     def test_model_with_wrong_assert_type_field_data(self):
-        assert_instance = Assert({'assert_type': 'unknown', 'value': '1', 'message': 'Error'})
+        assert_type = 'unknown'
+        assert_instance = Assert({'assert_type': assert_type, 'value': '1', 'message': 'Error'})
         with self.assertRaises(exceptions.DataError) as context:
             assert_instance.validate()
         self.assertEqual(context.exception.to_primitive(), {
             'assert_type': [
-                "Value must be one of ('response_code', 'response_time', 'body_text_equal', 'body_text_contains')."]
+                f"Value ({assert_type}) must be one of ('response_code', 'response_time', 'body_text_equal', "
+                f"'body_text_contains')."]
         })
 
     def test_model_with_valid_data(self):
@@ -125,12 +130,13 @@ class TestEndpointModel(unittest.TestCase):
         })
 
     def test_model_with_wrong_method_field_data(self):
-        endpoint = Endpoint({'name': 'test', 'method': 'unknown', 'url': '/test'})
+        method = 'unknown'
+        endpoint = Endpoint({'name': 'test', 'method': method, 'url': '/test'})
         with self.assertRaises(exceptions.DataError) as context:
             endpoint.validate()
         self.assertEqual(
             context.exception.to_primitive(),
-            {'method': ["Value must be one of ('get', 'post', 'put', 'patch', 'delete')."]}
+            {'method': [f"Value ({method}) must be one of ('get', 'post', 'put', 'patch', 'delete')."]}
         )
 
     def test_payload_field_with_valid_combined_data(self):
@@ -204,6 +210,7 @@ class TestEndpointModel(unittest.TestCase):
         self.assertEqual(context.exception.to_primitive(), {'payload': ["Only mappings may be used in a DictType"]})
 
     def test_asserts_field_with_invalid_data(self):
+        assert_type = 'unknown type'
         endpoint = Endpoint({
             'name': 'test',
             'method': 'put',
@@ -211,17 +218,17 @@ class TestEndpointModel(unittest.TestCase):
             'task_value': 2,
             'payload': {},
             'asserts': [{
-                'assert_type': 'unknown type',
+                'assert_type': assert_type,
                 'value': '100',
                 'message': 'Error'
             }]
         })
         with self.assertRaises(exceptions.DataError) as context:
             endpoint.validate()
-        self.assertEqual(context.exception.to_primitive(), {
-            'asserts': {0: {'assert_type': ["Value must be one of ('response_code', "
+        self.assertEqual({
+            'asserts': {0: {'assert_type': [f"Value ({assert_type}) must be one of ('response_code', "
                                             "'response_time', 'body_text_equal', 'body_text_contains')."]}}
-        })
+        }, context.exception.to_primitive())
 
     def test_assert_field_with_valid_data(self):
         endpoint = Endpoint({
@@ -266,6 +273,7 @@ class TestEndpointModel(unittest.TestCase):
         })
 
     def test_action_field_with_invalid_data(self):
+        action_type = 'unknown'
         endpoint = Endpoint({
             'name': 'test',
             'method': 'put',
@@ -278,7 +286,7 @@ class TestEndpointModel(unittest.TestCase):
                 'message': 'Error'
             }],
             'actions': [{
-                'action_type': 'unknown',
+                'action_type': action_type,
                 'location': 'response',
                 'variable_name': 'token',
                 'variable_path': 'my_token.path'
@@ -287,7 +295,7 @@ class TestEndpointModel(unittest.TestCase):
         with self.assertRaises(exceptions.DataError) as context:
             endpoint.validate()
         self.assertEqual(context.exception.to_primitive(), {
-            'actions': {0: {'action_type': ["Value must be one of ('set_variable',)."]}}
+            'actions': {0: {'action_type': [f"Value ({action_type}) must be one of ('set_variable',)."]}}
         })
 
     def test_action_field_with_valid_data(self):
@@ -384,9 +392,10 @@ class TestConfigurationModel(unittest.TestCase):
         })
 
     def test_model_with_wrong_test_type_field_data(self):
+        test_type = 'unknown-test-type'
         endpoint = Endpoint({'name': 'test', 'method': 'get', 'url': '/test'})
         test_configuration = TestConfiguration({
-            'test_type': 'unknown-test-type',
+            'test_type': test_type,
             'endpoints': [
                 endpoint
             ],
@@ -396,7 +405,8 @@ class TestConfigurationModel(unittest.TestCase):
         })
         with self.assertRaises(exceptions.DataError) as context:
             test_configuration.validate()
-        self.assertEqual(context.exception.to_primitive(), {'test_type': ["Value must be one of ('set', 'sequence')."]})
+        self.assertEqual(context.exception.to_primitive(), {'test_type': [f"Value ({test_type}) must be one of "
+                                                                          f"('set', 'sequence')."]})
 
     def test_set_endpoints(self):
         endpoints = [
