@@ -26,7 +26,7 @@ logger = setup_custom_logger(__name__)
 
 
 def validate_test_creator(json_data, min_wait, max_wait):
-    assert bool(json_data), f'json data is required'
+    assert json_data, f'json data is required'
     # logger.info(f'Executed validator for Test Creator with data: {json_data}, {min_wait}, {max_wait}')
     try:
         data = json.loads(json_data)
