@@ -16,33 +16,33 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
   </head>
 
-  <body class>
+  <body>
     <div class="login-pf-page">
       <div class="container-pf main-pf">
         <div class="wrapper-pf">
           <div class="card-pf login-pf-accounts">
             <header class="login-pf-header">
-              <div id="kc-page-title">
+              <div id="page-title">
                 <img src="{{ url_for('static', filename='img/bolt-logo.png') }}" alt="logo" />
               </div>
             </header>
 
-            <div id="kc-content">
-              <div id="kc-content-wrapper">
+            <div id="content">
+              <div id="content-wrapper">
                 {% for message in get_flashed_messages() %}
                   <div class="alert alert-error">
                     <span class="pficon pficon-error-circle-o"></span>
-                    <span class="kc-feedback-text">{{ message }}</span>
+                    <span class="feedback-text">{{ message }}</span>
                   </div>
                 {% endfor %}
 
-                <div id="kc-form" class="row">
+                <div id="form" class="row">
                   <div
-                    id="kc-form-wrapper"
+                    id="form-wrapper"
                     class="col-xs-12 col-sm-6 login-pf-social-section"
                   >
                     <form
-                      id="kc-form-login"
+                      id="form-login"
                       onsubmit="login.disabled = true; return true;"
                       method="post"
                     >
@@ -77,12 +77,12 @@
                         />
                       </div>
 
-                      <div id="kc-form-buttons" class="form-group">
+                      <div id="form-buttons" class="form-group">
                         <input
                           tabindex="4"
                           class="btn btn-primary btn-block btn-lg"
                           name="login"
-                          id="kc-login"
+                          id="login-input"
                           type="submit"
                           value="Log In"
                         />

@@ -314,22 +314,22 @@ a {
   width: 100%;
 }
 
-#kc-page-title {
+#page-title {
   height: 40px;
   text-align: center;
 }
 
-#kc-page-title img {
+#page-title img {
   height: 100%;
 }
 
-#kc-page-title h1 {
+#page-title h1 {
   font-weight: 600;
   font-size: 36px;
   color: #ffffff;
 }
 
-#kc-page-title h2 {
+#page-title h2 {
   font-weight: 300;
   font-size: 17px;
   color: #cfcfea;
@@ -350,7 +350,7 @@ a {
 
 .card-pf header,
 .login-pf-header,
-.card-pf #kc-content {
+.card-pf #content {
   width: 70%;
   margin: auto;
 }
@@ -359,7 +359,7 @@ a {
   margin-bottom: 0 !important;
 }
 
-#kc-login {
+#login-input {
   /* width: auto; */
   padding: 15px 80px;
   margin: auto;
@@ -367,7 +367,7 @@ a {
   border-radius: 3px;
 }
 
-#kc-login:hover {
+#login-input:hover {
   background: #5d45f8;
 }
 
@@ -507,11 +507,11 @@ div.kc-logo-text span {
   white-space: normal;
 }
 
-#kc-content {
+#content {
   width: 100%;
 }
 
-#kc-form-wrapper {
+#form-wrapper {
   width: 100%;
 }
 
@@ -524,11 +524,11 @@ div.kc-logo-text span {
   font-size: 13px;
 }
 
-#kc-form-options span {
+#form-options span {
   display: block;
 }
 
-#kc-form-options .checkbox {
+#form-options .checkbox {
   margin-top: 0;
   color: #72767b;
 }
@@ -698,7 +698,7 @@ a.zocial {
 }
 
 @media (max-width: 767px) {
-  /* #kc-login {
+  /* #login-input {
       width: 100%;
       padding: 10px 0;
       margin: auto;
@@ -730,7 +730,7 @@ a.zocial {
       background-size: 100%;
     }
 
-    #kc-form {
+    #form {
       float: none;
     }
 
@@ -790,7 +790,7 @@ a.zocial {
   margin-left: 10px;
 }
 
-#kc-form-buttons {
+#form-buttons {
   margin-top: 20px;
 }
 
@@ -842,7 +842,7 @@ a.zocial {
   margin: 0;
 }
 
-#kc-content-wrapper .row {
+#content-wrapper .row {
   display: flex;
   flex-direction: column;
   align-items: center;
