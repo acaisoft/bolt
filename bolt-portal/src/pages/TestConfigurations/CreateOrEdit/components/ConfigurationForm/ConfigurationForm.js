@@ -91,6 +91,7 @@ export function ConfigurationForm({ onCancel = () => {}, onSubmit = () => {} }) 
             marginBottom
           >
             <Button
+              data-testid="scenario-form-cancel"
               color="default"
               variant="text"
               disabled={form.isSubmitting}
@@ -100,6 +101,7 @@ export function ConfigurationForm({ onCancel = () => {}, onSubmit = () => {} }) 
               Cancel
             </Button>
             <Button
+              data-testid="scenario-form-submit"
               color="secondary"
               variant="contained"
               type="submit"

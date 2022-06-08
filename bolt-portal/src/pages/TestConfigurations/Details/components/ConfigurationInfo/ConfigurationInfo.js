@@ -109,6 +109,7 @@ export function ConfigurationInfo({
         >
           <span>
             <Button
+              data-testid="run-button"
               variant="contained"
               color="primary"
               icon={PlayArrow}
@@ -120,6 +121,7 @@ export function ConfigurationInfo({
             </Button>
 
             <PopoverMenu
+              data-testid="config-more-options"
               id="config-more-options"
               closeOnClick
               trigger={
@@ -131,7 +133,10 @@ export function ConfigurationInfo({
                 </IconButton>
               }
             >
-              <MenuItem onClick={() => handleRun({ coldStart: true })}>
+              <MenuItem
+                data-testid="cold-run"
+                onClick={() => handleRun({ coldStart: true })}
+              >
                 Cold Run
               </MenuItem>
             </PopoverMenu>
@@ -141,10 +146,17 @@ export function ConfigurationInfo({
 
       <ExpandablePanel defaultExpanded={false} title="Scenario Details">
         <TestConfigurationDetails configuration={configuration}>
-          <Button icon={Edit} variant="outlined" color="default" onClick={onEdit}>
+          <Button
+            data-testid="edit-scenario-button"
+            icon={Edit}
+            variant="outlined"
+            color="default"
+            onClick={onEdit}
+          >
             <Typography variant="body2">Edit</Typography>
           </Button>
           <Button
+            data-testid="clone-scenario-button"
             icon={FileCopyOutlined}
             variant="outlined"
             color="default"
@@ -159,6 +171,7 @@ export function ConfigurationInfo({
           >
             <span>
               <Button
+                data-testid="delete-scenario-button"
                 icon={Delete}
                 aria-label="Delete scenario"
                 variant="outlined"

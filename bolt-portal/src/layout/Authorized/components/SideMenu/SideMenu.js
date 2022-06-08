@@ -84,7 +84,11 @@ function SideMenu({ isOpen, onClose, projectId }) {
       <ClickAwayListener onClickAway={onClose}>
         <Paper className={classes.paper}>
           <div className={classes.header}>
-            <IconButton className={classes.button} onClick={onClose}>
+            <IconButton
+              data-testid="close-sidebar-button"
+              className={classes.button}
+              onClick={onClose}
+            >
               <Close />
             </IconButton>
 
@@ -95,6 +99,7 @@ function SideMenu({ isOpen, onClose, projectId }) {
           <MenuList component="div" className={classes.menu}>
             {items.map(item => (
               <MenuItem
+                data-testid={`${item.linkTo}-link`}
                 key={item.linkTo}
                 component={NavLink}
                 to={item.linkTo}

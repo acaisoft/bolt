@@ -51,6 +51,7 @@ function ProjectCard({ project, onEdit }) {
         className={classes.header}
         action={
           <PopoverMenu
+            data-testid={`project-${project.id}`}
             id={`project-${project.id}`}
             closeOnClick
             trigger={
@@ -59,7 +60,12 @@ function ProjectCard({ project, onEdit }) {
               </IconButton>
             }
           >
-            <MenuItem onClick={() => onEdit(project)}>Edit project</MenuItem>
+            <MenuItem
+              data-testid={`edit-project-${project.id}`}
+              onClick={() => onEdit(project)}
+            >
+              Edit project
+            </MenuItem>
           </PopoverMenu>
         }
         title={project.name}
@@ -99,6 +105,7 @@ function ProjectCard({ project, onEdit }) {
       </CardContent>
       <CardActions className={classes.actions}>
         <Button
+          data-testid={`project-${project.id}-more`}
           variant="contained"
           color="primary"
           href={`${project.id}/configs`}

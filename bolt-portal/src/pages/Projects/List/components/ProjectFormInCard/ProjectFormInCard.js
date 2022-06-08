@@ -59,6 +59,7 @@ function ProjectFormInCard({
             <form onSubmit={form.handleSubmit} className={classes.form}>
               <div className={classes.formFields}>
                 <FormField
+                  data-testid="project-name-input"
                   id="name"
                   name="name"
                   field={fields.name}
@@ -66,6 +67,7 @@ function ProjectFormInCard({
                   fullWidth
                 />
                 <FormField
+                  data-testid="project-desc-input"
                   id="description"
                   name="description"
                   field={fields.description}
@@ -95,6 +97,7 @@ function ProjectFormInCard({
 
               <div className={classes.actionButtons}>
                 <Button
+                  data-testid="cancel-button"
                   className={classes.cancelButton}
                   color="default"
                   icon={Close}
@@ -105,6 +108,7 @@ function ProjectFormInCard({
                   Cancel
                 </Button>
                 <Button
+                  data-testid="submit-button"
                   color="secondary"
                   variant="contained"
                   type="submit"
