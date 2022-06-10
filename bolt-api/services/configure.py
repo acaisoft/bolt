@@ -55,13 +55,22 @@ def configure(app: Flask):
     app.logger.info(f'app configured using {conf_file_path} v{config_ver} and {secrets_file_path} v{secrets_ver}')
 
 
-def validate(app, required_config_vars):
+def validate(app, required_config_vars, required_env_vars):
     missing = []
+    missing_env = []
     for var_name in required_config_vars:
         if app.config.get(var_name, None) is None:
             missing.append(var_name)
+    for var_name in required_env_vars:
+        if os.environ.get(var_name, None) is None:
+            missing_env.append(var_name)
     if missing:
         raise EnvironmentError(
             f'{len(missing)} undefined config variable{"s" if len(missing) > 1 else ""}: {", ".join(missing)}'
+        )
+    if missing_env:
+        raise EnvironmentError(
+            f'{len(missing_env)} undefined ENV variable{"s" if len(missing_env) > 1 else ""}: '
+            f'{", ".join(missing_env)}'
         )
     app.logger.info('config valid')

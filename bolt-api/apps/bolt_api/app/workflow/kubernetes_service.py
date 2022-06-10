@@ -17,18 +17,41 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import logging
+import abc
+import os
+from typing import Any
+from typing import Dict
+
 from kubernetes import client
 from kubernetes import config
 from kubernetes.config import ConfigException
 
-logger = logging.getLogger()
+from services import const
+from services.logger import setup_custom_logger
+
+logger = setup_custom_logger(__file__)
 
 
-class KubernetesService:
-    namespace = "argo"
-
+class KubernetesServiceABC(abc.ABC):
     def __init__(self):
+        self.app_config = {}
+        self.namespace = ''
+        self.helm_release_name = ''
+
+    @abc.abstractmethod
+    def create_argo_workflow(self, body=Dict[str, Any]):
+        ...
+
+    def terminate_workflow_pods(self, workflow_name=str):
+        ...
+
+
+class KubernetesService(KubernetesServiceABC):
+
+    def __init__(self, app_config):
+        self.app_config = app_config
+        self.namespace = os.environ.get(const.KUBE_NAMESPACE)
+        self.helm_release_name = os.environ.get(const.HELM_RELEASE_NAME)
         self._load_config()
         self._cr_cli = client.CustomObjectsApi()
         self._core_cli = client.CoreV1Api()
@@ -52,7 +75,16 @@ class KubernetesService:
             logger.info("Kubernetes config loaded from kube-config file.")
             return
 
-    def terminate_workflow_pods(self, workflow_name):
+    def create_argo_workflow(self, body=Dict[str, Any]):
+        return self._cr_cli.create_namespaced_custom_object(
+            group="argoproj.io",
+            version="v1alpha1",
+            namespace=self.namespace,
+            plural="workflows",
+            body=body,
+        )
+
+    def terminate_workflow_pods(self, workflow_name=str):
         pods = self._core_cli.list_namespaced_pod(
             self.namespace,
             label_selector=f"workflows.argoproj.io/workflow={workflow_name}",

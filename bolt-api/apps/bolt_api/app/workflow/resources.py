@@ -16,43 +16,46 @@
 # COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+from typing import Dict, Any
 
-import falcon
+from .argo import Argo
+from .schemas import WorkflowSchema
 
-from src import custom_logger
-from src.argo import create_argo_workflow
-from src.schemas import WorkflowSchema
-from src.services import KubernetesServiceABC
-
-
-logger = custom_logger.setup_custom_logger(__file__)
+from services.logger import setup_custom_logger
+from .kubernetes_service import KubernetesServiceABC
 
 
-class HealthCheckResource:
-    def on_get(self, request, response):
-        response.media = {"status": "ok"}
+logger = setup_custom_logger(__file__)
+
+
+class MalformedWorkflowData(Exception):
+    ...
 
 
 class WorkflowsResource:
     def __init__(self, kubernetes_service: KubernetesServiceABC):
         self.kubernetes_service = kubernetes_service
+        self.argo = Argo(
+            gql_url=kubernetes_service.app_config.get('HASURA_GQL'),
+            namespace=kubernetes_service.namespace,
+            helm_release_name=kubernetes_service.helm_release_name
+        )
 
-    def on_post(self, request: falcon.Request, response: falcon.Response):
+    def create(self, workflow_data: Dict[str, Any]):
         schema = WorkflowSchema()
-        request_payload = request.media
-        logger.info(f"Request to proceed: {request_payload}")
-        result = schema.load(request_payload)
+        try:
+            workflow = schema.load(workflow_data)
+        except Exception as ex:
+            logger.error(f"Invalid workflows response: {ex}")
+            raise MalformedWorkflowData(ex)
 
-        if result.errors:
-            logger.error(f"Invalid workflows response: {result.errors}")
-            raise falcon.HTTPBadRequest(result.errors)
-
-        workflow = result.data
-        argo_workflow = create_argo_workflow(workflow)
+        argo_workflow = self.argo.create_argo_workflow(workflow)
 
         logger.info(f"Creating argo workflow in the kubernetes service.")
         output = self.kubernetes_service.create_argo_workflow(argo_workflow)
         logger.info(f"The argo workflow has been created successfully.")
 
-        response.media = output["metadata"]
-        response.status = falcon.HTTP_OK
+        return output["metadata"]
+
+    def terminate(self, workflow_name: str):
+        self.kubernetes_service.terminate_workflow_pods(workflow_name)
