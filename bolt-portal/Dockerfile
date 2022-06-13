@@ -6,6 +6,7 @@ ARG hasura_api_url
 ARG auth_keycloak_url
 ARG auth_service="bolt"
 ARG auth_service_url
+ARG argo_url
 
 ENV REACT_APP_AUTH_SERVICE=$auth_service
 ENV REACT_APP_AUTH_SERVICE_BASE_URL=$auth_service_url
