@@ -5,5 +5,6 @@ build:
     --build-arg auth_keycloak_url=${BOLT_KEYCLOAK_URL} \
     --build-arg hasura_ws_url=${BOLT_HASURA_WS_URL} \
     --build-arg hasura_api_url=${BOLT_HASURA_API_URL} \
+    --build-arg argo_url=${BOLT_ARGO_URL} \
     -t bolt-portal-local:latest \
     .
