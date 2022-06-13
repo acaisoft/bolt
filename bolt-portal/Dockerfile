@@ -12,6 +12,7 @@ ENV REACT_APP_AUTH_SERVICE_BASE_URL=$auth_service_url
 ENV REACT_APP_KEYCLOAK_URL=$auth_keycloak_url
 ENV REACT_APP_HASURA_WS_URL=$hasura_ws_url
 ENV REACT_APP_HASURA_API_URL=$hasura_api_url
+ENV REACT_APP_ARGO_URL=$argo_url
 
 ENV PATH /app/node_modules/.bin:$PATH
 

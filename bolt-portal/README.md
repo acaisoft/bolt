@@ -193,6 +193,7 @@ There are 2 types of tests implemented in this project:
   - BOLT_AUTH_SERVICE_BASE_URL
   - BOLT_HASURA_WS_URL
   - BOLT_HASURA_API_URL
+  - BOLT_ARGO_URL
 - run:
 
 ```
