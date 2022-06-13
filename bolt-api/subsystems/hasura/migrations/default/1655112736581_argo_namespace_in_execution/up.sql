@@ -1,0 +1,1 @@
+ALTER TABLE "public"."execution" ADD COLUMN "argo_namespace" text DEFAULT 'default'::text NOT NULL;
