@@ -105,6 +105,7 @@ class Argo:
                 # TODO we should used tagged image, but for now pull always...
                 "imagePullPolicy": "Always",
                 "image": "eu.gcr.io/acai-bolt/argo-builder:revival-v4",
+                "command": ["python", "build.py"],
                 "volumeMounts": [
                     {"mountPath": "/root/.ssh", "name": "ssh"},
                     {"mountPath": "/etc/google", "name": "google-secret"},
