@@ -20,3 +20,4 @@
 from .start import TestrunStart, TestrunStartObject
 from .status import TestrunQueries, StatusResponse
 from .terminate import TestrunTerminate, TestrunTerminateObject
+from .generate_report import TestrunReport, TestrunReportResponse
