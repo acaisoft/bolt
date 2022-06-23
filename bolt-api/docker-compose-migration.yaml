@@ -1,0 +1,26 @@
+version: '3.6'
+services:
+  hasura:
+    image: hasura/graphql-engine:v2.4.0.cli-migrations-v3
+    ports:
+      - "8080:8080"
+    restart: always
+    environment:
+      HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:postgres@postgres:5432/postgres
+      HASURA_GRAPHQL_ENABLE_CONSOLE: "true" # set to "false" to disable console
+      HASURA_GRAPHQL_MIGRATIONS_DIR:
+      ## execute ./toos/encode_jwt_secret.py to obtain HASURA_GRAPHQL_JWT_SECRET from Flask config
+      HASURA_GRAPHQL_JWT_SECRET: '{"type": "RS256", "key": "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDAMt/Gzl1Y02lFQt5SJvoDBAcY\n0FPqq643xrsQO7k1xyVrWYJ5leA807EnZkr+dJ9QbrSInY8+ZXX1uDWUy8qZF6IO\nL3TrqEjLyWxNbsnp645+8uibC7zrbjWAnDRRr2yAt+7Fzrjdpg4VohcxAZ2hU946\nWqUaY/CuVE4gZ/mOoQIDAQAB\n-----END PUBLIC KEY-----"}'
+      ## uncomment next line to set an access key
+      HASURA_GRAPHQL_ACCESS_KEY: devaccess   
+      ## port-forward bolt-api k8s service on port 5000
+      BOLT_API_GRAPHQL: http://172.17.0.1:5000/graphql
+      BOLT_API_EXECUTION_STATE_CHANGE: http://172.17.0.1:5000/webhooks/execution/update
+      BOLT_API_CONFIGURATION_PARAM_CHANGE: http://172.17.0.1:5000/webhooks/configuration_param/update
+      BOLT_API_EXECUTION_REQUESTS_INSERT: http://172.17.0.1:5000/webhooks/execution_requests/insert
+      BOLT_API_EXECUTION_STAGE_LOG_INSERT: http://172.17.0.1:5000/webhooks/execution_stage_log/insert
+    volumes:
+      - ./subsystems/hasura/metadata:/hasura-metadata
+      - ./subsystems/hasura/migrations:/hasura-migrations
+volumes:
+  hasura_migrations:
