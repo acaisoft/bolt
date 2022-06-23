@@ -188,7 +188,7 @@ def start(app_config, conf_id, user_id, no_cache):
         workflow_state = workflow.create(workflow_data)
         # set argo_name for execution
         initial_state['argo_name'] = workflow_state['name']
-        initial_state['argo_namespace'] = workflow.kubernetes_service.namespace
+        initial_state['argo_namespace'] = app_config.get(const.ARGO_KUBE_NAMESPACE)
         logger.info(f'Added argo_name field to initial_state data {initial_state}')
     elif code_source == const.CONF_SOURCE_JSON:
         # TODO: DEPRECATED. NEED TO FIX (merge to argo)
