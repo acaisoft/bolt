@@ -39,7 +39,13 @@ function NewProjectCard({ onCreate }) {
         <CreateProject height={97} />
       </CardContent>
       <CardActions className={classes.actions}>
-        <Button color="secondary" variant="contained" onClick={onCreate} icon={Add}>
+        <Button
+          data-testid="new-project-button"
+          color="secondary"
+          variant="contained"
+          onClick={onCreate}
+          icon={Add}
+        >
           New
         </Button>
       </CardActions>

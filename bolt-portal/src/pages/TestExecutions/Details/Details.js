@@ -80,7 +80,9 @@ export function Details() {
         )}
       >
         {execution.configuration.has_monitoring && (
-          <Button href={getMonitoringUrl()}>Monitoring</Button>
+          <Button data-testid="monitoring-details-button" href={getMonitoringUrl()}>
+            Monitoring
+          </Button>
         )}
         <ExecutionActionsMenu execution={execution} />
       </SectionHeader>

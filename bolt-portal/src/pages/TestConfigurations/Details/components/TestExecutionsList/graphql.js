@@ -28,6 +28,7 @@ export const TEST_EXECUTION_ITEM_FRAGMENT = gql`
     start_locust
     status
     argo_name
+    argo_namespace
 
     executionTotals: execution_request_totals_aggregate {
       aggregate {

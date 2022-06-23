@@ -40,6 +40,7 @@ function EnvVariablesFields() {
               <React.Fragment key={name}>
                 <Grid item xs={12} md={5}>
                   <FormField
+                    data-testid={`${name}.name`}
                     name={`${name}.name`}
                     field={{ inputProps: { label: 'Key' } }}
                     fullWidth
@@ -52,6 +53,7 @@ function EnvVariablesFields() {
                 </Grid>
                 <Grid item xs={12} md={5}>
                   <FormField
+                    data-testid={`${name}.value`}
                     name={`${name}.value`}
                     field={{ inputProps: { label: 'Value' } }}
                     fullWidth
@@ -61,6 +63,7 @@ function EnvVariablesFields() {
                 </Grid>
                 <Grid item xs={12} md={2}>
                   <IconButton
+                    data-testid="remove-envvar-button"
                     variant="outlined"
                     color="default"
                     onClick={() => mutators.remove('configuration_envvars', index)}
@@ -72,6 +75,7 @@ function EnvVariablesFields() {
             ))}
             <Grid item xs={12}>
               <Button
+                data-testid="add-envvar-button"
                 onClick={() => mutators.push('configuration_envvars', undefined)}
                 variant="contained"
                 color="default"

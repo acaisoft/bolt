@@ -37,7 +37,11 @@ function UserMenu() {
         id="user-menu"
         closeOnClick
         trigger={
-          <Button aria-label="User Menu" color="inherit">
+          <Button
+            data-testid="user-menu-button"
+            aria-label="User Menu"
+            color="inherit"
+          >
             <UserAvatar />
             <span className={classes.userName}>{user.firstName}</span>
             <ExpandMore className={classes.expandIcon} />

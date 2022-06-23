@@ -42,6 +42,7 @@ export const SUBSCRIBE_TO_EXECUTION = gql`
       start_locust
       end_locust
       argo_name
+      argo_namespace
       status
       configuration {
         id

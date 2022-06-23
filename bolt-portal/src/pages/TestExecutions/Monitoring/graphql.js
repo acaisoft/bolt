@@ -29,6 +29,7 @@ export const SUBSCRIBE_TO_EXECUTION_WITH_MONITORING_DATA = gql`
       start_locust
       status
       argo_name
+      argo_namespace
       configuration_snapshot
 
       configuration {

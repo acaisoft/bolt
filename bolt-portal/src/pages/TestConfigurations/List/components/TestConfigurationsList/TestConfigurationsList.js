@@ -123,6 +123,7 @@ export function TestConfigurationsList({
           />
         )}
         <Button
+          data-testid="new-scenario-button"
           icon={Add}
           variant="contained"
           color="secondary"
@@ -231,6 +232,7 @@ export function TestConfigurationsList({
             return (
               <div className={classes.actionsContainer}>
                 <Button
+                  data-testid={`scenario-${configuration.id}-details`}
                   href={getTestConfigurationDetailsUrl(configuration)}
                   title="Show scenario details"
                   variant="link"

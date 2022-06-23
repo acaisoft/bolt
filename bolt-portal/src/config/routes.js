@@ -22,7 +22,7 @@
 const routes = {
   argo: {
     workflows: {
-      details: 'https://argo.dev.bolt.acaisoft.io/workflows/argo/:argo_name',
+      details: `${process.env.REACT_APP_ARGO_URL}/workflows/:argo_namespace/:argo_name`,
     },
   },
   projects: {

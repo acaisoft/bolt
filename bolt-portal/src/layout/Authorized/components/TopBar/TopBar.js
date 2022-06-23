@@ -57,6 +57,7 @@ export function TopBar() {
         <Toolbar className={classes.appBar}>
           {projectId && (
             <Button
+              data-testid="menu-button"
               className={classes.menuButton}
               variant="contained"
               color="primary"

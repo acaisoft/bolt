@@ -28,6 +28,7 @@ REACT_APP_HASURA_WS_URL=wss://www.hasura.dev.bolt.acaisoft.io/v1/graphql
 REACT_APP_HASURA_API_URL=https://www.hasura.dev.bolt.acaisoft.io/v1/graphql
 REACT_APP_AUTH_SERVICE=<auth service name>
 REACT_APP_AUTH_SERVICE_BASE_URL=<base url to auth service>
+REACT_APP_ARGO_URL=<argo url>
 ```
 
 `REACT_APP_AUTH_SERVICE` currently supports two options: `bolt` and `keycloak`. If no value will be specified, application by default will use bolt auth service. If value is set to `keycloak`, `REACT_APP_AUTH_SERVICE_BASE_URL` will not have any effect on the app because Keycloak handles login and redirecting to its login page by itself.
@@ -192,6 +193,7 @@ There are 2 types of tests implemented in this project:
   - BOLT_AUTH_SERVICE_BASE_URL
   - BOLT_HASURA_WS_URL
   - BOLT_HASURA_API_URL
+  - BOLT_ARGO_URL
 - run:
 
 ```

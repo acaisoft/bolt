@@ -53,10 +53,16 @@ export function SubmitCancelModal({
         <DialogContentText id={`${id}-description`}>{children}</DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="primary">
+        <Button data-testid="cancel-remove-button" onClick={onClose} color="primary">
           {cancelLabel}
         </Button>
-        <Button onClick={onSubmit} color="primary" variant="contained" autoFocus>
+        <Button
+          data-testid="submit-remove-button"
+          onClick={onSubmit}
+          color="primary"
+          variant="contained"
+          autoFocus
+        >
           {submitLabel}
         </Button>
       </DialogActions>

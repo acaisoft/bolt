@@ -57,6 +57,7 @@ function ConfigurationTypeFields({ fields, configuration }) {
                       .map(([id, options]) => (
                         <Grid key={id} item xs={6}>
                           <FormField
+                            data-testid={`parameters.${id}`}
                             id={`parameters.${id}`}
                             name={`parameters.${id}`}
                             field={options}
@@ -88,6 +89,7 @@ function ConfigurationTypeFields({ fields, configuration }) {
                   <Grid item xs={6}>
                     <FormField
                       aria-label="test source type select"
+                      data-testid="test_source_type"
                       id="test_source_type"
                       name="test_source_type"
                       field={fields.test_source_type}
@@ -113,6 +115,7 @@ function ConfigurationTypeFields({ fields, configuration }) {
                         return (
                           <FormField
                             aria-label={`test source ${selectedSourceType} select`}
+                            data-testid={`test_source.${selectedSourceType}`}
                             id={`test_source.${selectedSourceType}`}
                             name={`test_source.${selectedSourceType}`}
                             field={fields.test_source.fields[selectedSourceType]}
@@ -146,6 +149,7 @@ function ConfigurationTypeFields({ fields, configuration }) {
 
                         return (
                           <FormField
+                            data-testid="test_source.load_tests_repository_branch"
                             id="test_source.load_tests_repository_branch"
                             name="test_source.load_tests_repository_branch"
                             field={
@@ -169,6 +173,7 @@ function ConfigurationTypeFields({ fields, configuration }) {
 
                         return (
                           <FormField
+                            data-testid="test_source.load_tests_file_name"
                             id="test_source.load_tests_file_name"
                             name="test_source.load_tests_file_name"
                             field={fields.test_source.fields.load_tests_file_name}

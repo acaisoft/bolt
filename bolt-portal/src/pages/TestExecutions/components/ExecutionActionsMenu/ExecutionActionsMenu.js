@@ -37,7 +37,10 @@ function ExecutionActionsMenu({ execution }) {
   const notify = useNotification()
 
   const getExecutionDebugUrl = useCallback(execution => {
-    return getUrl(routes.argo.workflows.details, { argo_name: execution.argo_name })
+    return getUrl(routes.argo.workflows.details, {
+      argo_name: execution.argo_name,
+      argo_namespace: execution.argo_namespace,
+    })
   }, [])
 
   const handleExecutionTerminate = useCallback(

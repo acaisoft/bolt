@@ -150,6 +150,7 @@ function CompareResults({ status }) {
               </Grid>
               <Grid item xs={12} md={5}>
                 <FormField
+                  data-testid="scenario_id"
                   id="scenario_id"
                   name="scenario_id"
                   field={fields.scenario_id}
@@ -174,6 +175,7 @@ function CompareResults({ status }) {
                 <FormValue name="scenario_id">
                   {scenarioName => (
                     <FormField
+                      data-testid="execution_to_compare_id"
                       id="execution_to_compare_id"
                       name="execution_to_compare_id"
                       field={fields.execution_to_compare_id}
@@ -196,6 +198,7 @@ function CompareResults({ status }) {
               </Grid>
               <Grid item xs={12} md={2}>
                 <Button
+                  data-testid="compare-button"
                   color="secondary"
                   variant="contained"
                   type="submit"

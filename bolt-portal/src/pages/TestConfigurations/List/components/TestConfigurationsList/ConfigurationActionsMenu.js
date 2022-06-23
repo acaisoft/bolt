@@ -73,13 +73,19 @@ function ConfigurationActionsMenu({ configuration, editUrl, onClone }) {
           </IconButton>
         }
       >
-        <MenuItem title="Edit" to={`${editUrl}?from=list`} component={Link}>
+        <MenuItem
+          data-testid="edit-scenario-button"
+          title="Edit"
+          to={`${editUrl}?from=list`}
+          component={Link}
+        >
           <ListItemIcon>
             <Edit />
           </ListItemIcon>
           <ListItemText>Edit</ListItemText>
         </MenuItem>
         <MenuItem
+          data-testid="clone-scenario-button"
           onClick={() => handleCloneSubmit(configuration.id)}
           title="Clone"
           disabled={isCloning}
@@ -91,6 +97,7 @@ function ConfigurationActionsMenu({ configuration, editUrl, onClone }) {
         </MenuItem>
 
         <MenuItem
+          data-testid="delete-scenario-button"
           onClick={() => toggleDeleteModal(true)}
           title="Delete"
           disabled={isPerformed || isDeleting}

@@ -30,6 +30,7 @@ function ScenarioFields({ fields }) {
       <Grid container spacing={4}>
         <Grid item xs={6}>
           <FormField
+            data-testid="scenario_name"
             id="scenario_name"
             name="scenario_name"
             field={fields.scenario_name}
@@ -40,6 +41,7 @@ function ScenarioFields({ fields }) {
         <Grid item xs={6}>
           <FormField
             aria-label="configuration type select"
+            data-testid="configuration_type"
             id="configuration_type"
             name="configuration_type"
             field={fields.configuration_type}

@@ -80,6 +80,7 @@ export function CompareResponsesTable({
             key="actions"
             render={response => (
               <Button
+                data-testid={`endpoint-${response.identifier}-details`}
                 title="Show fails"
                 href={getEndpointDetailsUrl(response)}
                 variant="link"

@@ -197,6 +197,7 @@ function TestExecutionsList({
             <NoWrap>
               {has_load_tests && (
                 <Button
+                  data-testid="testrun-details-button"
                   href={getTestDetailsUrl(execution)}
                   title="Show test run details"
                   variant="link"
@@ -206,6 +207,7 @@ function TestExecutionsList({
               )}
               {has_monitoring && (
                 <Button
+                  data-testid="monitoring-details-button"
                   href={getMonitoringDetailsUrl(execution)}
                   title="Show monitoring details"
                   variant="link"
