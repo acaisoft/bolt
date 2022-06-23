@@ -73,4 +73,7 @@ def validate(app, required_config_vars, required_env_vars):
             f'{len(missing_env)} undefined ENV variable{"s" if len(missing_env) > 1 else ""}: '
             f'{", ".join(missing_env)}'
         )
+    for env_var in required_env_vars:
+        app.config[env_var] = os.environ.get(env_var)
+
     app.logger.info('config valid')

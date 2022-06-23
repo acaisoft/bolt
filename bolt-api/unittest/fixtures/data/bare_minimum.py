@@ -1,4 +1,3 @@
 TEST = "test"
 HASURA_GRAPHQL_ACCESS_KEY = "test"
 SECRET_KEY = "test"
-KUBE_NAMESPACE = "test"

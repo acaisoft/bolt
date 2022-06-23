@@ -36,9 +36,7 @@ class WorkflowsResource:
     def __init__(self, kubernetes_service: KubernetesServiceABC):
         self.kubernetes_service = kubernetes_service
         self.argo = Argo(
-            gql_url=kubernetes_service.app_config.get('HASURA_GQL'),
-            namespace=kubernetes_service.namespace,
-            helm_release_name=kubernetes_service.helm_release_name
+            app_config=kubernetes_service.app_config,
         )
 
     def create(self, workflow_data: Dict[str, Any]):

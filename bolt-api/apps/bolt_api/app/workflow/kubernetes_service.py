@@ -18,7 +18,6 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import abc
-import os
 from typing import Any
 from typing import Dict
 
@@ -35,13 +34,13 @@ logger = setup_custom_logger(__file__)
 class KubernetesServiceABC(abc.ABC):
     def __init__(self):
         self.app_config = {}
-        self.namespace = ''
-        self.helm_release_name = ''
+        self.argo_namespace = ''
 
     @abc.abstractmethod
     def create_argo_workflow(self, body=Dict[str, Any]):
         ...
 
+    @abc.abstractmethod
     def terminate_workflow_pods(self, workflow_name=str):
         ...
 
@@ -50,8 +49,7 @@ class KubernetesService(KubernetesServiceABC):
 
     def __init__(self, app_config):
         self.app_config = app_config
-        self.namespace = os.environ.get(const.KUBE_NAMESPACE)
-        self.helm_release_name = os.environ.get(const.HELM_RELEASE_NAME)
+        self.argo_namespace = app_config.get(const.ARGO_KUBE_NAMESPACE)
         self._load_config()
         self._cr_cli = client.CustomObjectsApi()
         self._core_cli = client.CoreV1Api()
@@ -79,14 +77,14 @@ class KubernetesService(KubernetesServiceABC):
         return self._cr_cli.create_namespaced_custom_object(
             group="argoproj.io",
             version="v1alpha1",
-            namespace=self.namespace,
+            namespace=self.argo_namespace,
             plural="workflows",
             body=body,
         )
 
     def terminate_workflow_pods(self, workflow_name=str):
         pods = self._core_cli.list_namespaced_pod(
-            self.namespace,
+            self.argo_namespace,
             label_selector=f"workflows.argoproj.io/workflow={workflow_name}",
         )
         for pod in pods.items:
@@ -94,4 +92,4 @@ class KubernetesService(KubernetesServiceABC):
                 continue
             if pod.status.phase.lower() not in ('pending', 'running'):
                 continue
-            self._core_cli.delete_namespaced_pod(pod.metadata.name, self.namespace)
+            self._core_cli.delete_namespaced_pod(pod.metadata.name, self.argo_namespace)

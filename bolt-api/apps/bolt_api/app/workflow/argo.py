@@ -25,6 +25,7 @@ from typing import Dict
 from typing import List
 from typing import Optional
 
+from services import const
 from .dao import Workflow
 
 from services.logger import setup_custom_logger
@@ -36,10 +37,11 @@ class Argo:
     """
     wrapper class for Argo methods
     """
-    def __init__(self, gql_url: str, namespace: str, helm_release_name: str):
-        self.HASURA_GQL = gql_url
-        self.NAMESPACE = namespace
-        self.HELM_RELEASE_NAME = helm_release_name
+    def __init__(self, app_config):
+        self.HASURA_GQL = app_config.get(const.HASURA_GQL)
+        self.CONTAINER_RESOURCES = app_config.get(const.ARGO_CONTAINER_RESOURCES)
+        self.NAMESPACE = app_config.get(const.ARGO_KUBE_NAMESPACE)
+        self.HELM_RELEASE_NAME = app_config.get(const.ARGO_HELM_RELEASE_NAME)
 
     def create_argo_workflow(self, workflow: Workflow) -> Dict[str, Any]:
         """
@@ -217,10 +219,7 @@ class Argo:
                         {"name": "BOLT_HASURA_TOKEN", "value": workflow.auth_token},
                         {"name": "BOLT_USERS", "value": str(workflow.job_load_tests.users)},
                     ],
-                    "resources": {
-                        "limits": {"cpu": "110m", "memory": "220Mi"},
-                        "requests": {"cpu": "100m", "memory": "200Mi"},
-                    },
+                    "resources": self.CONTAINER_RESOURCES["default"],
                 },
             }
             templates.append(template_pre_start)
@@ -240,10 +239,7 @@ class Argo:
                         {"name": "BOLT_GRAPHQL_URL", "value": self.HASURA_GQL},
                         {"name": "BOLT_HASURA_TOKEN", "value": workflow.auth_token},
                     ],
-                    "resources": {
-                        "limits": {"cpu": "110m", "memory": "220Mi"},
-                        "requests": {"cpu": "100m", "memory": "200Mi"},
-                    },
+                    "resources": self.CONTAINER_RESOURCES["default"],
                 },
             }
             templates.append(template_post_stop)
@@ -262,10 +258,7 @@ class Argo:
                         {"name": "BOLT_GRAPHQL_URL", "value": self.HASURA_GQL},
                         {"name": "BOLT_HASURA_TOKEN", "value": workflow.auth_token},
                     ],
-                    "resources": {
-                        "limits": {"cpu": "110m", "memory": "220Mi"},
-                        "requests": {"cpu": "100m", "memory": "200Mi"},
-                    },
+                    "resources": self.CONTAINER_RESOURCES["default"],
                 },
             }
             templates.append(template_monitoring)
@@ -286,10 +279,7 @@ class Argo:
                         {"name": "BOLT_HASURA_TOKEN", "value": workflow.auth_token},
                         {"name": "BOLT_WORKER_TYPE", "value": "master"},
                     ],
-                    "resources": {
-                        "limits": {"cpu": "410m", "memory": "520Mi"},
-                        "requests": {"cpu": "400m", "memory": "500Mi"},
-                    },
+                    "resources": self.CONTAINER_RESOURCES["master"],
                 },
             }
             templates.append(template_load_tests_master)
@@ -314,10 +304,7 @@ class Argo:
                         },
                         {"name": "BOLT_USERS", "value": str(workflow.job_load_tests.users)},
                     ],
-                    "resources": {
-                        "limits": {"cpu": "840m", "memory": "950Mi"},
-                        "requests": {"cpu": "800m", "memory": "900Mi"},
-                    },
+                    "resources": self.CONTAINER_RESOURCES["worker"],
                 },
             }
             if workflow.job_load_tests.host is not None:
