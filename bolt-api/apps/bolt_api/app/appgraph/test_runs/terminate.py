@@ -22,6 +22,7 @@ import requests
 
 from flask import current_app
 
+from apps.bolt_api.app.workflow import KubernetesService, WorkflowsResource
 from services import const, gql_util
 from services.hasura import hce
 from services.logger import setup_custom_logger
@@ -47,14 +48,14 @@ class TestrunTerminate(graphene.Mutation):
 
     @staticmethod
     def terminate_flow(argo_name):
-        endpoint = current_app.config['WORKFLOW_TERMINATE_ENDPOINT']
-        response = requests.post(endpoint, json={'workflow_name': argo_name})
-        if response.status_code == 200:
-            logger.info(f'Workflow {argo_name} was successfully terminated. Response: {response.text}')
-            return True, '200. Workflow was successfully terminated'
-        else:
-            logger.info(f'Error during terminating workflow | {response.status_code} | {response.text}')
-            return False, f'{response.status_code}. Error during terminating workflow'
+        try:
+            workflow = WorkflowsResource(KubernetesService(current_app.config))
+            workflow.terminate(argo_name)
+            logger.info(f'Workflow {argo_name} was successfully terminated.')
+            return True, 'Workflow was successfully terminated'
+        except Exception as ex:
+            logger.info(f'Error during terminating workflow. {ex}')
+            return False, f'Error during terminating workflow. {ex}'
 
     @staticmethod
     def update_execution_status(argo_name):

@@ -21,11 +21,11 @@ from marshmallow import Schema
 from marshmallow import fields
 from marshmallow import post_load
 
-from src.dao import JobLoadTests
-from src.dao import JobMonitoring
-from src.dao import JobPostStop
-from src.dao import JobPreStart
-from src.dao import Workflow
+from .dao import JobLoadTests
+from .dao import JobMonitoring
+from .dao import JobPostStop
+from .dao import JobPreStart
+from .dao import Workflow
 
 
 class PreStartSchema(Schema):
@@ -46,6 +46,7 @@ class LoadTestsSchema(Schema):
     workers = fields.Integer()
     host = fields.String(allow_none=True)
     port = fields.Integer(allow_none=True)
+    file = fields.String(allow_none=True)
 
 
 class WorkflowSchema(Schema):
@@ -68,7 +69,7 @@ class WorkflowSchema(Schema):
     no_cache = fields.Boolean(required=False, missing=False)
 
     @post_load
-    def make_workflow(self, data):
+    def make_workflow(self, data, **kwargs):
         data["job_pre_start"] = (
             JobPreStart(**data["job_pre_start"])
             if data["job_pre_start"] is not None
