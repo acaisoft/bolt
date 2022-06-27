@@ -15,7 +15,7 @@ def generate_report(app_config, execution_id: str):
             'project_id': "",
             'repository_url': "",
             'branch': "",
-            'execution_id': execution_id,
+            'execution_id': str(execution_id),
             'auth_token': hasura_token,
             'duration_seconds': 123,
             'job_pre_start': None,

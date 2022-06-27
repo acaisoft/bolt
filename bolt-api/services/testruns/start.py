@@ -184,7 +184,6 @@ def start(app_config, conf_id, user_id, no_cache):
         if test_config['has_post_test']:
             workflow_data['job_post_stop'] = {'env_vars': {}}
 
-        logger.info(f'Workflow creator data {workflow_data}')
         workflow = WorkflowsResource(KubernetesService(app_config))
         workflow_state = workflow.create(workflow_data)
         # set argo_name for execution

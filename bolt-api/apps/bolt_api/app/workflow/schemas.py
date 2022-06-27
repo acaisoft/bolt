@@ -50,6 +50,10 @@ class LoadTestsSchema(Schema):
     file = fields.String(allow_none=True)
 
 
+class JobReportSchema(Schema):
+    env_vars = fields.Dict()
+
+
 class WorkflowSchema(Schema):
     tenant_id = fields.Str(required=True)
     project_id = fields.Str(required=True)
@@ -66,7 +70,7 @@ class WorkflowSchema(Schema):
     job_post_stop = fields.Nested(PostStopSchema, missing=None)
     job_monitoring = fields.Nested(MonitoringSchema, missing=None)
     job_load_tests = fields.Nested(LoadTestsSchema, missing=None)
-    job_report = fields.Nested(JobReport, missing=None)
+    job_report = fields.Nested(JobReportSchema, missing=None)
 
     no_cache = fields.Boolean(required=False, missing=False)
 
