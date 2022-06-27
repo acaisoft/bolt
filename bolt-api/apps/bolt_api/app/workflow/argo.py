@@ -324,7 +324,7 @@ class Argo:
 
     def _generate_report_template(self, workflow: Workflow):
         return {
-            "name": "generate_report",
+            "name": "generate-report",
             "container": {
                 # TODO we should used tagged image, but for now pull always...
                 "imagePullPolicy": "Always",
