@@ -25,6 +25,7 @@ from .dao import JobLoadTests
 from .dao import JobMonitoring
 from .dao import JobPostStop
 from .dao import JobPreStart
+from .dao import JobReport
 from .dao import Workflow
 
 
@@ -65,6 +66,7 @@ class WorkflowSchema(Schema):
     job_post_stop = fields.Nested(PostStopSchema, missing=None)
     job_monitoring = fields.Nested(MonitoringSchema, missing=None)
     job_load_tests = fields.Nested(LoadTestsSchema, missing=None)
+    job_report = fields.Nested(JobReport, missing=None)
 
     no_cache = fields.Boolean(required=False, missing=False)
 
@@ -88,6 +90,11 @@ class WorkflowSchema(Schema):
         data["job_load_tests"] = (
             JobLoadTests(**data["job_load_tests"])
             if data["job_load_tests"] is not None
+            else None
+        )
+        data["job_report"] = (
+            JobReport(**data["job_report"])
+            if data["job_report"] is not None
             else None
         )
         return Workflow(**data)
