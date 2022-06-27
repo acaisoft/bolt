@@ -58,7 +58,7 @@ class Argo:
                 "namespace": self.NAMESPACE,
             },
             "spec": {
-                "entrypoint": "main",
+                "entrypoint": "main" if workflow.job_report is None else "generate-report",
                 "templates": self._generate_templates(workflow),
                 "volumes": self._generate_volumes(workflow),
                 "serviceAccountName": f"{self.HELM_RELEASE_NAME}-argo-workflows-workflow-controller"
