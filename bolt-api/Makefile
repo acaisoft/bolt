@@ -3,3 +3,11 @@ create_package:
 
 run_tests:
 	python -m unittest
+
+hasura_migration_mac:
+	kubectl port-forward $(shell kubectl get svc -A -o name | grep bolt-api) 5000:80 &
+	docker-compose -f docker-compose-migration-mac.yaml up
+
+hasura_migration_linux:
+	kubectl port-forward $(shell kubectl get svc -A -o name | grep bolt-api) 5000:80 &
+	docker-compose -f docker-compose-migration.yaml up

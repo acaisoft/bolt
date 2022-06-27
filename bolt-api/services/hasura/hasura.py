@@ -82,7 +82,7 @@ def hasura_token_for_testrunner(config):
 #TODO: can be removed once AUTH_KC-driven approach above is tested
 def hasura_selfsignedtoken_for_testrunner(config):
     """
-    Returns a token for use by a testrunner, granting access to a single execution. Signed by config.TEST_SECRET_KEY, good for local tests.
+    Returns a token for use by a testrunner, granting access to a single execution. Signed by config.SECRET_KEY, good for local tests.
     :param config: flask app config
     :param execution_id: resource ID to grant access to
     :return: str: jwt token

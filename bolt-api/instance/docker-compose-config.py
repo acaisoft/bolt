@@ -32,3 +32,18 @@ SELFSIGNED_TOKEN_FOR_TESTRUNNER = False
 GOOGLE_APPLICATION_CREDENTIALS = 'instance/acai-bolt-356aea83d223.json'
 
 CONFIG_VERSION = '01betaConf'
+
+ARGO_CONTAINER_RESOURCES = {
+    "default": {
+        "limits": {"cpu": "110m", "memory": "220Mi"},
+        "requests": {"cpu": "100m", "memory": "200Mi"},
+    },
+    "master": {
+        "limits": {"cpu": "410m", "memory": "520Mi"},
+        "requests": {"cpu": "400m", "memory": "500Mi"},
+    },
+    "worker": {
+        "limits": {"cpu": "840m", "memory": "950Mi"},
+        "requests": {"cpu": "800m", "memory": "900Mi"},
+    }
+}

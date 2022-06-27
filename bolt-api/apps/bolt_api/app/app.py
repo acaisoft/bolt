@@ -54,7 +54,7 @@ def create_app(test_config=None):
     if test_config:
         app.config.from_object(test_config)
 
-    validate(app, const.REQUIRED_BOLT_API_CONFIG_VARS)
+    validate(app, const.REQUIRED_BOLT_API_CONFIG_VARS, const.REQUIRED_ENV_VARS)
 
     ## initialize the hasura client
     hasura_client(app.config)
