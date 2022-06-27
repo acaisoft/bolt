@@ -32,11 +32,12 @@ from services.logger import setup_custom_logger
 logger = setup_custom_logger(__file__)
 
 
-def hasura_token_for_testrunner(config):
+def generate_hasura_token(config, role: str = None) -> tuple[str, str]:
     """
     Returns a token for use by a testrunner, granting access to a single execution.
     Token's generated either through Keycloak or locally depending on config
     :param config: flask app config
+    :param role: hasura role token needs to be issued for
     :return: tuple: jwt token, testrunner id
     """
 
@@ -72,9 +73,10 @@ def hasura_token_for_testrunner(config):
         execution_id = str(uuid.uuid4())
         payload = {
             "https://hasura.io/jwt/claims": {
-                "x-hasura-allowed-roles": [const.ROLE_TESTRUNNER],
-                "x-hasura-default-role": const.ROLE_TESTRUNNER,
+                "x-hasura-allowed-roles": [role],
+                "x-hasura-default-role": role,
                 "x-hasura-testruner-id": execution_id,
+                "x-hasura-user-id": config.get('AUTH_USER_ID')
             }}
         return generate_token(current_app.config, payload=payload), execution_id
 

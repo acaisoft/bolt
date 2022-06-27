@@ -110,6 +110,7 @@ select_permissions:
     - end_locust
     - failed_requests
     - id
+    - report
     - passed_requests
     - start
     - start_locust
@@ -147,6 +148,7 @@ select_permissions:
     - end
     - end_locust
     - id
+    - report
     - start
     - start_locust
     - status
@@ -183,6 +185,7 @@ select_permissions:
     - end_locust
     - failed_requests
     - id
+    - report
     - passed_requests
     - start
     - start_locust
@@ -220,6 +223,7 @@ select_permissions:
     - end
     - end_locust
     - id
+    - report
     - start
     - start_locust
     - status
@@ -253,6 +257,7 @@ select_permissions:
     - created_by_id
     - end
     - id
+    - report
     - start
     - status
     - test_job_error
@@ -266,6 +271,25 @@ select_permissions:
         _eq: X-Hasura-Testruner-Id
   role: testrunner
 update_permissions:
+- permission:
+    check: null
+    columns:
+    - report
+    filter:
+      _and:
+      - configuration:
+          is_deleted:
+            _eq: false
+      - configuration:
+          project:
+            is_deleted:
+              _eq: false
+      - configuration:
+          project:
+            userProjects:
+              user_id:
+                _eq: X-Hasura-User-Id
+  role: reader
 - permission:
     check: null
     columns:

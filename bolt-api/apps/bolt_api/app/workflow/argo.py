@@ -119,7 +119,6 @@ class Argo:
                         "name": "GOOGLE_APPLICATION_CREDENTIALS",
                         "value": "/etc/google/google-secret.json",
                     },
-                    {"name": "CLOUDSDK_CORE_PROJECT", "value": "acai-bolt"},
                     {"name": "TENANT_ID", "value": workflow.tenant_id},
                     {"name": "PROJECT_ID", "value": workflow.project_id},
                     {"name": "NO_CACHE", "value": no_cache_value},
