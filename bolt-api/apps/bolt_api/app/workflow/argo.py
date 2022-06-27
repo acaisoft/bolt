@@ -61,8 +61,12 @@ class Argo:
                 "entrypoint": "main",
                 "templates": self._generate_templates(workflow),
                 "volumes": self._generate_volumes(workflow),
-                "serviceAccountName": f"{self.HELM_RELEASE_NAME}-argo-workflows-workflow-controller",
-                "affinity": {
+                "serviceAccountName": f"{self.HELM_RELEASE_NAME}-argo-workflows-workflow-controller"
+            },
+        }
+        if workflow.job_report is None:
+            resource_definition["affinity"] = \
+                {
                     "nodeAffinity": {
                         "requiredDuringSchedulingIgnoredDuringExecution": {
                             "nodeSelectorTerms": [
@@ -82,13 +86,13 @@ class Argo:
                         }
                     }
                 }
-            },
-        }
         if workflow.job_post_stop:
             resource_definition["spec"]["onExit"] = "post-stop"
         return resource_definition
 
     def _generate_templates(self, workflow: Workflow):
+        if workflow.job_report is not None:
+            return [self._generate_report_template(workflow)]
         main_template = self._generate_main_template(workflow)
         logger.info(f"The main template has been created.")
         build_template = self._generate_build_template(workflow)
@@ -318,12 +322,39 @@ class Argo:
 
         return templates
 
+    def _generate_report_template(self, workflow: Workflow):
+        return {
+            "name": "generate_report",
+            "container": {
+                # TODO we should used tagged image, but for now pull always...
+                "imagePullPolicy": "Always",
+                "image": "eu.gcr.io/acai-bolt/bolt-reporting:os-test-01",
+                "command": ["python", "reporter.py"],
+                "volumeMounts": [
+                    {"mountPath": "/etc/google", "name": "google-secret"},
+                ],
+                "env": [
+                    {
+                        "name": "GOOGLE_APPLICATION_CREDENTIALS",
+                        "value": "/etc/google/google-secret.json",
+                    },
+                    *self._map_envs(workflow.job_report.env_vars),
+                    {"name": "EXECUTION_ID", "value": workflow.execution_id},
+                    {"name": "HASURA_URL", "value": self.HASURA_GQL},
+                    {"name": "HASURA_TOKEN", "value": workflow.auth_token},
+                ]
+            }
+        }
+
     @staticmethod
     def _generate_volumes(workflow: Workflow):
-        return [
-            {"name": "ssh", "secret": {"defaultMode": 384, "secretName": "ssh-files"}},
+        ssh_volume = {"name": "ssh", "secret": {"defaultMode": 384, "secretName": "ssh-files"}}
+        volumes = [
             {"name": "google-secret", "secret": {"secretName": "google-secret"}},
         ]
+        if workflow.job_report is None:
+            volumes.append(ssh_volume)
+        return volumes
 
     @staticmethod
     def _postfix_generator(num=6):

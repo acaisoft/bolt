@@ -1,7 +1,8 @@
 import graphene
+from flask import current_app
 
 from services import gql_util, const
-from services.testruns.generate_report import get_report
+from services.testruns.generate_report import generate_report
 
 
 class TestrunReportInterface(graphene.Interface):
@@ -27,5 +28,5 @@ class TestrunReport(graphene.Mutation):
         role, user_id = gql_util.get_request_role_userid(
             info, (const.ROLE_ADMIN, const.ROLE_TENANT_ADMIN, const.ROLE_MANAGER, const.ROLE_TESTER))
 
-        data = get_report(execution_id)
-        return TestrunReportResponse(data={'test': data})
+        status = generate_report(current_app.config, execution_id)
+        return TestrunReportResponse(data={'status': status})

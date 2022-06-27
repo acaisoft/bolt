@@ -160,6 +160,7 @@ def start(app_config, conf_id, user_id, no_cache):
             'job_load_tests': None,
             'job_monitoring': None,
             'job_post_stop': None,
+            'job_report': None,
             'no_cache': no_cache,
         }
         # pre start
@@ -184,8 +185,8 @@ def start(app_config, conf_id, user_id, no_cache):
             workflow_data['job_post_stop'] = {'env_vars': {}}
 
         logger.info(f'Workflow creator data {workflow_data}')
-        # workflow = WorkflowsResource(KubernetesService(app_config))
-        # workflow_state = workflow.create(workflow_data)
+        workflow = WorkflowsResource(KubernetesService(app_config))
+        workflow_state = workflow.create(workflow_data)
         # set argo_name for execution
         initial_state['argo_name'] = "workflow_state['name']"
         initial_state['argo_namespace'] = app_config.get(const.ARGO_KUBE_NAMESPACE)
