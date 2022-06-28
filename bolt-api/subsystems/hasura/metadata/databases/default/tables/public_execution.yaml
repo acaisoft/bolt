@@ -102,6 +102,7 @@ select_permissions:
     allow_aggregations: true
     columns:
     - argo_name
+    - argo_namespace
     - commit_hash
     - configuration_id
     - configuration_snapshot
@@ -110,8 +111,8 @@ select_permissions:
     - end_locust
     - failed_requests
     - id
-    - report
     - passed_requests
+    - report
     - start
     - start_locust
     - status
