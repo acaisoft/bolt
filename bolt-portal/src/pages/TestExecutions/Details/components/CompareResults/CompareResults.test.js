@@ -21,7 +21,7 @@
 
 import React from 'react'
 import { Routes, Route } from 'react-router-dom'
-import { render, screen, waitFor } from '@testing-library/react'
+import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import moment from 'moment'
 import routes from 'config/routes'
@@ -54,23 +54,21 @@ const renderWithRoute = (
   status = TestRunStatus.SUCCEEDED
 ) => ({
   user: userEvent.setup(),
-  ...render(
-    customRender(
-      <Routes>
-        <Route
-          path={routes.projects.configurations.executions.details}
-          element={<CompareResults status={status} />}
-        />
-      </Routes>,
-      [configsMock, executionsMock],
-      [
-        getUrl(routes.projects.configurations.executions.details, {
-          projectId,
-          configurationId,
-          executionId,
-        }),
-      ]
-    )
+  ...customRender(
+    <Routes>
+      <Route
+        path={routes.projects.configurations.executions.details}
+        element={<CompareResults status={status} />}
+      />
+    </Routes>,
+    [configsMock, executionsMock],
+    [
+      getUrl(routes.projects.configurations.executions.details, {
+        projectId,
+        configurationId,
+        executionId,
+      }),
+    ]
   ),
 })
 
@@ -102,12 +100,10 @@ async function selectScenario(user) {
 
 describe('component: CompareResults', () => {
   it('should display a loader while data is loading', () => {
-    render(
-      customRender(<CompareResults status={TestRunStatus.SUCCEEDED} />, [
-        configurationsListMock,
-        executionsListMock,
-      ])
-    )
+    customRender(<CompareResults status={TestRunStatus.SUCCEEDED} />, [
+      configurationsListMock,
+      executionsListMock,
+    ])
 
     expect(screen.getByText('Loading data to compare...')).toBeInTheDocument()
     expect(

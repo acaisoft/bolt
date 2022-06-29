@@ -36,7 +36,7 @@ import {
 } from 'components'
 import { getUrl } from 'utils/router'
 import routes from 'config/routes'
-import { ExecutionActionsMenu } from '../components'
+import { ExecutionActionsMenu, GenerateReportButton } from '../components'
 import { CompareResults, StatusGraph, ResultsPerEndpoint } from './components'
 import { SUBSCRIBE_TO_EXECUTION } from './graphql'
 import useStyles from './Details.styles'
@@ -84,6 +84,10 @@ export function Details() {
             Monitoring
           </Button>
         )}
+        <GenerateReportButton
+          testStatus={execution.status}
+          reportGenerationStatus={execution.report}
+        />
         <ExecutionActionsMenu execution={execution} />
       </SectionHeader>
       <div className={classes.configDetails}>

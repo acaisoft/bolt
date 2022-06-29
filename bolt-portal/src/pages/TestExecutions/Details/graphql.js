@@ -44,6 +44,7 @@ export const SUBSCRIBE_TO_EXECUTION = gql`
       argo_name
       argo_namespace
       status
+      report
       configuration {
         id
         name
