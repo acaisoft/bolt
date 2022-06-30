@@ -20,3 +20,4 @@
  */
 
 export { default as ExecutionActionsMenu } from './ExecutionActionsMenu'
+export { default as GenerateReportButton } from './GenerateReportButton'

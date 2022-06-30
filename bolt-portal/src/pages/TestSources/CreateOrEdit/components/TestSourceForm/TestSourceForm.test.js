@@ -21,7 +21,7 @@
 
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
-import { render, screen, waitFor, within } from '@testing-library/react'
+import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import routes from 'config/routes'
 import { getUrl } from 'utils/router'
@@ -59,19 +59,17 @@ const renderWithRoute = (
 
   return {
     user: userEvent.setup(),
-    ...render(
-      customRender(
-        <Routes>
-          <Route path={url} element={<TestSourceForm />} />
-        </Routes>,
-        [
-          repositoryKeyMock,
-          configurationTypesMock,
-          repositoryConnectionMock,
-          getTestSourceMock,
-        ],
-        [getUrl(url, params)]
-      )
+    ...customRender(
+      <Routes>
+        <Route path={url} element={<TestSourceForm />} />
+      </Routes>,
+      [
+        repositoryKeyMock,
+        configurationTypesMock,
+        repositoryConnectionMock,
+        getTestSourceMock,
+      ],
+      [getUrl(url, params)]
     ),
   }
 }

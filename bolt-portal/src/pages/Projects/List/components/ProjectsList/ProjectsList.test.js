@@ -20,7 +20,7 @@
  */
 
 import React from 'react'
-import { render, screen, waitFor, within } from '@testing-library/react'
+import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { customRender } from 'utils/tests/mocks'
 import ProjectsList from './ProjectsList'
@@ -37,13 +37,13 @@ async function loadProjects() {
 
 describe('component: ProjectsList', () => {
   it('should display a loader while projects are loading', () => {
-    render(customRender(<ProjectsList />, [projectsGraphqlMock]))
+    customRender(<ProjectsList />, [projectsGraphqlMock])
 
     expect(screen.getByText('Loading projects...')).toBeInTheDocument()
   })
 
   it('should display exact projects count', async () => {
-    render(customRender(<ProjectsList />, [projectsGraphqlMock]))
+    customRender(<ProjectsList />, [projectsGraphqlMock])
 
     await loadProjects()
 
@@ -53,7 +53,7 @@ describe('component: ProjectsList', () => {
   })
 
   it('should display all projects', async () => {
-    render(customRender(<ProjectsList />, [projectsGraphqlMock]))
+    customRender(<ProjectsList />, [projectsGraphqlMock])
 
     await loadProjects()
 
@@ -84,7 +84,7 @@ describe('component: ProjectsList', () => {
 
   it('should display new project form after clicking new button', async () => {
     const user = userEvent.setup()
-    render(customRender(<ProjectsList />, [projectsGraphqlMock]))
+    customRender(<ProjectsList />, [projectsGraphqlMock])
 
     await loadProjects()
 
@@ -114,7 +114,7 @@ describe('component: ProjectsList', () => {
 
   it('should display project edit form with populated inputs after menu click', async () => {
     const user = userEvent.setup()
-    render(customRender(<ProjectsList />, [projectsGraphqlMock]))
+    customRender(<ProjectsList />, [projectsGraphqlMock])
 
     await loadProjects()
 

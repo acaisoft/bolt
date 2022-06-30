@@ -21,7 +21,7 @@
 
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
-import { screen, waitFor, render, within } from '@testing-library/react'
+import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import routes from 'config/routes'
 import { getUrl } from 'utils/router'
@@ -49,17 +49,15 @@ console.warn = jest.fn()
 
 const renderWithEditRoute = mocks => ({
   user: userEvent.setup(),
-  ...render(
-    customRender(
-      <Routes>
-        <Route
-          path={routes.projects.configurations.edit}
-          element={<ConfigurationForm />}
-        />
-      </Routes>,
-      [testSourcesMock, testParametersMock, configurationTypesMock, ...mocks],
-      [getUrl(routes.projects.configurations.edit, { projectId, configurationId })]
-    )
+  ...customRender(
+    <Routes>
+      <Route
+        path={routes.projects.configurations.edit}
+        element={<ConfigurationForm />}
+      />
+    </Routes>,
+    [testSourcesMock, testParametersMock, configurationTypesMock, ...mocks],
+    [getUrl(routes.projects.configurations.edit, { projectId, configurationId })]
   ),
 })
 
@@ -86,19 +84,17 @@ function checkInputValue(inputName, value) {
 
 describe('component: ConfigurationForm', () => {
   it('should display a loader before fetching any data', () => {
-    render(customRender(<ConfigurationForm />))
+    customRender(<ConfigurationForm />)
 
     expect(screen.getByRole('progressbar')).toBeInTheDocument()
   })
 
   it('should display only load tests options by default', async () => {
-    render(
-      customRender(<ConfigurationForm />, [
-        testSourcesMock,
-        testParametersMock,
-        configurationTypesMock,
-      ])
-    )
+    customRender(<ConfigurationForm />, [
+      testSourcesMock,
+      testParametersMock,
+      configurationTypesMock,
+    ])
 
     await loadData()
 
@@ -115,13 +111,11 @@ describe('component: ConfigurationForm', () => {
 
   // TODO: unskip when scenario parts section will be needed
   it.skip('should not allow unchecking load tests checkbox', async () => {
-    render(
-      customRender(<ConfigurationForm />, [
-        testSourcesMock,
-        testParametersMock,
-        configurationTypesMock,
-      ])
-    )
+    customRender(<ConfigurationForm />, [
+      testSourcesMock,
+      testParametersMock,
+      configurationTypesMock,
+    ])
 
     await loadData()
 
@@ -132,13 +126,11 @@ describe('component: ConfigurationForm', () => {
   // TODO: unskip when scenario parts section will be needed
   it.skip('should display all monitoring options when monitoring checkbox is checked', async () => {
     const user = userEvent.setup()
-    render(
-      customRender(<ConfigurationForm />, [
-        testSourcesMock,
-        testParametersMock,
-        configurationTypesMock,
-      ])
-    )
+    customRender(<ConfigurationForm />, [
+      testSourcesMock,
+      testParametersMock,
+      configurationTypesMock,
+    ])
 
     await loadData()
 
@@ -151,13 +143,11 @@ describe('component: ConfigurationForm', () => {
   // TODO: unskip when scenario parts section will be needed
   it.skip('should display all monitoring and load tests options when both checkboxes are checked', async () => {
     const user = userEvent.setup()
-    render(
-      customRender(<ConfigurationForm />, [
-        testSourcesMock,
-        testParametersMock,
-        configurationTypesMock,
-      ])
-    )
+    customRender(<ConfigurationForm />, [
+      testSourcesMock,
+      testParametersMock,
+      configurationTypesMock,
+    ])
 
     await loadData()
 
@@ -173,13 +163,11 @@ describe('component: ConfigurationForm', () => {
   })
 
   it('should display repo branch and file path params in test source section', async () => {
-    render(
-      customRender(<ConfigurationForm />, [
-        testSourcesMock,
-        testParametersMock,
-        configurationTypesMock,
-      ])
-    )
+    customRender(<ConfigurationForm />, [
+      testSourcesMock,
+      testParametersMock,
+      configurationTypesMock,
+    ])
 
     await loadData()
 

@@ -19,17 +19,13 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import React from 'react'
-import { MemoryRouter } from 'react-router-dom'
-import { render } from '@testing-library/react'
-import { MockedProvider as MockedApolloProvider } from '@apollo/client/testing'
-import { MockedThemeProvider } from '.'
+import { gql } from '@apollo/client'
 
-export const customRender = (ui, mocks = [], initialEntries) =>
-  render(
-    <MockedApolloProvider mocks={mocks} addTypename={false}>
-      <MemoryRouter initialEntries={initialEntries}>
-        <MockedThemeProvider>{ui}</MockedThemeProvider>
-      </MemoryRouter>
-    </MockedApolloProvider>
-  )
+export const GENERATE_EXECUTION_REPORT_MUTATION = gql`
+  mutation generateExecutionReport($executionId: UUID!) {
+    testrun_get_report(execution_id: $executionId) {
+      __typename
+      data
+    }
+  }
+`
