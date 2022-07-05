@@ -328,7 +328,7 @@ class Argo:
             "container": {
                 # TODO we should used tagged image, but for now pull always...
                 "imagePullPolicy": "Always",
-                "image": "eu.gcr.io/acai-bolt/bolt-reporting:os-test-01",
+                "image": "eu.gcr.io/acai-bolt/bolt-reporting:os-test-02",
                 "command": ["python", "reporter.py"],
                 "volumeMounts": [
                     {"mountPath": "/etc/google", "name": "google-secret"},

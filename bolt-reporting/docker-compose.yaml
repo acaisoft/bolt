@@ -1,0 +1,8 @@
+version: '3.6'
+services:
+  reporter:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - GCP_BUCKET_NAME=tf-acai-bolt-rh

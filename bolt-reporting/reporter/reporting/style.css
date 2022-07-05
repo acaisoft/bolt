@@ -1,0 +1,209 @@
+    @page {
+    @bottom-right {
+        font-family: Verdana, "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
+        /* font-family: "Lucida Console", Courier, monospace; */
+        content: counter(page) " of " counter(pages);
+        font-size: 10pt;
+    }
+    @bottom-center {
+        content: "Copyright Acaisoft ";
+        font-family: Verdana, "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
+        /* font-family: "Lucida Console", Courier, monospace; */
+        font-size: 10pt;
+    }
+        margin-left: 10%;
+        margin-right: 10%;
+    }
+    body
+    th{
+        border: none !important;
+        background-color: #e6e6e6;
+        font-size: 6pt;
+        min-height: 30pt;
+        padding: 1pt;
+        font-weight: bold;
+    }
+
+    td {
+        border: 0.5px solid #000000;
+        font-size: 10pt;
+        padding: 5pt;
+    }
+
+    .percentiles{
+        font-size: 7pt;
+        padding: 2pt;
+    }
+
+    tfoot {
+        background-color: #e6e6e6;
+        font-size: 11pt;
+        font-weight: bold;
+    }
+
+    .tf {
+        background-color: #e6e6e6;
+        font-size: 11pt;
+        font-weight: bold;
+        text-align: center;
+    }
+    .content-container{
+        width: 100%;
+        margin: auto;
+    }
+    .table-steps {
+        width: 100%;
+        border-spacing: 0;
+        table-layout: fixed;
+        overflow-wrap: break-word;
+    }
+    .odd{
+        background: lightgray;
+        padding-bottom: 3pt;
+    }
+    .even{
+        padding-bottom: 3pt;
+    }
+    .breaker {
+        page-break-before: always;
+    }
+
+    .logs-table {
+        width: 100%;
+    }
+    .param_name {
+        width: 30%;
+        font-size: 10pt;
+        font-weight: bolder;
+    }
+    .param_value {
+        width: 70%;
+        font-size: 10pt;
+        font-weight: lighter;
+    }
+    .error_name{
+        font-size: 10pt;
+        font-weight: bolder;
+        width: 80%;
+    }
+    .error_value{
+        font-size: 10pt;
+        font-weight: lighter;
+        width: 20%;
+    }
+    .param_row {
+        padding-bottom: 3pt;
+    }
+    hr{
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 1em 0;
+    padding-top: 5pt;
+    padding-bottom: 5pt;
+    }
+    td{
+        border-right: none !important;
+        border-left: none !important;
+        border-bottom: none !important;
+        border-top: none !important;
+    }
+    table{
+        border-spacing: 0;
+    }
+
+    body {
+        font-family: Verdana, "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
+        /* font-family: "Lucida Console", Courier, monospace; */
+        counter-reset: section subsection;
+    }
+
+    h1 {
+        font-size: 20pt;
+    }
+
+    a {
+        text-decoration: none;
+        color: #000000 !important;
+    }
+
+    p {
+        text-align: justify
+    }
+
+    .subtitle {
+        font-size: 11pt;
+        text-transform: uppercase !important;
+        font-weight: 300;
+    }
+    .doctitle {
+        font-size: 13pt;
+        text-transform: uppercase !important;
+        font-weight: 500;
+    }
+
+    .toc-title {
+        font-size: 14pt !important;
+        text-align: center;
+    }
+
+    .empty-page {
+        margin-top: 20%;
+        text-align: center;
+        width: 80%;
+        margin-left: 25%;
+    }
+
+    .rb {
+        border-right: none !important;
+    }
+
+    .lb {
+        border-left: none !important;
+    }
+
+    h4 {
+        font-size: 12pt;
+        font-weight: normal;
+    }
+
+    h2 {
+        string-set: chapterstring content();
+        counter-reset: subsection;
+        font-size: 14pt;
+    }
+
+    h2:before {
+        content: counter(section)".";
+        counter-increment: section;
+
+    }
+
+
+
+    ol.toc li {
+
+ font-size: 13pt !important;
+    }
+.toctext{
+color: #000000;
+margin-top: 2pt;
+ font-size: 13pt !important;
+}
+.tocpagenr{
+color: #000000;
+ font-size: 13pt !important;
+}
+.toctext::before{
+ content: target-text(attr(href));
+}
+.tocpagenr {
+ float:right;
+}
+.tocpagenr::before{
+content: ". . . . . ."
+}
+.tocpagenr::after {
+ content: target-counter(attr(href), page);
+}
