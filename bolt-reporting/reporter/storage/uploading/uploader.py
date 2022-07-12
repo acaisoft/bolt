@@ -17,33 +17,14 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import datetime
-
 import requests
-from os import environ as env
-
-from google.cloud import storage
-
-GCP_URL = 'https://storage.cloud.google.com'
 
 
 def upload(file_path: str, upload_url: str):
+    """
+    Boilerplate, bare upload handler
+    """
 
     file = {"file": open(file_path, "rb")}
 
     requests.put(upload_url, files=file, headers={"Content-Type": "application/pdf"},)
-
-    bucket_name = env.get('GCP_BUCKET_NAME')
-    file_name = f'reports/{file_path.split("/")[-1]}'
-
-    storage_client = storage.Client()
-
-    bucket = storage_client.get_bucket(bucket_name)
-    blob = bucket.blob(file_name)
-
-    download_url = blob.generate_signed_url(
-        version="v4",
-        expiration=datetime.timedelta(days=7),
-    )
-    print('Uploaded to GCP')
-    return download_url
