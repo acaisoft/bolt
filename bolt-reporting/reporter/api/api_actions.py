@@ -20,6 +20,7 @@
 from time import sleep
 
 import requests
+from query_builder import *
 
 
 class APIClient:
@@ -61,17 +62,7 @@ class APIClient:
 
     def get_errors_details(self, execution_id):
         print('Get errors data started.')
-        data = None
-        cnt = 0
-        while cnt < 20:
-            try:
-                data = self.__graphQL(payload=errors_query(execution_id))
-                return data
-            except Exception as e:
-                print('Get errors error. Retrying')
-                print(e)
-                sleep(2)
-                cnt += 1
+        data = self.__graphQL(payload=errors_query(execution_id))
         print('Get errors data ended.')
         return data
 
