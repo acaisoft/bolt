@@ -42,6 +42,8 @@ class Argo:
         self.CONTAINER_RESOURCES = app_config.get(const.ARGO_CONTAINER_RESOURCES)
         self.NAMESPACE = app_config.get(const.ARGO_KUBE_NAMESPACE)
         self.HELM_RELEASE_NAME = app_config.get(const.ARGO_HELM_RELEASE_NAME)
+        self.IMAGE_BOLT_BUILDER = app_config.get(const.IMAGE_BOLT_BUILDER, const.DEFAULT_IMAGE_BOLT_BUILDER)
+        self.IMAGE_REPORT_BUILDER = app_config.get(const.IMAGE_REPORT_BUILDER, const.DEFAULT_IMAGE_REPORT_BUILDER)
 
     def create_argo_tests_workflow(self, workflow: Workflow) -> Dict[str, Any]:
         """
@@ -128,7 +130,7 @@ class Argo:
             "container": {
                 # TODO we should used tagged image, but for now pull always...
                 "imagePullPolicy": "Always",
-                "image": "eu.gcr.io/acai-bolt/argo-builder:revival-v4",
+                "image": self.IMAGE_BOLT_BUILDER,
                 "command": ["python", "build.py"],
                 "volumeMounts": [
                     {"mountPath": "/root/.ssh", "name": "ssh"},
@@ -346,7 +348,7 @@ class Argo:
             "container": {
                 # TODO we should used tagged image, but for now pull always...
                 "imagePullPolicy": "Always",
-                "image": "eu.gcr.io/acai-bolt/bolt-reporting:os-test-02",
+                "image": self.IMAGE_REPORT_BUILDER,
                 "command": ["python", "reporter.py"],
                 "env": [
                     *self._map_envs(workflow.job_report.env_vars),

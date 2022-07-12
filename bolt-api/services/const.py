@@ -92,8 +92,11 @@ REQUIRED_ENV_VARS = (
     'ARGO_HELM_RELEASE_NAME'
 )
 
-# default testrunner image for use by `test_creator` tests, override with BOLT_TEST_RUNNER_IMAGE
-DEFAULT_TEST_RUNNER_IMAGE = 'eu.gcr.io/acai-bolt/bolt-test-runner:0.1.31'
+# default testrunner image, override with IMAGE_BOLT_BUILDER
+DEFAULT_IMAGE_BOLT_BUILDER = 'eu.gcr.io/acai-bolt/argo-builder:revival-v4'
+
+# default report generator image, override with IMAGE_REPORT_BUILDER
+DEFAULT_IMAGE_REPORT_BUILDER = 'eu.gcr.io/acai-bolt/bolt-reporting:os-test-02'
 
 # allows load tests setup/teardown to work without getting ratelimited by repository hosting
 MOCK_REPOSITORY = 'git@mockbitbucket.org:repo'
@@ -105,6 +108,10 @@ EXTENSION_CHOICE = (EXTENSION_NFS,)
 
 # executions graphs
 MAX_GRAPH_POINTS = 1400
+
+# argo images
+IMAGE_BOLT_BUILDER = 'IMAGE_BOLT_BUILDER'
+IMAGE_REPORT_BUILDER = 'IMAGE_REPORT_BUILDER'
 
 # images upload
 BUCKET_PRIVATE_STORAGE = "uploads-bolt-acaisoft"
