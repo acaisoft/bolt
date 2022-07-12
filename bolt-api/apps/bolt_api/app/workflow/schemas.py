@@ -76,29 +76,24 @@ class WorkflowSchema(Schema):
 
     @post_load
     def make_workflow(self, data, **kwargs):
-        data["job_pre_start"] = (
-            JobPreStart(**data["job_pre_start"])
-            if data["job_pre_start"] is not None
-            else None
-        )
-        data["job_post_stop"] = (
-            JobPostStop(**data["job_post_stop"])
-            if data["job_post_stop"] is not None
-            else None
-        )
-        data["job_monitoring"] = (
-            JobMonitoring(**data["job_monitoring"])
-            if data["job_monitoring"] is not None
-            else None
-        )
-        data["job_load_tests"] = (
-            JobLoadTests(**data["job_load_tests"])
-            if data["job_load_tests"] is not None
-            else None
-        )
-        data["job_report"] = (
-            JobReport(**data["job_report"])
-            if data["job_report"] is not None
-            else None
-        )
+        if data["job_pre_start"] is not None:
+            data["job_pre_start"] = (
+                JobPreStart(**data["job_pre_start"])
+            )
+        if data["job_post_stop"] is not None:
+            data["job_post_stop"] = (
+                JobPostStop(**data["job_post_stop"])
+            )
+        if data["job_monitoring"] is not None:
+            data["job_monitoring"] = (
+                JobMonitoring(**data["job_monitoring"])
+            )
+        if data["job_load_tests"] is not None:
+            data["job_load_tests"] = (
+                JobLoadTests(**data["job_load_tests"])
+            )
+        if data["job_report"] is not None:
+            data["job_report"] = (
+                JobReport(**data["job_report"])
+            )
         return Workflow(**data)
