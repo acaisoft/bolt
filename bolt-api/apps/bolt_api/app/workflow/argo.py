@@ -43,7 +43,49 @@ class Argo:
         self.NAMESPACE = app_config.get(const.ARGO_KUBE_NAMESPACE)
         self.HELM_RELEASE_NAME = app_config.get(const.ARGO_HELM_RELEASE_NAME)
 
-    def create_argo_workflow(self, workflow: Workflow) -> Dict[str, Any]:
+    def create_argo_tests_workflow(self, workflow: Workflow) -> Dict[str, Any]:
+        """
+        Returns argoproj workflow for load tests
+        """
+        resource_definition = self._create_argo_workflow_base(workflow)
+        resource_definition["affinity"] = \
+            {
+                "nodeAffinity": {
+                    "requiredDuringSchedulingIgnoredDuringExecution": {
+                        "nodeSelectorTerms": [
+                            {
+                                "matchExpressions": [
+                                    {
+                                        "key": "node_pool",
+                                        "operator": "In",
+                                        "values": [
+                                            "load-tests-workers-slaves",
+                                            "load-tests-workers-masters",
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            }
+        resource_definition["spec"]["entrypoint"] = "main"
+        resource_definition["spec"]["templates"] = self._generate_test_templates(workflow)
+        return resource_definition
+
+    def create_argo_report_workflow(self, workflow: Workflow) -> Dict[str, Any]:
+        """
+        Returns argoproj workflow for generating report
+        """
+        resource_definition = self._create_argo_workflow_base(workflow)
+        resource_definition["spec"]["entrypoint"] = "generate-report"
+        resource_definition["spec"]["templates"] = [self._generate_report_template(workflow)]
+        resource_definition["spec"]["volumes"].append(
+            {"name": "ssh", "secret": {"defaultMode": 384, "secretName": "ssh-files"}}
+        )
+        return resource_definition
+
+    def _create_argo_workflow_base(self, workflow: Workflow) -> Dict[str, Any]:
         """
         Returns argoproj.io/v1alpha1 Workflow as dict (in json format)
         """
@@ -58,41 +100,17 @@ class Argo:
                 "namespace": self.NAMESPACE,
             },
             "spec": {
-                "entrypoint": "main" if workflow.job_report is None else "generate-report",
-                "templates": self._generate_templates(workflow),
+                "entrypoint": None,
+                "templates": None,
                 "volumes": self._generate_volumes(workflow),
                 "serviceAccountName": f"{self.HELM_RELEASE_NAME}-argo-workflows-workflow-controller"
             },
         }
-        if workflow.job_report is None:
-            resource_definition["affinity"] = \
-                {
-                    "nodeAffinity": {
-                        "requiredDuringSchedulingIgnoredDuringExecution": {
-                            "nodeSelectorTerms": [
-                                {
-                                    "matchExpressions": [
-                                        {
-                                            "key": "node_pool",
-                                            "operator": "In",
-                                            "values": [
-                                                "load-tests-workers-slaves",
-                                                "load-tests-workers-masters",
-                                            ]
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
-                    }
-                }
         if workflow.job_post_stop:
             resource_definition["spec"]["onExit"] = "post-stop"
         return resource_definition
 
-    def _generate_templates(self, workflow: Workflow):
-        if workflow.job_report is not None:
-            return [self._generate_report_template(workflow)]
+    def _generate_test_templates(self, workflow: Workflow):
         main_template = self._generate_main_template(workflow)
         logger.info(f"The main template has been created.")
         build_template = self._generate_build_template(workflow)
@@ -330,14 +348,7 @@ class Argo:
                 "imagePullPolicy": "Always",
                 "image": "eu.gcr.io/acai-bolt/bolt-reporting:os-test-02",
                 "command": ["python", "reporter.py"],
-                "volumeMounts": [
-                    {"mountPath": "/etc/google", "name": "google-secret"},
-                ],
                 "env": [
-                    {
-                        "name": "GOOGLE_APPLICATION_CREDENTIALS",
-                        "value": "/etc/google/google-secret.json",
-                    },
                     *self._map_envs(workflow.job_report.env_vars),
                     {"name": "EXECUTION_ID", "value": workflow.execution_id},
                     {"name": "HASURA_URL", "value": self.HASURA_GQL},
@@ -348,13 +359,9 @@ class Argo:
 
     @staticmethod
     def _generate_volumes(workflow: Workflow):
-        ssh_volume = {"name": "ssh", "secret": {"defaultMode": 384, "secretName": "ssh-files"}}
-        volumes = [
+        return [
             {"name": "google-secret", "secret": {"secretName": "google-secret"}},
         ]
-        if workflow.job_report is None:
-            volumes.append(ssh_volume)
-        return volumes
 
     @staticmethod
     def _postfix_generator(num=6):

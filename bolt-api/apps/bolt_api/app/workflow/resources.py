@@ -39,17 +39,26 @@ class WorkflowsResource:
             app_config=kubernetes_service.app_config,
         )
 
-    def create(self, workflow_data: Dict[str, Any]):
+    def _prepare_workflow(self, workflow_data: Dict[str, Any]):
         schema = WorkflowSchema()
         logger.info(f'Workflow creator data {workflow_data}')
         try:
-            workflow = schema.load(workflow_data)
+            return schema.load(workflow_data)
         except Exception as ex:
             logger.error(f"Invalid workflows response: {ex}")
             raise MalformedWorkflowData(ex)
 
-        argo_workflow = self.argo.create_argo_workflow(workflow)
+    def run_tests(self, workflow_data: Dict[str, Any]):
+        workflow = self._prepare_workflow(workflow_data)
+        argo_workflow = self.argo.create_argo_tests_workflow(workflow)
+        self._create(argo_workflow)
 
+    def generate_report(self, workflow_data: Dict[str, Any]):
+        workflow = self._prepare_workflow(workflow_data)
+        argo_workflow = self.argo.create_argo_report_workflow(workflow)
+        self._create(argo_workflow)
+
+    def _create(self, argo_workflow: Dict[str, Any]):
         logger.info(f"Creating argo workflow in the kubernetes service.")
         output = self.kubernetes_service.create_argo_workflow(argo_workflow)
         logger.info(f"The argo workflow has been created successfully.")

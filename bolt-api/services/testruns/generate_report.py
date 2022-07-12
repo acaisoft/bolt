@@ -53,7 +53,7 @@ def generate_report(app_config, execution_id: str):
         raise ex
     try:
         workflow = WorkflowsResource(KubernetesService(app_config))
-        workflow_state = workflow.create(workflow_data)
+        workflow_state = workflow.generate_report(workflow_data)
     except Exception as ex:
         logger.error(f'Failure during Argo workflow triggering: {ex}')
         raise ex
