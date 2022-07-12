@@ -4,5 +4,3 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    environment:
-      - GCP_BUCKET_NAME=tf-acai-bolt-rh
