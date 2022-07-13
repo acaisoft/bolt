@@ -1,11 +1,11 @@
 import datetime
 
+from apps.bolt_api.app.utils.storage_client import StorageClient
 from apps.bolt_api.app.workflow import WorkflowsResource, KubernetesService
 from services import const
+from services.hasura import hce
 from services.hasura.hasura import generate_hasura_token
 from services.logger import setup_custom_logger
-
-from google.cloud import storage
 
 logger = setup_custom_logger(__name__)
 
@@ -13,19 +13,24 @@ logger = setup_custom_logger(__name__)
 def generate_report(app_config, execution_id: str):
     logger.info("Report Generation")
     try:
-        bucket_name = app_config.get('GCP_BUCKET_NAME')
+        client = StorageClient(app_config)
         file_name = f'reports/{execution_id}.pdf'
 
-        storage_client = storage.Client()
+        url = client.generate_upload_url(blob_name=file_name)
 
-        bucket = storage_client.bucket(bucket_name)
-        blob = bucket.blob(file_name)
-        url = blob.generate_signed_url(
-            version="v4",
-            expiration=datetime.timedelta(minutes=30),
-            method="PUT",
-            content_type="application/pdf",
-        )
+        # TODO: this part ideally should be triggered dynamically <if> report is ready, not every time.
+        # requires refactoring of frontend and then generator piece. This url is exactly what we should be returning,
+        # not updating a report status.
+        download_url = client.generate_download_url(blob_name=file_name)
+        hce(app_config, '''mutation ($id:uuid!, $status:String!) {
+            update_execution_by_pk(pk_columns: {id: $id}, _set: {report: $status}) 
+	        {
+                id
+            }
+        }''', {
+            'id': execution_id,
+            'status': download_url,
+        })
 
         hasura_token, _ = generate_hasura_token(app_config, const.ROLE_READER)
         workflow_data = {
@@ -42,7 +47,6 @@ def generate_report(app_config, execution_id: str):
             'job_post_stop': None,
             'job_report': {
                 "env_vars": {
-                    "GCP_BUCKET_NAME": bucket_name,
                     "UPLOAD_URL": url
                 }
             },

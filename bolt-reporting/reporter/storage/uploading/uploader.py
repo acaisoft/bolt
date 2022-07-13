@@ -27,4 +27,4 @@ def upload(file_path: str, upload_url: str):
 
     file = {"file": open(file_path, "rb")}
 
-    requests.put(upload_url, files=file, headers={"Content-Type": "application/pdf"},)
+    requests.post(upload_url, files=file, headers={"Content-Type": "application/pdf"},)
