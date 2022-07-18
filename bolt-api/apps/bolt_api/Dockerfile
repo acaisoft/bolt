@@ -1,13 +1,14 @@
 FROM python:3.10.0b3-slim as base
-RUN apt-get update
+RUN apt-get update &&\
+    apt-get install -y curl gcc libjpeg62-turbo-dev zlib1g-dev musl musl-dev libffi-dev openssh-client libjpeg62 &&\
+    rm -rf /var/lib/apt/lists/*
+
 RUN pip install --no-cache-dir --upgrade -U pip
 
 FROM base as builder
 
 RUN mkdir /install
 WORKDIR /install
-
-RUN apt-get install -y curl gcc libjpeg62-turbo-dev zlib1g-dev musl musl-dev libffi-dev openssh-client libjpeg62
 
 RUN curl -L https://github.com/argoproj/argo/releases/download/v2.3.0/argo-linux-amd64 > /usr/bin/argo \
   && chmod +x /usr/bin/argo

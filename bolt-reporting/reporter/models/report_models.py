@@ -18,11 +18,16 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 # REGION BUILDERS
+from os import environ as env
+
+import const
+
+
 def report_model(config_data, date, time_svg, requests, execution_id, notes, metrics_svg, distribution):
     return {'config': config_data_model(config_data['configuration_snapshot']),
             'time_plots': time_svg,
             'date': date,
-            'url': f'http://console.bolt.acaisoft.io/projects/'
+            'url': f'{env.get("BOLT_CONSOLE_URL", const.BOLT_CONSOLE_URL_DEFAULT)}/projects/'
                    f'{config_data["configuration_snapshot"]["project_id"]}/configs/'
                    f'{config_data["configuration_id"]}/runs/'
                    f'{execution_id}',
@@ -62,8 +67,7 @@ def request_data_model(request_data, pie_svg, distribution_svg):
 def seconds_form(value):
     if value > 1000:
         return f'{value / 1000} s.'
-    else:
-        return f'{value} ms.'
+    return f'{value} ms.'
 
 
 def list_of_envars(cd):
