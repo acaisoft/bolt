@@ -34,6 +34,7 @@ import {
 import { Failures, TimeDistribution, Stats } from './components'
 import { GET_ENDPOINT } from './graphql'
 import useStyles from './EndpointDetails.styles'
+import ResultsPerEndpointPerTick from "../../../components/ResultsPerEndpointPerTick/ResultsPerEndpointPerTick";
 
 function EndpointDetails() {
   const { endpointId } = useParams()
@@ -59,6 +60,9 @@ function EndpointDetails() {
       <SectionHeader title={`${endpoint.method} ${endpoint.name}`} marginBottom />
 
       <Grid container spacing={2} alignItems="stretch">
+        <Grid item xs={12} md={12}>
+          <ResultsPerEndpointPerTick classes={classes} executionId={endpoint.execution_id} name={endpoint.name} />
+        </Grid>
         <Grid item xs={12} md={3} className={classes.verticalGrid}>
           <Stats classes={classes} endpointId={endpointId} />
         </Grid>
@@ -84,7 +88,6 @@ function useEndpointQuery(endpointId) {
     variables: { endpointId },
     fetchPolicy: 'cache-and-network',
   })
-
   return { loading, error, endpoint: endpoint[0] || {} }
 }
 

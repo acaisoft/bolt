@@ -21,19 +21,16 @@
 
 import { gql } from '@apollo/client'
 
-export const GET_ENDPOINT = gql`
-  query getEndpoint($endpointId: String!) {
-    endpoint: execution_requests(
-      where: { identifier: { _eq: $endpointId } }
-      order_by: { timestamp: desc }
-      limit: 1
+export const SUBSCRIBE_TO_EXECUTION_RESULTS_PER_ENDPOINT_PER_TICK = gql`
+  subscription subscribeToExecutionResultsPerEndpointPerTick($executionId: uuid!, $name: String) {
+    resultsPerEndpointPerTick: execution_requests(
+      where: { execution_id: { _eq: $executionId },
+      name: {_eq: $name}}
+      order_by: { timestamp: asc }
     ) {
       id
-      identifier
+      requests_per_second
       timestamp
-      method
-      name
-      execution_id
     }
   }
 `
