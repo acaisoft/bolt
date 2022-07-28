@@ -42,6 +42,9 @@ class Argo:
         self.CONTAINER_RESOURCES = app_config.get(const.ARGO_CONTAINER_RESOURCES)
         self.NAMESPACE = app_config.get(const.ARGO_KUBE_NAMESPACE)
         self.HELM_RELEASE_NAME = app_config.get(const.ARGO_HELM_RELEASE_NAME)
+        self.CLOUDSDK_CORE_PROJECT = app_config.get(const.CLOUDSDK_CORE_PROJECT)
+        self.IMAGE_REGISTRY_ADDRESS = app_config.get(const.IMAGE_REGISTRY_ADDRESS)
+        self.GOOGLE_LOGS_BUCKET = app_config.get(const.GOOGLE_LOGS_BUCKET)
 
     def create_argo_workflow(self, workflow: Workflow) -> Dict[str, Any]:
         """
@@ -119,13 +122,15 @@ class Argo:
                         "name": "GOOGLE_APPLICATION_CREDENTIALS",
                         "value": "/etc/google/google-secret.json",
                     },
-                    {"name": "CLOUDSDK_CORE_PROJECT", "value": "acai-bolt"},
+                    {"name": "CLOUDSDK_CORE_PROJECT", "value": self.CLOUDSDK_CORE_PROJECT},
                     {"name": "TENANT_ID", "value": workflow.tenant_id},
                     {"name": "PROJECT_ID", "value": workflow.project_id},
                     {"name": "NO_CACHE", "value": no_cache_value},
                     {"name": "BOLT_EXECUTION_ID", "value": workflow.execution_id},
                     {"name": "BOLT_GRAPHQL_URL", "value": self.HASURA_GQL},
                     {"name": "BOLT_HASURA_TOKEN", "value": workflow.auth_token},
+                    {"name": "IMAGE_REGISTRY_ADDRESS", "value": self.IMAGE_REGISTRY_ADDRESS},
+                    {"name": "GOOGLE_LOGS_BUCKET", "value": self.GOOGLE_LOGS_BUCKET},
                 ],
             },
             "outputs": {
