@@ -1,159 +1,159 @@
 table:
-  name: configuration_parameter
   schema: public
+  name: configuration_parameter
 object_relationships:
-- name: configuration
-  using:
-    foreign_key_constraint_on: configuration_id
-- name: parameter
-  using:
-    foreign_key_constraint_on: parameter_slug
+  - name: configuration
+    using:
+      foreign_key_constraint_on: configuration_id
+  - name: parameter
+    using:
+      foreign_key_constraint_on: parameter_slug
 insert_permissions:
-- permission:
-    check:
-      configuration:
-        project:
-          userProjects:
-            user_id:
-              _eq: X-HASURA-USER-ID
-    columns:
-    - configuration_id
-    - parameter_slug
-    - value
-  role: manager
-select_permissions:
-- permission:
-    allow_aggregations: true
-    columns:
-    - id
-    - configuration_id
-    - value
-    - parameter_slug
-    filter:
-      _and:
-      - configuration:
-          is_deleted:
-            _eq: false
-      - configuration:
-          project:
-            is_deleted:
-              _eq: false
-      - configuration:
+  - role: manager
+    permission:
+      check:
+        configuration:
           project:
             userProjects:
               user_id:
-                _eq: X-Hasura-User-Id
-  role: manager
-- permission:
-    allow_aggregations: true
-    columns:
-    - configuration_id
-    - id
-    - parameter_slug
-    - value
-    filter:
-      _and:
-      - configuration:
-          is_deleted:
-            _eq: false
-      - configuration:
-          project:
-            is_deleted:
-              _eq: false
-      - configuration:
-          project:
-            userProjects:
-              user_id:
-                _eq: X-Hasura-User-Id
-  role: reader
-- permission:
-    allow_aggregations: true
-    columns:
-    - id
-    - configuration_id
-    - value
-    - parameter_slug
-    filter:
-      _and:
-      - configuration:
-          is_deleted:
-            _eq: false
-      - configuration:
-          project:
-            is_deleted:
-              _eq: false
-      - configuration:
-          project:
-            userProjects:
-              user_id:
-                _eq: X-Hasura-User-Id
-  role: tenantadmin
-- permission:
-    allow_aggregations: true
-    columns:
-    - configuration_id
-    - id
-    - parameter_slug
-    - value
-    filter:
-      _and:
-      - configuration:
-          is_deleted:
-            _eq: false
-      - configuration:
-          project:
-            is_deleted:
-              _eq: false
-      - configuration:
-          project:
-            userProjects:
-              user_id:
-                _eq: X-Hasura-User-Id
-  role: tester
-- permission:
-    columns:
-    - id
-    - configuration_id
-    - value
-    - parameter_slug
-    filter:
-      configuration:
-        executions:
-          id:
-            _eq: X-Hasura-Testruner-Id
-  role: testrunner
-update_permissions:
-- permission:
-    check: null
-    columns:
-    - value
-    filter:
-      configuration:
-        project:
-          userProjects:
-            user_id:
-              _eq: X-HASURA-USER-ID
-  role: manager
-delete_permissions:
-- permission:
-    filter:
-      configuration:
-        project:
-          userProjects:
-            user_id:
-              _eq: X-HASURA-USER-ID
-  role: manager
-event_triggers:
-- definition:
-    update:
+                _eq: X-HASURA-USER-ID
       columns:
-      - id
-      - configuration_id
-      - value
-      - parameter_slug
-  name: BOLT_API_CONFIGURATION_PARAM_CHANGE
-  retry_conf:
-    interval_sec: 10
-    num_retries: 0
-    timeout_sec: 60
-  webhook_from_env: BOLT_API_CONFIGURATION_PARAM_CHANGE
+        - configuration_id
+        - parameter_slug
+        - value
+select_permissions:
+  - role: manager
+    permission:
+      columns:
+        - id
+        - configuration_id
+        - value
+        - parameter_slug
+      filter:
+        _and:
+          - configuration:
+              is_deleted:
+                _eq: false
+          - configuration:
+              project:
+                is_deleted:
+                  _eq: false
+          - configuration:
+              project:
+                userProjects:
+                  user_id:
+                    _eq: X-Hasura-User-Id
+      allow_aggregations: true
+  - role: reader
+    permission:
+      columns:
+        - configuration_id
+        - id
+        - parameter_slug
+        - value
+      filter:
+        _and:
+          - configuration:
+              is_deleted:
+                _eq: false
+          - configuration:
+              project:
+                is_deleted:
+                  _eq: false
+          - configuration:
+              project:
+                userProjects:
+                  user_id:
+                    _eq: X-Hasura-User-Id
+      allow_aggregations: true
+  - role: tenantadmin
+    permission:
+      columns:
+        - id
+        - configuration_id
+        - value
+        - parameter_slug
+      filter:
+        _and:
+          - configuration:
+              is_deleted:
+                _eq: false
+          - configuration:
+              project:
+                is_deleted:
+                  _eq: false
+          - configuration:
+              project:
+                userProjects:
+                  user_id:
+                    _eq: X-Hasura-User-Id
+      allow_aggregations: true
+  - role: tester
+    permission:
+      columns:
+        - configuration_id
+        - id
+        - parameter_slug
+        - value
+      filter:
+        _and:
+          - configuration:
+              is_deleted:
+                _eq: false
+          - configuration:
+              project:
+                is_deleted:
+                  _eq: false
+          - configuration:
+              project:
+                userProjects:
+                  user_id:
+                    _eq: X-Hasura-User-Id
+      allow_aggregations: true
+  - role: testrunner
+    permission:
+      columns:
+        - id
+        - configuration_id
+        - value
+        - parameter_slug
+      filter:
+        configuration:
+          executions:
+            id:
+              _eq: X-Hasura-Testruner-Id
+update_permissions:
+  - role: manager
+    permission:
+      columns:
+        - value
+      filter:
+        configuration:
+          project:
+            userProjects:
+              user_id:
+                _eq: X-HASURA-USER-ID
+      check: null
+delete_permissions:
+  - role: manager
+    permission:
+      filter:
+        configuration:
+          project:
+            userProjects:
+              user_id:
+                _eq: X-HASURA-USER-ID
+event_triggers:
+  - name: BOLT_API_CONFIGURATION_PARAM_CHANGE
+    definition:
+      update:
+        columns:
+          - id
+          - configuration_id
+          - value
+          - parameter_slug
+    retry_conf:
+      num_retries: 0
+      interval_sec: 10
+      timeout_sec: 60
+    webhook_from_env: BOLT_API_CONFIGURATION_PARAM_CHANGE

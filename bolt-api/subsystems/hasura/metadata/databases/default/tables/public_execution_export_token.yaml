@@ -1,10 +1,10 @@
 table:
-  name: execution_export_token
   schema: public
+  name: execution_export_token
 object_relationships:
-- name: execution
-  using:
-    foreign_key_constraint_on: execution_id
-- name: project
-  using:
-    foreign_key_constraint_on: project_id
+  - name: execution
+    using:
+      foreign_key_constraint_on: execution_id
+  - name: project
+    using:
+      foreign_key_constraint_on: project_id

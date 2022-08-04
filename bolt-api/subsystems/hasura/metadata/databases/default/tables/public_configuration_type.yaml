@@ -1,62 +1,62 @@
 table:
-  name: configuration_type
   schema: public
+  name: configuration_type
 array_relationships:
-- name: configurations
-  using:
-    foreign_key_constraint_on:
-      column: type_slug
-      table:
-        name: configuration
-        schema: public
-- name: parameters
-  using:
-    foreign_key_constraint_on:
-      column: type_slug
-      table:
-        name: parameter
-        schema: public
-- name: repositories
-  using:
-    foreign_key_constraint_on:
-      column: type_slug
-      table:
-        name: repository
-        schema: public
+  - name: configurations
+    using:
+      foreign_key_constraint_on:
+        column: type_slug
+        table:
+          schema: public
+          name: configuration
+  - name: parameters
+    using:
+      foreign_key_constraint_on:
+        column: type_slug
+        table:
+          schema: public
+          name: parameter
+  - name: repositories
+    using:
+      foreign_key_constraint_on:
+        column: type_slug
+        table:
+          schema: public
+          name: repository
 select_permissions:
-- permission:
-    allow_aggregations: true
-    columns:
-    - id
-    - name
-    - description
-    - slug_name
-    filter: {}
-  role: manager
-- permission:
-    allow_aggregations: true
-    columns:
-    - description
-    - id
-    - name
-    - slug_name
-    filter: {}
-  role: reader
-- permission:
-    allow_aggregations: true
-    columns:
-    - id
-    - name
-    - description
-    - slug_name
-    filter: {}
-  role: tenantadmin
-- permission:
-    allow_aggregations: true
-    columns:
-    - description
-    - id
-    - name
-    - slug_name
-    filter: {}
-  role: tester
+  - role: manager
+    permission:
+      columns:
+        - id
+        - name
+        - description
+        - slug_name
+      filter: {}
+      allow_aggregations: true
+  - role: reader
+    permission:
+      columns:
+        - description
+        - id
+        - name
+        - slug_name
+      filter: {}
+      allow_aggregations: true
+  - role: tenantadmin
+    permission:
+      columns:
+        - id
+        - name
+        - description
+        - slug_name
+      filter: {}
+      allow_aggregations: true
+  - role: tester
+    permission:
+      columns:
+        - description
+        - id
+        - name
+        - slug_name
+      filter: {}
+      allow_aggregations: true

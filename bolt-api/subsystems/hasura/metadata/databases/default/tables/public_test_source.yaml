@@ -1,119 +1,119 @@
 table:
-  name: test_source
   schema: public
+  name: test_source
 object_relationships:
-- name: project
-  using:
-    foreign_key_constraint_on: project_id
-- name: repository
-  using:
-    foreign_key_constraint_on: repository_id
-- name: test_creator
-  using:
-    foreign_key_constraint_on: test_creator_id
+  - name: project
+    using:
+      foreign_key_constraint_on: project_id
+  - name: repository
+    using:
+      foreign_key_constraint_on: repository_id
+  - name: test_creator
+    using:
+      foreign_key_constraint_on: test_creator_id
 array_relationships:
-- name: configurations
-  using:
-    foreign_key_constraint_on:
-      column: test_source_id
-      table:
-        name: configuration
-        schema: public
+  - name: configurations
+    using:
+      foreign_key_constraint_on:
+        column: test_source_id
+        table:
+          schema: public
+          name: configuration
 select_permissions:
-- permission:
-    allow_aggregations: true
-    columns:
-    - id
-    - project_id
-    - source_type
-    - repository_id
-    - test_creator_id
-    - is_deleted
-    filter:
-      _and:
-      - is_deleted:
-          _eq: false
-      - project:
-          is_deleted:
-            _eq: false
-      - project:
-          userProjects:
-            user_id:
-              _eq: X-Hasura-User-Id
-  role: manager
-- permission:
-    allow_aggregations: true
-    columns:
-    - id
-    - project_id
-    - source_type
-    - repository_id
-    - test_creator_id
-    - is_deleted
-    filter:
-      _and:
-      - is_deleted:
-          _eq: false
-      - project:
-          is_deleted:
-            _eq: false
-      - project:
-          userProjects:
-            user_id:
-              _eq: X-Hasura-User-Id
-  role: reader
-- permission:
-    allow_aggregations: true
-    columns:
-    - id
-    - project_id
-    - source_type
-    - repository_id
-    - test_creator_id
-    - is_deleted
-    filter:
-      _and:
-      - is_deleted:
-          _eq: false
-      - project:
-          is_deleted:
-            _eq: false
-      - project:
-          userProjects:
-            user_id:
-              _eq: X-Hasura-User-Id
-  role: tenantadmin
-- permission:
-    allow_aggregations: true
-    columns:
-    - id
-    - project_id
-    - source_type
-    - repository_id
-    - test_creator_id
-    - is_deleted
-    filter:
-      _and:
-      - is_deleted:
-          _eq: false
-      - project:
-          is_deleted:
-            _eq: false
-      - project:
-          userProjects:
-            user_id:
-              _eq: X-Hasura-User-Id
-  role: tester
-- permission:
-    columns:
-    - id
-    - project_id
-    - source_type
-    - repository_id
-    - test_creator_id
-    filter:
-      configurations:
-        executions:
-          id:
-            _eq: X-Hasura-Testruner-Id
-  role: testrunner
+  - role: manager
+    permission:
+      columns:
+        - id
+        - project_id
+        - source_type
+        - repository_id
+        - test_creator_id
+        - is_deleted
+      filter:
+        _and:
+          - is_deleted:
+              _eq: false
+          - project:
+              is_deleted:
+                _eq: false
+          - project:
+              userProjects:
+                user_id:
+                  _eq: X-Hasura-User-Id
+      allow_aggregations: true
+  - role: reader
+    permission:
+      columns:
+        - id
+        - project_id
+        - source_type
+        - repository_id
+        - test_creator_id
+        - is_deleted
+      filter:
+        _and:
+          - is_deleted:
+              _eq: false
+          - project:
+              is_deleted:
+                _eq: false
+          - project:
+              userProjects:
+                user_id:
+                  _eq: X-Hasura-User-Id
+      allow_aggregations: true
+  - role: tenantadmin
+    permission:
+      columns:
+        - id
+        - project_id
+        - source_type
+        - repository_id
+        - test_creator_id
+        - is_deleted
+      filter:
+        _and:
+          - is_deleted:
+              _eq: false
+          - project:
+              is_deleted:
+                _eq: false
+          - project:
+              userProjects:
+                user_id:
+                  _eq: X-Hasura-User-Id
+      allow_aggregations: true
+  - role: tester
+    permission:
+      columns:
+        - id
+        - project_id
+        - source_type
+        - repository_id
+        - test_creator_id
+        - is_deleted
+      filter:
+        _and:
+          - is_deleted:
+              _eq: false
+          - project:
+              is_deleted:
+                _eq: false
+          - project:
+              userProjects:
+                user_id:
+                  _eq: X-Hasura-User-Id
+      allow_aggregations: true
+  - role: testrunner
+    permission:
+      columns:
+        - id
+        - project_id
+        - source_type
+        - repository_id
+        - test_creator_id
+      filter:
+        configurations:
+          executions:
+            id:
+              _eq: X-Hasura-Testruner-Id
