@@ -19,18 +19,4 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { gql } from '@apollo/client'
-
-export const SUBSCRIBE_TO_EXECUTION_RESULTS_PER_ENDPOINT_PER_TICK = gql`
-  subscription subscribeToExecutionResultsPerEndpointPerTick($executionId: uuid!, $name: String) {
-    resultsPerEndpointPerTick: execution_requests(
-      where: { execution_id: { _eq: $executionId },
-      name: {_eq: $name}}
-      order_by: { timestamp: asc }
-    ) {
-      id
-      requests_per_second
-      timestamp
-    }
-  }
-`
+export { default } from './ResponseLengthChart'

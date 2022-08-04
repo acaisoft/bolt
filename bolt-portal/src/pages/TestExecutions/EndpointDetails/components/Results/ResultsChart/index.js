@@ -19,4 +19,4 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export { default } from './ResultsPerTick'
+export { default } from './ResultsChart'
