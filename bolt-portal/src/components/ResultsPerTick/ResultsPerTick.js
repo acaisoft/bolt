@@ -52,7 +52,7 @@ function ResultsPerTick({
     echartsConnect(syncGroup)
   }, [])
 
-  if (loading || error || resultsPerTick.length === 0) {
+  if (loading || error || resultsPerTick.length <= 1) {
     return (
       <Grid item xs={12}>
         <Paper square className={classes.tile}>
