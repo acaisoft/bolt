@@ -59,14 +59,21 @@ export const SUBSCRIBE_TO_EXECUTION = gql`
 
 export const SUBSCRIBE_TO_EXECUTION_STATUS = gql`
   subscription subscribeToExecutionStatus($executionId: uuid!) {
-    execution_stage_log(
-      where: { execution_id: { _eq: $executionId } }
-      order_by: { timestamp: desc }
+    execution(
+      where: { id: { _eq: $executionId } }
     ) {
-      msg
-      level
+      status
+    }
+  }
+`
+
+export const SUBSCRIBE_TO_EXECUTION_STAGE_LOG = gql`
+  subscription subscribeToExecutionStageLog($executionId: uuid!, $statuses: [String!]!) {
+    execution_stage_log(
+      where: { execution_id: { _eq: $executionId }, level: { _in: $statuses } }
+    ) {
       stage
-      timestamp
+      level
     }
   }
 `

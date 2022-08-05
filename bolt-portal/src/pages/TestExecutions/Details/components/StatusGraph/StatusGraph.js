@@ -29,6 +29,7 @@ import { TestRunStageStatus } from 'config/constants'
 import {
   SUBSCRIBE_TO_EXECUTION_STATUS,
   GET_GRAPH_CONFIGURATION,
+  SUBSCRIBE_TO_EXECUTION_STAGE_LOG,
 } from '../../graphql'
 
 import Step from './Step'
@@ -47,46 +48,60 @@ const Stages = {
   FINISHED: 'finished',
 }
 
-function getCurrentStatus(data, config) {
-  const stagesOrder = [
-    Stages.DOWNLOADING_SOURCE,
-    Stages.IMAGE_PREPARATION,
-    Stages.PRE_START,
-    Stages.LOAD_TESTS,
-    Stages.MONITORING,
-    Stages.CLEAN_UP,
-  ]
+const stagesOrder = [
+  Stages.DOWNLOADING_SOURCE,
+  Stages.IMAGE_PREPARATION,
+  Stages.PRE_START,
+  Stages.LOAD_TESTS,
+  Stages.MONITORING,
+  Stages.CLEAN_UP,
+]
 
+function getCurrentStatus(executionStatus, errorStages, terminatedStage) {
   let stagesData = {}
-  stagesOrder.forEach(stage => {
-    if (data.find(log => log.stage === stage)) {
-      stagesData[stage] = data.find(log => log.stage === stage).msg.toUpperCase()
-    } else {
-      stagesData[stage] = TestRunStageStatus.NOT_STARTED
-    }
+  stagesOrder.forEach(stage => {stagesData[stage] = TestRunStageStatus.NOT_STARTED});
+
+  switch (executionStatus) {
+    case TestRunStageStatus.PENDING:
+      stagesData[Stages.DOWNLOADING_SOURCE] = TestRunStageStatus.SUCCEEDED
+      stagesData[Stages.IMAGE_PREPARATION] = TestRunStageStatus.RUNNING
+      break;
+    case TestRunStageStatus.RUNNING:
+      stagesData[Stages.DOWNLOADING_SOURCE] = TestRunStageStatus.SUCCEEDED
+      stagesData[Stages.IMAGE_PREPARATION] = TestRunStageStatus.SUCCEEDED
+      stagesData[Stages.LOAD_TESTS] = TestRunStageStatus.RUNNING
+      break;
+    case TestRunStageStatus.SUCCEEDED:
+    case TestRunStageStatus.FINISHED:
+    case TestRunStageStatus.ERROR:
+    case TestRunStageStatus.FAILED:
+      stagesOrder.forEach(stage => {stagesData[stage] = TestRunStageStatus.SUCCEEDED});
+      break;
+    case TestRunStageStatus.TERMINATED:
+      for (let i=0; i<stagesOrder.length; i++) {
+        let stage = stagesOrder[i];
+        if (stage === terminatedStage) {
+          break
+        } else {
+          stagesData[stage] = TestRunStageStatus.SUCCEEDED
+        }
+      }
+      break
+    default:
+      // Keep all stages in NOT_STARTED status
+      break
+  }
+
+  errorStages.forEach(stage => {
+    stagesData[stage.toLowerCase()] = TestRunStageStatus.FAILED
   })
-
-  if (!config.has_load_tests) {
-    delete stagesData[Stages.LOAD_TESTS]
-  }
-
-  if (!config.has_monitoring) {
-    delete stagesData[Stages.MONITORING]
-  }
-
-  if (!config.has_post_test) {
-    delete stagesData[Stages.CLEAN_UP]
-  }
-
-  if (!config.has_pre_start) {
-    delete stagesData[Stages.PRE_START]
-  }
 
   return stagesData
 }
 
 function getFinishStepStatus(stagesData, executionStatus) {
   delete stagesData.finished
+  const errorStatuses = [TestRunStageStatus.FAILED, TestRunStageStatus.ERROR]
 
   const isFinished =
     Object.values(stagesData).length > 0 &&
@@ -94,8 +109,8 @@ function getFinishStepStatus(stagesData, executionStatus) {
 
   const hasError = Object.values(stagesData).find(
     value =>
-      value === TestRunStageStatus.FAILED || value === TestRunStageStatus.ERROR
-  )
+      errorStatuses.indexOf(value) > -1
+  ) || errorStatuses.indexOf(executionStatus) > -1
 
   if (executionStatus === TestRunStageStatus.TERMINATED) {
     return TestRunStageStatus.TERMINATED
@@ -122,13 +137,36 @@ export function StatusGraph({ executionId, configurationId, executionStatus }) {
   })
 
   const {
-    data: { execution_stage_log } = {},
+    data: { execution } = {},
     loading,
     error,
   } = useSubscription(SUBSCRIBE_TO_EXECUTION_STATUS, {
     variables: { executionId },
     fetchPolicy: 'cache-and-network',
   })
+
+  if (execution) {
+    executionStatus = execution[0]["status"];
+  }
+
+  const statuses = [TestRunStageStatus.ERROR, TestRunStageStatus.FAILED, TestRunStageStatus.TERMINATED]
+  const {
+    data: { execution_stage_log } = {},
+  } = useSubscription(SUBSCRIBE_TO_EXECUTION_STAGE_LOG, {
+    variables: { executionId, statuses },
+    fetchPolicy: 'cache-and-network',
+  })
+
+  let errorStages = [];
+  let terminatedStage = "";
+  if (execution_stage_log) {
+    execution_stage_log.forEach(status => {
+      if (status["level"] === TestRunStageStatus.TERMINATED) {
+        terminatedStage = status["stage"]
+      } else {
+        errorStages.push(status["stage"])
+      }})
+  }
 
   const [startEl, startRef] = useCallbackRef()
   const [sourceEl, sourceRef] = useCallbackRef()
@@ -139,79 +177,15 @@ export function StatusGraph({ executionId, configurationId, executionStatus }) {
   const [finishEl, finishRef] = useCallbackRef()
 
   const isStarted = useMemo(() => {
-    if (
-      executionStatus === TestRunStageStatus.PENDING ||
-      (execution_stage_log && execution_stage_log.length !== 0)
-    ) {
-      return true
-    }
-
-    return false
-  }, [executionStatus, execution_stage_log])
+    return Boolean(executionStatus !== TestRunStageStatus.NOT_STARTED);
+  }, [executionStatus])
 
   const stagesData = useMemo(() => {
-    if ((!execution_stage_log || execution_stage_log.length === 0) && isStarted) {
-      return {
-        [Stages.DOWNLOADING_SOURCE]: TestRunStageStatus.RUNNING,
-      }
-    }
-
-    if (!execution_stage_log || execution_stage_log.length === 0) {
-      return {}
-    }
-
-    let tempData = getCurrentStatus(execution_stage_log, configuration)
-
+    let tempData = getCurrentStatus(executionStatus, errorStages, terminatedStage)
     tempData[Stages.FINISHED] = getFinishStepStatus(tempData, executionStatus)
 
-    if (!configuration.has_post_test) {
-      tempData[Stages.CLEAN_UP] = TestRunStageStatus.NOT_STARTED
-      if (tempData[Stages.FINISHED] !== TestRunStageStatus.NOT_STARTED) {
-        tempData[Stages.CLEAN_UP] = TestRunStageStatus.SUCCEEDED
-      }
-    }
-
-    if (
-      isStarted &&
-      (!tempData[Stages.DOWNLOADING_SOURCE] ||
-        tempData[Stages.DOWNLOADING_SOURCE] === TestRunStageStatus.NOT_STARTED)
-    ) {
-      tempData[Stages.DOWNLOADING_SOURCE] = TestRunStageStatus.RUNNING
-    }
-
-    if (
-      tempData[Stages.DOWNLOADING_SOURCE] === TestRunStageStatus.SUCCEEDED &&
-      tempData[Stages.IMAGE_PREPARATION] === TestRunStageStatus.NOT_STARTED
-    ) {
-      tempData[Stages.DOWNLOADING_SOURCE] = TestRunStageStatus.RUNNING
-    }
-
-    if (tempData[Stages.LOAD_TESTS] === TestRunStageStatus.PENDING) {
-      tempData[Stages.LOAD_TESTS] = TestRunStageStatus.NOT_STARTED
-    }
-
-    if (tempData[Stages.MONITORING] === TestRunStageStatus.PENDING) {
-      tempData[Stages.MONITORING] = TestRunStageStatus.NOT_STARTED
-    }
-
-    if (tempData[Stages.IMAGE_PREPARATION] === TestRunStageStatus.SUCCEEDED) {
-      if (configuration.has_monitoring && configuration.has_load_tests) {
-        if (
-          tempData[Stages.LOAD_TESTS] === TestRunStageStatus.NOT_STARTED &&
-          tempData[Stages.MONITORING] === TestRunStageStatus.NOT_STARTED
-        ) {
-          tempData[Stages.IMAGE_PREPARATION] = TestRunStageStatus.RUNNING
-        }
-      } else if (
-        tempData[Stages.LOAD_TESTS] === TestRunStageStatus.NOT_STARTED ||
-        tempData[Stages.MONITORING] === TestRunStageStatus.NOT_STARTED
-      ) {
-        tempData[Stages.IMAGE_PREPARATION] = TestRunStageStatus.RUNNING
-      }
-    }
-
     return tempData
-  }, [execution_stage_log, configuration, executionStatus, isStarted])
+  }, [executionStatus, configuration, executionStatus, isStarted, errorStages, terminatedStage])
 
   const options = useMemo(() => {
     const { line } = theme.palette.chart.graph
