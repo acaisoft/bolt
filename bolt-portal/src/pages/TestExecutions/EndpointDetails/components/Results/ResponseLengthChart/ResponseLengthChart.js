@@ -27,7 +27,7 @@ import { withStyles } from '@material-ui/core'
 
 import { TooltipBuilder } from 'utils/echartUtils'
 import { DefaultChart } from 'components'
-import { formatThousands } from "utils/numbers";
+import { formatBytes } from "utils/numbers";
 
 const formatTimestamp = timestamp => moment(timestamp).format('HH:mm:ss')
 
@@ -54,10 +54,7 @@ export function ResponseLengthChart({ responseData, theme, syncGroup }) {
       yAxis: {
         type: 'value',
         axisLabel: {
-          formatter: value => value < 1024 ? value + " B" :
-            value < 1024 * 1024 ? Math.floor(value / 1024) + " kB":
-              value < 1024 * 1024 * 1024 ? (value / (1024 * 1024)).toFixed(2) + " MB":
-                formatThousands(Math.floor(value / 1024 * 1024)) + " MB"
+          formatter: value => formatBytes(value)
         },
       },
       series: {
