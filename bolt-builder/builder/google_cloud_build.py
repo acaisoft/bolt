@@ -141,7 +141,7 @@ class GoogleCloudBuild:
         config = {
             'steps': steps,
             'images': images,
-            'logsBucket': 'gs://acai-bolt_cloudbuild/logs'
+            'logsBucket': os.environ['GOOGLE_LOGS_BUCKET']
         }
 
         return config

@@ -33,7 +33,7 @@ logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 
 logger = logging.getLogger(__name__)
 
-IMAGE_REGISTRY_ADDRESS = 'eu.gcr.io/acai-bolt/bolt-deployer-builds-local'
+IMAGE_REGISTRY_ADDRESS = os.environ['IMAGE_REGISTRY_ADDRESS']
 SPECIAL_CHARACTERS_REGEX = re.compile(r"[^A-Za-z0-9]")
 
 
