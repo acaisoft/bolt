@@ -1,4 +1,5 @@
 import datetime
+from enum import Enum
 
 from apps.bolt_api.app.utils.storage_client import StorageClient
 from apps.bolt_api.app.workflow import WorkflowsResource, KubernetesService
@@ -10,28 +11,47 @@ from services.logger import setup_custom_logger
 logger = setup_custom_logger(__name__)
 
 
-def generate_report(app_config, execution_id: str):
+class Status(Enum):
+    STATUS_ERROR = 'error'
+    STATUS_NOT_GENERATED = 'not_generated'
+    STATUS_GENERATING = 'generating'
+    STATUS_READY = 'ready'
+
+def generate_report(app_config, execution_id: str) -> str:
+    """
+    If report for given execution exists, will return signed download url.
+    Otherwise, will return a proper message
+    """
     logger.info("Report Generation")
-    try:
-        client = StorageClient(app_config)
-        file_name = f'reports/{execution_id}.pdf'
 
-        url = client.generate_upload_url(blob_name=file_name)
+    client = StorageClient(app_config)
+    file_name = f'reports/{execution_id}.pdf'
 
-        # TODO: this part ideally should be triggered dynamically <if> report is ready, not every time.
-        # requires refactoring of frontend and then generator piece. This url is exactly what we should be returning,
-        # not updating a report status.
-        download_url = client.generate_download_url(blob_name=file_name)
-        hce(app_config, '''mutation ($id:uuid!, $status:String!) {
-            update_execution_by_pk(pk_columns: {id: $id}, _set: {report: $status}) 
-	        {
-                id
+    report_status = hce(app_config, '''query ($executionId: uuid!) {
+        execution(
+            where: { id: { _eq: $executionId } }
+        ) {
+            report
             }
-        }''', {
-            'id': execution_id,
-            'status': download_url,
-        })
+    }''', variable_values={
+        "executionId": execution_id
+    })
 
+    if report_status == Status.STATUS_READY:
+        if client.file_exists(file_name):
+            return client.generate_download_url(blob_name=file_name)
+        else:
+            trigger_report_generator(client, file_name, execution_id, app_config)
+            return "Report was not found. Generating new report."
+    elif report_status in [Status.STATUS_NOT_GENERATED, Status.STATUS_ERROR]:
+        trigger_report_generator(client, file_name, execution_id, app_config)
+        return "Generating report."
+    elif report_status == Status.STATUS_GENERATING:
+        return "Generating report."
+
+def trigger_report_generator(client: StorageClient, file_name: str, execution_id: str, app_config):
+    url = client.generate_upload_url(blob_name=file_name)
+    try:
         hasura_token, _ = generate_hasura_token(app_config, const.ROLE_READER)
         workflow_data = {
             'tenant_id': '1',
@@ -61,4 +81,3 @@ def generate_report(app_config, execution_id: str):
     except Exception as ex:
         logger.error(f'Failure during Argo workflow triggering: {ex}')
         raise ex
-    return "Report generation triggered"

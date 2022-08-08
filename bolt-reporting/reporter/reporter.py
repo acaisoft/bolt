@@ -43,9 +43,7 @@ if __name__ == '__main__':
         model = prepare_single_execution_model(execution_id=execution_id, api=api)
         report_path = generate_pdf_report(model)
         upload(report_path, upload_url)
-        # TODO: Update status of report generation in hasura so that api would know that it is possible to generate
-        # signed urls for given resource
-        # api.update_report_status(execution_id, 'ready')
+        api.update_report_status(execution_id, STATUS_READY)
     except Exception as ex:
         if api is not None:
             api.update_report_status(execution_id, STATUS_NOT_GENERATED)

@@ -28,5 +28,5 @@ class TestrunReport(graphene.Mutation):
         role, user_id = gql_util.get_request_role_userid(
             info, (const.ROLE_ADMIN, const.ROLE_TENANT_ADMIN, const.ROLE_MANAGER, const.ROLE_TESTER))
 
-        status = generate_report(current_app.config, execution_id)
-        return TestrunReportResponse(data={'status': status})
+        response = generate_report(current_app.config, execution_id)
+        return TestrunReportResponse(data={'response': response})

@@ -56,8 +56,12 @@ class StorageClient(StorageClientABC):
             expires=1800
         )
 
-    def generate_download_url(self, blob_name: str, expires: int = 518400) -> str:
+    def generate_download_url(self, blob_name: str, expires: int = 300) -> str:
         blob = self._container.get_blob(blob_name=blob_name)
         return blob.generate_download_url(
             expires=expires
         )
+
+    def file_exists(self, blob_name: str) -> bool:
+        blob = self._container.get_blob(blob_name=blob_name)
+        return blob in self._container
