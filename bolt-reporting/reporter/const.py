@@ -20,3 +20,5 @@
 STATUS_ERROR='error'
 STATUS_NOT_GENERATED='not_generated'
 STATUS_GENERATING='generating'
+
+BOLT_CONSOLE_URL_DEFAULT='https://console.os.bolt.acaisoft.io'

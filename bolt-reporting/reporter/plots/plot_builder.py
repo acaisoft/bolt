@@ -106,7 +106,6 @@ def plot_in_thread(axis, axis_index, chart, metrics_meta_data, data):
     f_d = list(filter(lambda x: x['type'] == chart, data))
     names = list(set(x['name'] for x in f_d))
     values = {n: [float(f['value']) for f in f_d if f['name'] == n] for n in names}
-    t = [f['timestamp'] for f in f_d if f['name'] == names[0]]
     df = pd.DataFrame(data=values, index=[f['timestamp'] for f in f_d if f['name'] == names[0]])
     df.plot(kind=chart_type, ax=axis[axis_index], stacked='area' in chart_type)
     axis[axis_index].legend(frameon=False)
