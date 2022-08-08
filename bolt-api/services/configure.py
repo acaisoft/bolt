@@ -77,3 +77,21 @@ def validate(app, required_config_vars, required_env_vars):
         app.config[env_var] = os.environ.get(env_var)
 
     app.logger.info('config valid')
+
+
+def validate_storage_service(app, supported_storage_services, storage_service_var):
+    missing = []
+    storage_service = app.config.get(storage_service_var)
+    if storage_service not in supported_storage_services:
+        raise EnvironmentError(
+            f'{storage_service_var} config variable needs to be one of: {", ".join(list(supported_storage_services))}'
+        )
+    for var_name in supported_storage_services[storage_service]["vars"]:
+        if app.config.get(var_name, None) is None:
+            missing.append(var_name)
+    if missing:
+        raise EnvironmentError(
+            f'{len(missing)} undefined config variable{"s" if len(missing) > 1 else ""} for {storage_service} service:\n'
+            f'{", ".join(missing)}'
+        )
+    app.logger.info('storage config valid')

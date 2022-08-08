@@ -20,7 +20,7 @@
 from time import sleep
 
 import requests
-from query_builder import *
+from api.query_builder import *
 
 
 class APIClient:
