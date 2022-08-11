@@ -53,7 +53,7 @@ function GenerateReportButton({ testStatus, reportGenerationStatus }) {
 
   const [processClick, setProcessClick] = useState(false)
   const reportState = useReportState({ testStatus, reportGenerationStatus })
-  const { isTestRunning, disabled, isReportGenerated } = reportState
+  const { disabled, isReportGenerated } = reportState
 
   const {
     error,
@@ -97,7 +97,7 @@ function GenerateReportButton({ testStatus, reportGenerationStatus }) {
         color="secondary"
         variant="contained"
         disabled={disabled || loading || processClick}
-        icon={isTestRunning ? loadingIcon : undefined}
+        icon={processClick ? loadingIcon : undefined}
         onClick={handleClick}
       >
         {getButtonText(reportGenerationStatus, processClick)}
