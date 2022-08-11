@@ -20,37 +20,42 @@ class Status(Enum):
 def generate_report(app_config, execution_id: str) -> str:
     """
     If report for given execution exists, will return signed download url.
-    Otherwise, will return a proper message
+    Otherwise, will trigger report generation.
     """
     logger.info("Report Generation")
 
     client = StorageClient(app_config)
     file_name = f'reports/{execution_id}.pdf'
 
-    report_status = hce(app_config, '''query ($executionId: uuid!) {
+    response = hce(app_config, '''query ($executionId:uuid!) {
         execution(
             where: { id: { _eq: $executionId } }
         ) {
             report
             }
-    }''', variable_values={
-        "executionId": execution_id
+    }''', {
+        "executionId": str(execution_id)
     })
-
-    if report_status == Status.STATUS_READY:
+    report_status = response["execution"][0]["report"]
+    if report_status == Status.STATUS_READY.value:
         if client.file_exists(file_name):
             return client.generate_download_url(blob_name=file_name)
         else:
             trigger_report_generator(client, file_name, execution_id, app_config)
-            return "Report was not found. Generating new report."
-    elif report_status in [Status.STATUS_NOT_GENERATED, Status.STATUS_ERROR]:
+    elif report_status in [Status.STATUS_NOT_GENERATED.value, Status.STATUS_ERROR.value]:
         trigger_report_generator(client, file_name, execution_id, app_config)
-        return "Generating report."
-    elif report_status == Status.STATUS_GENERATING:
-        return "Generating report."
 
 def trigger_report_generator(client: StorageClient, file_name: str, execution_id: str, app_config):
     url = client.generate_upload_url(blob_name=file_name)
+    hce(app_config, '''
+        mutation update($id:uuid!, $status:String) {
+          update_execution_by_pk(pk_columns: {id: $id}, _set: {report: $status}) {
+            id
+          }
+        }''', {
+        "id": str(execution_id),
+        "status": "generating"
+    })
     try:
         hasura_token, _ = generate_hasura_token(app_config, const.ROLE_READER)
         workflow_data = {

@@ -27,18 +27,18 @@ class StorageClient(StorageClientABC):
         self._driver = None
         self._container = None
         container_name = app_config.get(const.STORAGE_CONTAINER_NAME)
-        match(self._provider):
-            case Providers.GCP:
+        match self._provider:
+            case Providers.GCP.value:
                 from cloudstorage.drivers.google import GoogleStorageDriver
                 self._driver = GoogleStorageDriver()
-            case Providers.S3:
+            case Providers.S3.value:
                 from cloudstorage.drivers.amazon import S3Driver
                 self._driver = S3Driver(
                     key=app_config.get(const.S3_KEY_ID),
                     secret=app_config.get(const.S3_ACCESS_KEY),
                     region=app_config.get(const.S3_REGION)
                 )
-            case Providers.AZURE:
+            case Providers.AZURE.value:
                 from cloudstorage.drivers.microsoft import AzureStorageDriver
                 self._driver = AzureStorageDriver(
                     account_name=app_config.get(const.AZURE_ACCOUNT_NAME),

@@ -7,7 +7,7 @@ from services.testruns.generate_report import generate_report
 
 class TestrunReportInterface(graphene.Interface):
     """Holds report data response."""
-    data = graphene.JSONString(description='report data')
+    data = graphene.String(description='report data')
 
 
 class TestrunReportResponse(graphene.ObjectType):
@@ -29,4 +29,4 @@ class TestrunReport(graphene.Mutation):
             info, (const.ROLE_ADMIN, const.ROLE_TENANT_ADMIN, const.ROLE_MANAGER, const.ROLE_TESTER))
 
         response = generate_report(current_app.config, execution_id)
-        return TestrunReportResponse(data={'response': response})
+        return TestrunReportResponse(response)
