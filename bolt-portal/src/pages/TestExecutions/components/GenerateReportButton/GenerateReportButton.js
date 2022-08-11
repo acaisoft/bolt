@@ -53,7 +53,7 @@ function GenerateReportButton({ testStatus, reportGenerationStatus }) {
 
   const [processClick, setProcessClick] = useState(false)
   const reportState = useReportState({ testStatus, reportGenerationStatus })
-  const { disabled, isReportGenerated } = reportState
+  const { disabled, isReportGenerating } = reportState
 
   const {
     error,
@@ -72,19 +72,18 @@ function GenerateReportButton({ testStatus, reportGenerationStatus }) {
 
   useDidUpdateEffect(() => {
     setProcessClick(false)
-    if (!isReportGenerated) return
-    downloadReport(reportGenerationStatus)
-  }, [isReportGenerated])
+  })
 
   async function handleClick() {
-    if (isReportGenerated) {
-      downloadReport(reportGenerationStatus)
-      return
-    }
-
     try {
-      await generateReportMutation()
-      setProcessClick(true)
+      let data = await generateReportMutation()
+      let url = data.response.data.testrun_get_report.data
+      if (typeof(url) === "string" && url.startsWith("http")) {
+        downloadReport(url)
+        setProcessClick(false)
+      } else {
+        setProcessClick(true)
+      }
     } catch (e) {
       notify.error(e.message)
       setProcessClick(false)
@@ -97,7 +96,7 @@ function GenerateReportButton({ testStatus, reportGenerationStatus }) {
         color="secondary"
         variant="contained"
         disabled={disabled || loading || processClick}
-        icon={processClick ? loadingIcon : undefined}
+        icon={processClick || isReportGenerating ? loadingIcon : undefined}
         onClick={handleClick}
       >
         {getButtonText(reportGenerationStatus, processClick)}
