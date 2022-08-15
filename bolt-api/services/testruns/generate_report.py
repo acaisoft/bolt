@@ -14,11 +14,13 @@ logger = setup_custom_logger(__name__)
 class ReportGenerationException(Exception):
     ...
 
+
 class Status(Enum):
     STATUS_ERROR = 'error'
     STATUS_NOT_GENERATED = 'not_generated'
     STATUS_GENERATING = 'generating'
     STATUS_READY = 'ready'
+
 
 def generate_report(app_config, execution_id: str) -> str:
     """
@@ -52,6 +54,7 @@ def generate_report(app_config, execution_id: str) -> str:
             trigger_report_generator(client, file_name, execution_id, app_config)
     elif report_status in [Status.STATUS_NOT_GENERATED.value, Status.STATUS_ERROR.value]:
         trigger_report_generator(client, file_name, execution_id, app_config)
+
 
 def trigger_report_generator(client: StorageClient, file_name: str, execution_id: str, app_config):
     try:
