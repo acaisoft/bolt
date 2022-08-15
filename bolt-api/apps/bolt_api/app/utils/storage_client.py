@@ -4,19 +4,22 @@ from enum import Enum
 
 from services import const
 
+
 class Providers(Enum):
     GCP = "GCP"
     AZURE = "AZURE"
     S3 = "S3"
 
+
 class StorageClientABC(abc.ABC):
     @abc.abstractmethod
-    def generate_upload_url(self, blob_name: str, content_type: str="") -> str:
+    def generate_upload_url(self, blob_name: str, content_type: str = "") -> str:
         ...
 
     @abc.abstractmethod
-    def generate_download_url(self, blob_name: str, expires: int=0) -> str:
+    def generate_download_url(self, blob_name: str, expires: int = 0) -> str:
         ...
+
 
 class StorageClient(StorageClientABC):
     """
@@ -45,11 +48,11 @@ class StorageClient(StorageClientABC):
                     key=app_config.get(const.AZURE_ACCOUNT_KEY)
                 )
             case _:
-                raise EnvironmentError(f'Storage service provider "{self._provider}" is not supported.')
+                raise EnvironmentError(f"Storage service provider '{self._provider}' is not supported.")
 
         self._container = self._driver.get_container(container_name)
 
-    def generate_upload_url(self, blob_name: str, content_type: str="application/pdf") -> str:
+    def generate_upload_url(self, blob_name: str, content_type: str = "application/pdf") -> str:
         return self._container.generate_upload_url(
             blob_name=blob_name,
             content_type=content_type,
