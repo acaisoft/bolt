@@ -1,75 +1,75 @@
 table:
-  name: execution_errors
   schema: public
+  name: execution_errors
 object_relationships:
-- name: execution
-  using:
-    foreign_key_constraint_on: execution_id
+  - name: execution
+    using:
+      foreign_key_constraint_on: execution_id
 insert_permissions:
-- permission:
-    check: {}
-    columns:
-    - id
-    - execution_id
-    - timestamp
-    - identifier
-    - method
-    - name
-    - exception_data
-    - number_of_occurrences
-    set:
-      execution_id: x-hasura-Testruner-Id
-  role: testrunner
+  - role: testrunner
+    permission:
+      check: {}
+      set:
+        execution_id: x-hasura-Testruner-Id
+      columns:
+        - id
+        - execution_id
+        - timestamp
+        - identifier
+        - method
+        - name
+        - exception_data
+        - number_of_occurrences
 select_permissions:
-- permission:
-    allow_aggregations: true
-    columns:
-    - id
-    - execution_id
-    - timestamp
-    - identifier
-    - method
-    - name
-    - exception_data
-    - number_of_occurrences
-    filter: {}
-  role: manager
-- permission:
-    allow_aggregations: true
-    columns:
-    - id
-    - number_of_occurrences
-    - exception_data
-    - identifier
-    - method
-    - name
-    - timestamp
-    - execution_id
-    filter: {}
-  role: reader
-- permission:
-    allow_aggregations: true
-    columns:
-    - id
-    - number_of_occurrences
-    - exception_data
-    - identifier
-    - method
-    - name
-    - timestamp
-    - execution_id
-    filter: {}
-  role: tenantadmin
-- permission:
-    allow_aggregations: true
-    columns:
-    - id
-    - number_of_occurrences
-    - exception_data
-    - identifier
-    - method
-    - name
-    - timestamp
-    - execution_id
-    filter: {}
-  role: tester
+  - role: manager
+    permission:
+      columns:
+        - id
+        - execution_id
+        - timestamp
+        - identifier
+        - method
+        - name
+        - exception_data
+        - number_of_occurrences
+      filter: {}
+      allow_aggregations: true
+  - role: reader
+    permission:
+      columns:
+        - id
+        - number_of_occurrences
+        - exception_data
+        - identifier
+        - method
+        - name
+        - timestamp
+        - execution_id
+      filter: {}
+      allow_aggregations: true
+  - role: tenantadmin
+    permission:
+      columns:
+        - id
+        - number_of_occurrences
+        - exception_data
+        - identifier
+        - method
+        - name
+        - timestamp
+        - execution_id
+      filter: {}
+      allow_aggregations: true
+  - role: tester
+    permission:
+      columns:
+        - id
+        - number_of_occurrences
+        - exception_data
+        - identifier
+        - method
+        - name
+        - timestamp
+        - execution_id
+      filter: {}
+      allow_aggregations: true

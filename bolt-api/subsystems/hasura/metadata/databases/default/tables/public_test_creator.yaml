@@ -1,146 +1,146 @@
 table:
-  name: test_creator
   schema: public
+  name: test_creator
 object_relationships:
-- name: project
-  using:
-    foreign_key_constraint_on: project_id
+  - name: project
+    using:
+      foreign_key_constraint_on: project_id
 array_relationships:
-- name: test_sources
-  using:
-    foreign_key_constraint_on:
-      column: test_creator_id
-      table:
-        name: test_source
-        schema: public
+  - name: test_sources
+    using:
+      foreign_key_constraint_on:
+        column: test_creator_id
+        table:
+          schema: public
+          name: test_source
 select_permissions:
-- permission:
-    allow_aggregations: true
-    columns:
-    - created_at
-    - created_by_id
-    - data
-    - id
-    - max_wait
-    - min_wait
-    - name
-    - performed
-    - previous_version_id
-    - project_id
-    - test_source_id
-    - type_slug
-    filter:
-      _and:
-      - test_sources:
-          is_deleted:
-            _eq: false
-      - project:
-          is_deleted:
-            _eq: false
-      - project:
-          userProjects:
-            user_id:
-              _eq: X-Hasura-User-Id
-  role: manager
-- permission:
-    columns:
-    - created_at
-    - created_by_id
-    - data
-    - id
-    - max_wait
-    - min_wait
-    - name
-    - performed
-    - previous_version_id
-    - project_id
-    - test_source_id
-    - type_slug
-    filter:
-      _and:
-      - test_sources:
-          is_deleted:
-            _eq: false
-      - project:
-          is_deleted:
-            _eq: false
-      - project:
-          userProjects:
-            user_id:
-              _eq: X-Hasura-User-Id
-  role: reader
-- permission:
-    allow_aggregations: true
-    columns:
-    - created_at
-    - created_by_id
-    - data
-    - id
-    - max_wait
-    - min_wait
-    - name
-    - performed
-    - previous_version_id
-    - project_id
-    - test_source_id
-    - type_slug
-    filter:
-      _and:
-      - test_sources:
-          is_deleted:
-            _eq: false
-      - project:
-          is_deleted:
-            _eq: false
-      - project:
-          userProjects:
-            user_id:
-              _eq: X-Hasura-User-Id
-  role: tenantadmin
-- permission:
-    columns:
-    - created_at
-    - created_by_id
-    - data
-    - id
-    - max_wait
-    - min_wait
-    - name
-    - performed
-    - previous_version_id
-    - project_id
-    - test_source_id
-    - type_slug
-    filter:
-      _and:
-      - test_sources:
-          is_deleted:
-            _eq: false
-      - project:
-          is_deleted:
-            _eq: false
-      - project:
-          userProjects:
-            user_id:
-              _eq: X-Hasura-User-Id
-  role: tester
-- permission:
-    columns:
-    - id
-    - data
-    - created_by_id
-    - created_at
-    - max_wait
-    - min_wait
-    - name
-    - project_id
-    - previous_version_id
-    - performed
-    - test_source_id
-    filter:
-      test_sources:
-        configurations:
-          executions:
-            id:
-              _eq: X-Hasura-Testruner-Id
-  role: testrunner
+  - role: manager
+    permission:
+      columns:
+        - created_at
+        - created_by_id
+        - data
+        - id
+        - max_wait
+        - min_wait
+        - name
+        - performed
+        - previous_version_id
+        - project_id
+        - test_source_id
+        - type_slug
+      filter:
+        _and:
+          - test_sources:
+              is_deleted:
+                _eq: false
+          - project:
+              is_deleted:
+                _eq: false
+          - project:
+              userProjects:
+                user_id:
+                  _eq: X-Hasura-User-Id
+      allow_aggregations: true
+  - role: reader
+    permission:
+      columns:
+        - created_at
+        - created_by_id
+        - data
+        - id
+        - max_wait
+        - min_wait
+        - name
+        - performed
+        - previous_version_id
+        - project_id
+        - test_source_id
+        - type_slug
+      filter:
+        _and:
+          - test_sources:
+              is_deleted:
+                _eq: false
+          - project:
+              is_deleted:
+                _eq: false
+          - project:
+              userProjects:
+                user_id:
+                  _eq: X-Hasura-User-Id
+  - role: tenantadmin
+    permission:
+      columns:
+        - created_at
+        - created_by_id
+        - data
+        - id
+        - max_wait
+        - min_wait
+        - name
+        - performed
+        - previous_version_id
+        - project_id
+        - test_source_id
+        - type_slug
+      filter:
+        _and:
+          - test_sources:
+              is_deleted:
+                _eq: false
+          - project:
+              is_deleted:
+                _eq: false
+          - project:
+              userProjects:
+                user_id:
+                  _eq: X-Hasura-User-Id
+      allow_aggregations: true
+  - role: tester
+    permission:
+      columns:
+        - created_at
+        - created_by_id
+        - data
+        - id
+        - max_wait
+        - min_wait
+        - name
+        - performed
+        - previous_version_id
+        - project_id
+        - test_source_id
+        - type_slug
+      filter:
+        _and:
+          - test_sources:
+              is_deleted:
+                _eq: false
+          - project:
+              is_deleted:
+                _eq: false
+          - project:
+              userProjects:
+                user_id:
+                  _eq: X-Hasura-User-Id
+  - role: testrunner
+    permission:
+      columns:
+        - id
+        - data
+        - created_by_id
+        - created_at
+        - max_wait
+        - min_wait
+        - name
+        - project_id
+        - previous_version_id
+        - performed
+        - test_source_id
+      filter:
+        test_sources:
+          configurations:
+            executions:
+              id:
+                _eq: X-Hasura-Testruner-Id

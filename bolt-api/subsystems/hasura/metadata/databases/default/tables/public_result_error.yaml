@@ -1,68 +1,68 @@
 table:
-  name: result_error
   schema: public
+  name: result_error
 object_relationships:
-- name: execution
-  using:
-    foreign_key_constraint_on: execution_id
+  - name: execution
+    using:
+      foreign_key_constraint_on: execution_id
 insert_permissions:
-- permission:
-    check: {}
-    columns:
-    - error_type
-    - exception_data
-    - name
-    - number_of_occurrences
-    set:
-      execution_id: x-hasura-Testruner-Id
-  role: testrunner
+  - role: testrunner
+    permission:
+      check: {}
+      set:
+        execution_id: x-hasura-Testruner-Id
+      columns:
+        - error_type
+        - exception_data
+        - name
+        - number_of_occurrences
 select_permissions:
-- permission:
-    columns:
-    - error_type
-    - exception_data
-    - execution_id
-    - id
-    - name
-    - number_of_occurrences
-    filter:
-      execution:
-        configuration:
-          project:
-            userProjects:
-              user_id:
-                _eq: X-HASURA-USER-ID
-  role: manager
-- permission:
-    columns:
-    - error_type
-    - exception_data
-    - execution_id
-    - id
-    - name
-    - number_of_occurrences
-    filter:
-      execution:
-        configuration:
-          project:
-            userProjects:
-              user_id:
-                _eq: X-HASURA-USER-ID
-  role: reader
-- permission:
-    allow_aggregations: true
-    columns: []
-    filter:
-      _and:
-      - execution:
+  - role: manager
+    permission:
+      columns:
+        - error_type
+        - exception_data
+        - execution_id
+        - id
+        - name
+        - number_of_occurrences
+      filter:
+        execution:
           configuration:
             project:
               userProjects:
                 user_id:
-                  _eq: X-Hasura-User-Id
-      - execution:
+                  _eq: X-HASURA-USER-ID
+  - role: reader
+    permission:
+      columns:
+        - error_type
+        - exception_data
+        - execution_id
+        - id
+        - name
+        - number_of_occurrences
+      filter:
+        execution:
           configuration:
             project:
-              is_deleted:
-                _eq: false
-  role: tenantadmin
+              userProjects:
+                user_id:
+                  _eq: X-HASURA-USER-ID
+  - role: tenantadmin
+    permission:
+      columns: []
+      filter:
+        _and:
+          - execution:
+              configuration:
+                project:
+                  userProjects:
+                    user_id:
+                      _eq: X-Hasura-User-Id
+          - execution:
+              configuration:
+                project:
+                  is_deleted:
+                    _eq: false
+      allow_aggregations: true

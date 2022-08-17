@@ -1,129 +1,129 @@
 table:
-  name: result_aggregate
   schema: public
+  name: result_aggregate
 object_relationships:
-- name: execution
-  using:
-    foreign_key_constraint_on: execution_id
+  - name: execution
+    using:
+      foreign_key_constraint_on: execution_id
 insert_permissions:
-- permission:
-    check:
-      execution:
-        id:
-          _eq: X-Hasura-Testruner-Id
-    columns:
-    - average_response_size
-    - average_response_time
-    - number_of_errors
-    - number_of_fails
-    - number_of_successes
-    - number_of_users
-    - timestamp
-    set:
-      execution_id: x-hasura-Testruner-Id
-  role: testrunner
+  - role: testrunner
+    permission:
+      check:
+        execution:
+          id:
+            _eq: X-Hasura-Testruner-Id
+      set:
+        execution_id: x-hasura-Testruner-Id
+      columns:
+        - average_response_size
+        - average_response_time
+        - number_of_errors
+        - number_of_fails
+        - number_of_successes
+        - number_of_users
+        - timestamp
 select_permissions:
-- permission:
-    allow_aggregations: true
-    columns:
-    - average_response_size
-    - average_response_time
-    - execution_id
-    - id
-    - number_of_errors
-    - number_of_fails
-    - number_of_successes
-    - number_of_users
-    - timestamp
-    filter:
-      _and:
-      - execution:
-          configuration:
-            project:
-              userProjects:
-                user_id:
-                  _eq: X-Hasura-User-Id
-      - execution:
-          configuration:
-            project:
-              is_deleted:
-                _eq: false
-  role: manager
-- permission:
-    allow_aggregations: true
-    columns:
-    - average_response_size
-    - average_response_time
-    - execution_id
-    - id
-    - number_of_errors
-    - number_of_fails
-    - number_of_successes
-    - number_of_users
-    - timestamp
-    filter:
-      _and:
-      - execution:
-          configuration:
-            project:
-              userProjects:
-                user_id:
-                  _eq: X-Hasura-User-Id
-      - execution:
-          configuration:
-            project:
-              is_deleted:
-                _eq: false
-  role: reader
-- permission:
-    allow_aggregations: true
-    columns:
-    - average_response_size
-    - average_response_time
-    - execution_id
-    - id
-    - number_of_errors
-    - number_of_fails
-    - number_of_successes
-    - number_of_users
-    - timestamp
-    filter:
-      _and:
-      - execution:
-          configuration:
-            project:
-              userProjects:
-                user_id:
-                  _eq: X-Hasura-User-Id
-      - execution:
-          configuration:
-            project:
-              is_deleted:
-                _eq: false
-  role: tenantadmin
-- permission:
-    allow_aggregations: true
-    columns:
-    - average_response_size
-    - average_response_time
-    - execution_id
-    - id
-    - number_of_errors
-    - number_of_fails
-    - number_of_successes
-    - number_of_users
-    - timestamp
-    filter:
-      _and:
-      - execution:
-          configuration:
-            project:
-              userProjects:
-                user_id:
-                  _eq: X-Hasura-User-Id
-      - execution:
-          configuration:
-            project:
-              is_deleted:
-                _eq: false
-  role: tester
+  - role: manager
+    permission:
+      columns:
+        - average_response_size
+        - average_response_time
+        - execution_id
+        - id
+        - number_of_errors
+        - number_of_fails
+        - number_of_successes
+        - number_of_users
+        - timestamp
+      filter:
+        _and:
+          - execution:
+              configuration:
+                project:
+                  userProjects:
+                    user_id:
+                      _eq: X-Hasura-User-Id
+          - execution:
+              configuration:
+                project:
+                  is_deleted:
+                    _eq: false
+      allow_aggregations: true
+  - role: reader
+    permission:
+      columns:
+        - average_response_size
+        - average_response_time
+        - execution_id
+        - id
+        - number_of_errors
+        - number_of_fails
+        - number_of_successes
+        - number_of_users
+        - timestamp
+      filter:
+        _and:
+          - execution:
+              configuration:
+                project:
+                  userProjects:
+                    user_id:
+                      _eq: X-Hasura-User-Id
+          - execution:
+              configuration:
+                project:
+                  is_deleted:
+                    _eq: false
+      allow_aggregations: true
+  - role: tenantadmin
+    permission:
+      columns:
+        - average_response_size
+        - average_response_time
+        - execution_id
+        - id
+        - number_of_errors
+        - number_of_fails
+        - number_of_successes
+        - number_of_users
+        - timestamp
+      filter:
+        _and:
+          - execution:
+              configuration:
+                project:
+                  userProjects:
+                    user_id:
+                      _eq: X-Hasura-User-Id
+          - execution:
+              configuration:
+                project:
+                  is_deleted:
+                    _eq: false
+      allow_aggregations: true
+  - role: tester
+    permission:
+      columns:
+        - average_response_size
+        - average_response_time
+        - execution_id
+        - id
+        - number_of_errors
+        - number_of_fails
+        - number_of_successes
+        - number_of_users
+        - timestamp
+      filter:
+        _and:
+          - execution:
+              configuration:
+                project:
+                  userProjects:
+                    user_id:
+                      _eq: X-Hasura-User-Id
+          - execution:
+              configuration:
+                project:
+                  is_deleted:
+                    _eq: false
+      allow_aggregations: true

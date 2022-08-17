@@ -33,6 +33,7 @@ export const GET_ENDPOINT = gql`
       timestamp
       method
       name
+      execution_id
     }
   }
 `

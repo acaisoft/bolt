@@ -19,15 +19,34 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import accounting from 'accounting'
+import { gql } from '@apollo/client'
 
-export const formatNumber = accounting.formatNumber
-
-export const formatThousands = (n, precision = 0) => formatNumber(n, precision, ' ')
-export const formatPercent = (n, precision = 2) =>
-  `${formatNumber(n * 100.0, precision)}%`
-export const formatBytes = n =>
-  n < 1024 ? n + " B" :
-    n < 1024 * 1024 ? Math.floor(n / 1024) + " kB":
-      n < 1024 * 1024 * 1024 ? (n / (1024 * 1024)).toFixed(2) + " MB":
-        formatThousands(Math.floor(n / 1024 * 1024)) + " MB"
+export const QUERY_EXECUTION_RESULTS_PER_ENDPOINT_PER_TICK = gql`
+  query sub($executionId: uuid!, $name: String) {
+    errorsPerTick: execution_errors(
+      where: { execution_id: { _eq: $executionId },
+      name: {_eq: $name}}
+      order_by: { timestamp: asc }
+    ) {
+      id
+      number_of_occurrences
+      exception_data
+      timestamp
+    }
+    resultsPerTick: execution_requests(
+      where: { execution_id: { _eq: $executionId },
+      name: {_eq: $name}}
+      order_by: { timestamp: asc }
+    ) {
+      id
+      num_requests
+      num_failures
+      successes_per_tick
+      timestamp
+      average_response_time
+      max_response_time
+      min_response_time
+      total_content_length
+    }
+  }
+`

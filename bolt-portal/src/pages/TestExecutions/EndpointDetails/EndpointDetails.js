@@ -31,7 +31,7 @@ import {
   NotFoundPlaceholder,
 } from 'components'
 
-import { Failures, TimeDistribution, Stats } from './components'
+import { TimeDistribution, Results } from './components'
 import { GET_ENDPOINT } from './graphql'
 import useStyles from './EndpointDetails.styles'
 
@@ -57,17 +57,9 @@ function EndpointDetails() {
   return (
     <div>
       <SectionHeader title={`${endpoint.method} ${endpoint.name}`} marginBottom />
-
-      <Grid container spacing={2} alignItems="stretch">
-        <Grid item xs={12} md={3} className={classes.verticalGrid}>
-          <Stats classes={classes} endpointId={endpointId} />
-        </Grid>
-
-        <Grid item xs={12} md={4}>
-          <Failures classes={classes} endpointId={endpointId} />
-        </Grid>
-
-        <Grid item xs={12} md={5}>
+      <Grid container spacing={2}>
+        <Results classes={classes} executionId={endpoint.execution_id} name={endpoint.name} />
+        <Grid item xs={12} md={12}>
           <TimeDistribution classes={classes} endpointId={endpointId} />
         </Grid>
       </Grid>
@@ -84,7 +76,6 @@ function useEndpointQuery(endpointId) {
     variables: { endpointId },
     fetchPolicy: 'cache-and-network',
   })
-
   return { loading, error, endpoint: endpoint[0] || {} }
 }
 

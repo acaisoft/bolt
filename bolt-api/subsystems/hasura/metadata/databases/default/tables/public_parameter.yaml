@@ -1,80 +1,80 @@
 table:
-  name: parameter
   schema: public
+  name: parameter
 object_relationships:
-- name: configuration_type
-  using:
-    foreign_key_constraint_on: type_slug
+  - name: configuration_type
+    using:
+      foreign_key_constraint_on: type_slug
 array_relationships:
-- name: configuration_parameter
-  using:
-    foreign_key_constraint_on:
-      column: parameter_slug
-      table:
-        name: configuration_parameter
-        schema: public
+  - name: configuration_parameter
+    using:
+      foreign_key_constraint_on:
+        column: parameter_slug
+        table:
+          schema: public
+          name: configuration_parameter
 select_permissions:
-- permission:
-    allow_aggregations: true
-    columns:
-    - default_value
-    - id
-    - name
-    - param_name
-    - param_type
-    - slug_name
-    - type_slug
-    filter: {}
-  role: manager
-- permission:
-    allow_aggregations: true
-    columns:
-    - default_value
-    - id
-    - name
-    - param_name
-    - param_type
-    - slug_name
-    - type_slug
-    filter: {}
-  role: reader
-- permission:
-    allow_aggregations: true
-    columns:
-    - id
-    - name
-    - param_type
-    - default_value
-    - param_name
-    - type_slug
-    - slug_name
-    filter: {}
-  role: tenantadmin
-- permission:
-    allow_aggregations: true
-    columns:
-    - default_value
-    - id
-    - name
-    - param_name
-    - param_type
-    - slug_name
-    - type_slug
-    filter: {}
-  role: tester
-- permission:
-    columns:
-    - id
-    - name
-    - param_type
-    - default_value
-    - param_name
-    - type_slug
-    - slug_name
-    filter:
-      configuration_parameter:
-        configuration:
-          executions:
-            id:
-              _eq: X-Hasura-Testruner-Id
-  role: testrunner
+  - role: manager
+    permission:
+      columns:
+        - default_value
+        - id
+        - name
+        - param_name
+        - param_type
+        - slug_name
+        - type_slug
+      filter: {}
+      allow_aggregations: true
+  - role: reader
+    permission:
+      columns:
+        - default_value
+        - id
+        - name
+        - param_name
+        - param_type
+        - slug_name
+        - type_slug
+      filter: {}
+      allow_aggregations: true
+  - role: tenantadmin
+    permission:
+      columns:
+        - id
+        - name
+        - param_type
+        - default_value
+        - param_name
+        - type_slug
+        - slug_name
+      filter: {}
+      allow_aggregations: true
+  - role: tester
+    permission:
+      columns:
+        - default_value
+        - id
+        - name
+        - param_name
+        - param_type
+        - slug_name
+        - type_slug
+      filter: {}
+      allow_aggregations: true
+  - role: testrunner
+    permission:
+      columns:
+        - id
+        - name
+        - param_type
+        - default_value
+        - param_name
+        - type_slug
+        - slug_name
+      filter:
+        configuration_parameter:
+          configuration:
+            executions:
+              id:
+                _eq: X-Hasura-Testruner-Id

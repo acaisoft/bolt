@@ -1,49 +1,49 @@
 table:
-  name: execution_stage_graph
   schema: public
+  name: execution_stage_graph
 select_permissions:
-- permission:
-    allow_aggregations: true
-    columns:
-    - id
-    - execution_id
-    - data
-    - timestamp
-    filter: {}
-  role: manager
-- permission:
-    allow_aggregations: true
-    columns:
-    - timestamp
-    - data
-    - execution_id
-    - id
-    filter: {}
-  role: reader
-- permission:
-    allow_aggregations: true
-    columns:
-    - timestamp
-    - data
-    - execution_id
-    - id
-    filter: {}
-  role: tenantadmin
-- permission:
-    allow_aggregations: true
-    columns:
-    - timestamp
-    - data
-    - execution_id
-    - id
-    filter: {}
-  role: tester
-- permission:
-    allow_aggregations: true
-    columns:
-    - timestamp
-    - data
-    - execution_id
-    - id
-    filter: {}
-  role: testrunner
+  - role: manager
+    permission:
+      columns:
+        - id
+        - execution_id
+        - data
+        - timestamp
+      filter: {}
+      allow_aggregations: true
+  - role: reader
+    permission:
+      columns:
+        - timestamp
+        - data
+        - execution_id
+        - id
+      filter: {}
+      allow_aggregations: true
+  - role: tenantadmin
+    permission:
+      columns:
+        - timestamp
+        - data
+        - execution_id
+        - id
+      filter: {}
+      allow_aggregations: true
+  - role: tester
+    permission:
+      columns:
+        - timestamp
+        - data
+        - execution_id
+        - id
+      filter: {}
+      allow_aggregations: true
+  - role: testrunner
+    permission:
+      columns:
+        - timestamp
+        - data
+        - execution_id
+        - id
+      filter: {}
+      allow_aggregations: true

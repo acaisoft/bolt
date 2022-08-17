@@ -1,108 +1,108 @@
 table:
-  name: project
   schema: public
+  name: project
 array_relationships:
-- name: configurations
-  using:
-    foreign_key_constraint_on:
-      column: project_id
-      table:
-        name: configuration
-        schema: public
-- name: repositories
-  using:
-    foreign_key_constraint_on:
-      column: project_id
-      table:
-        name: repository
-        schema: public
-- name: test_sources
-  using:
-    foreign_key_constraint_on:
-      column: project_id
-      table:
-        name: test_source
-        schema: public
-- name: userProjects
-  using:
-    foreign_key_constraint_on:
-      column: project_id
-      table:
-        name: user_project
-        schema: public
-- name: user_registration_tokens
-  using:
-    foreign_key_constraint_on:
-      column: project_id
-      table:
-        name: user_registration_token
-        schema: public
+  - name: configurations
+    using:
+      foreign_key_constraint_on:
+        column: project_id
+        table:
+          schema: public
+          name: configuration
+  - name: repositories
+    using:
+      foreign_key_constraint_on:
+        column: project_id
+        table:
+          schema: public
+          name: repository
+  - name: test_sources
+    using:
+      foreign_key_constraint_on:
+        column: project_id
+        table:
+          schema: public
+          name: test_source
+  - name: userProjects
+    using:
+      foreign_key_constraint_on:
+        column: project_id
+        table:
+          schema: public
+          name: user_project
+  - name: user_registration_tokens
+    using:
+      foreign_key_constraint_on:
+        column: project_id
+        table:
+          schema: public
+          name: user_registration_token
 select_permissions:
-- permission:
-    allow_aggregations: true
-    columns:
-    - id
-    - name
-    - description
-    - image_url
-    - is_deleted
-    - created_by_id
-    filter:
-      _and:
-      - userProjects:
-          user_id:
-            _eq: X-Hasura-User-Id
-      - is_deleted:
-          _eq: false
-  role: manager
-- permission:
-    allow_aggregations: true
-    columns:
-    - id
-    - name
-    - description
-    - image_url
-    - is_deleted
-    - created_by_id
-    filter:
-      _and:
-      - userProjects:
-          user_id:
-            _eq: X-Hasura-User-Id
-      - is_deleted:
-          _eq: false
-  role: reader
-- permission:
-    allow_aggregations: true
-    columns:
-    - id
-    - name
-    - description
-    - image_url
-    - is_deleted
-    - created_by_id
-    filter:
-      _and:
-      - userProjects:
-          user_id:
-            _eq: X-Hasura-User-Id
-      - is_deleted:
-          _eq: false
-  role: tenantadmin
-- permission:
-    allow_aggregations: true
-    columns:
-    - id
-    - name
-    - description
-    - image_url
-    - is_deleted
-    - created_by_id
-    filter:
-      _and:
-      - userProjects:
-          user_id:
-            _eq: X-Hasura-User-Id
-      - is_deleted:
-          _eq: false
-  role: tester
+  - role: manager
+    permission:
+      columns:
+        - id
+        - name
+        - description
+        - image_url
+        - is_deleted
+        - created_by_id
+      filter:
+        _and:
+          - userProjects:
+              user_id:
+                _eq: X-Hasura-User-Id
+          - is_deleted:
+              _eq: false
+      allow_aggregations: true
+  - role: reader
+    permission:
+      columns:
+        - id
+        - name
+        - description
+        - image_url
+        - is_deleted
+        - created_by_id
+      filter:
+        _and:
+          - userProjects:
+              user_id:
+                _eq: X-Hasura-User-Id
+          - is_deleted:
+              _eq: false
+      allow_aggregations: true
+  - role: tenantadmin
+    permission:
+      columns:
+        - id
+        - name
+        - description
+        - image_url
+        - is_deleted
+        - created_by_id
+      filter:
+        _and:
+          - userProjects:
+              user_id:
+                _eq: X-Hasura-User-Id
+          - is_deleted:
+              _eq: false
+      allow_aggregations: true
+  - role: tester
+    permission:
+      columns:
+        - id
+        - name
+        - description
+        - image_url
+        - is_deleted
+        - created_by_id
+      filter:
+        _and:
+          - userProjects:
+              user_id:
+                _eq: X-Hasura-User-Id
+          - is_deleted:
+              _eq: false
+      allow_aggregations: true
