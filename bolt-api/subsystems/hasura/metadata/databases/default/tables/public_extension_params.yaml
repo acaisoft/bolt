@@ -1,7 +1,7 @@
 table:
-  name: extension_params
   schema: public
+  name: extension_params
 object_relationships:
-- name: configuration_extension
-  using:
-    foreign_key_constraint_on: configuration_extension_id
+  - name: configuration_extension
+    using:
+      foreign_key_constraint_on: configuration_extension_id

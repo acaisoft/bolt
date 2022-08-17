@@ -1,134 +1,134 @@
 table:
-  name: execution_users
   schema: public
+  name: execution_users
 object_relationships:
-- name: execution
-  using:
-    foreign_key_constraint_on: execution_id
+  - name: execution
+    using:
+      foreign_key_constraint_on: execution_id
 insert_permissions:
-- permission:
-    check:
-      execution_id:
-        _eq: X-Hasura-Testruner-Id
-    columns:
-    - execution_id
-    - instance_id
-    - timestamp
-    - users_count
-    set:
-      execution_id: x-hasura-Testruner-Id
-  role: testrunner
+  - role: testrunner
+    permission:
+      check:
+        execution_id:
+          _eq: X-Hasura-Testruner-Id
+      set:
+        execution_id: x-hasura-Testruner-Id
+      columns:
+        - execution_id
+        - instance_id
+        - timestamp
+        - users_count
 select_permissions:
-- permission:
-    allow_aggregations: true
-    columns:
-    - execution_id
-    - timestamp
-    - users_count
-    - instance_id
-    - id
-    filter:
-      _and:
-      - execution:
-          configuration:
-            project:
-              userProjects:
-                user_id:
-                  _eq: X-Hasura-User-Id
-      - execution:
-          configuration:
-            is_deleted:
-              _eq: false
-      - execution:
-          configuration:
-            project:
-              is_deleted:
-                _eq: false
-  role: manager
-- permission:
-    columns:
-    - execution_id
-    - id
-    - instance_id
-    - timestamp
-    - users_count
-    filter:
-      _and:
-      - execution:
-          configuration:
-            project:
-              userProjects:
-                user_id:
-                  _eq: X-Hasura-User-Id
-      - execution:
-          configuration:
-            is_deleted:
-              _eq: false
-      - execution:
-          configuration:
-            project:
-              is_deleted:
-                _eq: false
-  role: reader
-- permission:
-    allow_aggregations: true
-    columns:
-    - execution_id
-    - timestamp
-    - users_count
-    - instance_id
-    - id
-    filter:
-      _and:
-      - execution:
-          configuration:
-            project:
-              userProjects:
-                user_id:
-                  _eq: X-Hasura-User-Id
-      - execution:
-          configuration:
-            is_deleted:
-              _eq: false
-      - execution:
-          configuration:
-            project:
-              is_deleted:
-                _eq: false
-  role: tenantadmin
-- permission:
-    columns:
-    - execution_id
-    - id
-    - instance_id
-    - timestamp
-    - users_count
-    filter:
-      _and:
-      - execution:
-          configuration:
-            project:
-              userProjects:
-                user_id:
-                  _eq: X-Hasura-User-Id
-      - execution:
-          configuration:
-            is_deleted:
-              _eq: false
-      - execution:
-          configuration:
-            project:
-              is_deleted:
-                _eq: false
-  role: tester
-- permission:
-    columns:
-    - execution_id
-    - id
-    - instance_id
-    - timestamp
-    - users_count
-    filter:
-      execution_id:
-        _eq: X-Hasura-Testruner-Id
-  role: testrunner
+  - role: manager
+    permission:
+      columns:
+        - execution_id
+        - timestamp
+        - users_count
+        - instance_id
+        - id
+      filter:
+        _and:
+          - execution:
+              configuration:
+                project:
+                  userProjects:
+                    user_id:
+                      _eq: X-Hasura-User-Id
+          - execution:
+              configuration:
+                is_deleted:
+                  _eq: false
+          - execution:
+              configuration:
+                project:
+                  is_deleted:
+                    _eq: false
+      allow_aggregations: true
+  - role: reader
+    permission:
+      columns:
+        - execution_id
+        - id
+        - instance_id
+        - timestamp
+        - users_count
+      filter:
+        _and:
+          - execution:
+              configuration:
+                project:
+                  userProjects:
+                    user_id:
+                      _eq: X-Hasura-User-Id
+          - execution:
+              configuration:
+                is_deleted:
+                  _eq: false
+          - execution:
+              configuration:
+                project:
+                  is_deleted:
+                    _eq: false
+  - role: tenantadmin
+    permission:
+      columns:
+        - execution_id
+        - timestamp
+        - users_count
+        - instance_id
+        - id
+      filter:
+        _and:
+          - execution:
+              configuration:
+                project:
+                  userProjects:
+                    user_id:
+                      _eq: X-Hasura-User-Id
+          - execution:
+              configuration:
+                is_deleted:
+                  _eq: false
+          - execution:
+              configuration:
+                project:
+                  is_deleted:
+                    _eq: false
+      allow_aggregations: true
+  - role: tester
+    permission:
+      columns:
+        - execution_id
+        - id
+        - instance_id
+        - timestamp
+        - users_count
+      filter:
+        _and:
+          - execution:
+              configuration:
+                project:
+                  userProjects:
+                    user_id:
+                      _eq: X-Hasura-User-Id
+          - execution:
+              configuration:
+                is_deleted:
+                  _eq: false
+          - execution:
+              configuration:
+                project:
+                  is_deleted:
+                    _eq: false
+  - role: testrunner
+    permission:
+      columns:
+        - execution_id
+        - id
+        - instance_id
+        - timestamp
+        - users_count
+      filter:
+        execution_id:
+          _eq: X-Hasura-Testruner-Id

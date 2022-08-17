@@ -1,58 +1,58 @@
 table:
-  name: execution_instance
   schema: public
+  name: execution_instance
 object_relationships:
-- name: execution
-  using:
-    foreign_key_constraint_on: execution_id
+  - name: execution
+    using:
+      foreign_key_constraint_on: execution_id
 insert_permissions:
-- permission:
-    check:
-      execution_id:
-        _eq: X-Hasura-Testruner-Id
-    columns:
-    - created_at
-    - execution_id
-    - expect_slaves
-    - host
-    - instance_type
-    - job_id
-    - port
-    - status
-    - updated_at
-    set:
-      execution_id: x-hasura-Testruner-Id
-  role: testrunner
+  - role: testrunner
+    permission:
+      check:
+        execution_id:
+          _eq: X-Hasura-Testruner-Id
+      set:
+        execution_id: x-hasura-Testruner-Id
+      columns:
+        - created_at
+        - execution_id
+        - expect_slaves
+        - host
+        - instance_type
+        - job_id
+        - port
+        - status
+        - updated_at
 select_permissions:
-- permission:
-    columns:
-    - created_at
-    - execution_id
-    - expect_slaves
-    - host
-    - id
-    - instance_type
-    - job_id
-    - port
-    - status
-    - updated_at
-    filter:
-      execution_id:
-        _eq: X-Hasura-Testruner-Id
-  role: testrunner
+  - role: testrunner
+    permission:
+      columns:
+        - created_at
+        - execution_id
+        - expect_slaves
+        - host
+        - id
+        - instance_type
+        - job_id
+        - port
+        - status
+        - updated_at
+      filter:
+        execution_id:
+          _eq: X-Hasura-Testruner-Id
 update_permissions:
-- permission:
-    check: null
-    columns:
-    - created_at
-    - expect_slaves
-    - host
-    - instance_type
-    - job_id
-    - port
-    - status
-    - updated_at
-    filter:
-      execution_id:
-        _eq: X-Hasura-Testruner-Id
-  role: testrunner
+  - role: testrunner
+    permission:
+      columns:
+        - created_at
+        - expect_slaves
+        - host
+        - instance_type
+        - job_id
+        - port
+        - status
+        - updated_at
+      filter:
+        execution_id:
+          _eq: X-Hasura-Testruner-Id
+      check: null

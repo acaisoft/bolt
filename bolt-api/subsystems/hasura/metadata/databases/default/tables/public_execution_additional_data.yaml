@@ -1,18 +1,18 @@
 table:
-  name: execution_additional_data
   schema: public
+  name: execution_additional_data
 insert_permissions:
-- permission:
-    check:
-      execution_id:
-        _eq: X-Hasura-Testruner-Id
-    columns:
-    - created_at
-    - data
-    - execution_id
-    - id
-    - name
-    - slug
-    set:
-      execution_id: x-hasura-Testruner-Id
-  role: testrunner
+  - role: testrunner
+    permission:
+      check:
+        execution_id:
+          _eq: X-Hasura-Testruner-Id
+      set:
+        execution_id: x-hasura-Testruner-Id
+      columns:
+        - created_at
+        - data
+        - execution_id
+        - id
+        - name
+        - slug

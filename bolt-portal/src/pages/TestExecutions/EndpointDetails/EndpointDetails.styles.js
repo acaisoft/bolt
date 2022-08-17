@@ -31,6 +31,10 @@ export default makeStyles(({ palette, spacing, typography }) => {
     tileContent: {
       padding: spacing(4, 0, 2),
     },
+    tileTitle: {
+      fontWeight: 'bold',
+      marginBottom: spacing(2),
+    },
     verticalGrid: {
       display: 'flex',
       flexDirection: 'column',

@@ -26,10 +26,12 @@ import filesize from 'filesize'
 export const EChartsFormatterType = {
   Percentage: 'percent',
   Numeric: 'number',
-  GB: 'bytes',
-  KB: 'kbytes',
+  GB: 'gigabytes',
+  kB: 'kbytes',
+  B: 'bytes',
   ScaledDuration: 'scaledDuration',
   Heatmap: 'heatmap',
+  Milliseconds: 'ms'
 }
 export class TooltipBuilder {
   html = ''
@@ -83,6 +85,24 @@ export class TooltipBuilder {
     const series = this.findSeriesById(seriesId)
     const value = series.data[1].toString() + ' ' + postfix
     this.html += this.getHtmlForValue(series, value)
+    return this
+  }
+  withMillisecondsDataLine(seriesName) {
+    const formatter = EChartUtils.GetFormatter(EChartsFormatterType.Milliseconds)
+    const series = this.findSeriesByName(seriesName)
+    if (series) {
+      const value = formatter(series.data)
+      this.html += this.getHtmlForValue(series, value)
+    }
+    return this
+  }
+  withBytesDataLine(seriesName) {
+    const formatter = EChartUtils.GetFormatter(EChartsFormatterType.B)
+    const series = this.findSeriesByName(seriesName)
+    if (series) {
+      const value = formatter(series.data)
+      this.html += this.getHtmlForValue(series, value)
+    }
     return this
   }
 
@@ -197,6 +217,12 @@ export class EChartUtils {
   static KBFormatter(value) {
     return filesize(value, { round: 3 })
   }
+  static MillisecondsFormatter(value) {
+    return formatThousands(value) + " ms"
+  }
+  static BytesFormatter(value) {
+    return formatThousands(value) + " bytes"
+  }
 
   static GetFormatter(type) {
     switch (type) {
@@ -210,8 +236,12 @@ export class EChartUtils {
         return this.ScaledDurationFormatter
       case EChartsFormatterType.GB:
         return this.GBFormatter
-      case EChartsFormatterType.KB:
+      case EChartsFormatterType.kB:
         return this.KBFormatter
+      case EChartsFormatterType.B:
+        return this.BytesFormatter
+      case EChartsFormatterType.Milliseconds:
+        return this.MillisecondsFormatter
       default:
         return this.NumericFormatter
     }

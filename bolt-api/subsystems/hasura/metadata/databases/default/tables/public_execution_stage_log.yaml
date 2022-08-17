@@ -1,132 +1,132 @@
 table:
-  name: execution_stage_log
   schema: public
+  name: execution_stage_log
 object_relationships:
-- name: execution
-  using:
-    foreign_key_constraint_on: execution_id
+  - name: execution
+    using:
+      foreign_key_constraint_on: execution_id
 insert_permissions:
-- permission:
-    check: {}
-    columns:
-    - id
-    - timestamp
-    - stage
-    - level
-    - msg
-    - execution_id
-    - job_name
-    set:
-      execution_id: x-hasura-Testruner-Id
-  role: testrunner
+  - role: testrunner
+    permission:
+      check: {}
+      set:
+        execution_id: x-hasura-Testruner-Id
+      columns:
+        - id
+        - timestamp
+        - stage
+        - level
+        - msg
+        - execution_id
+        - job_name
 select_permissions:
-- permission:
-    allow_aggregations: true
-    columns:
-    - id
-    - timestamp
-    - stage
-    - level
-    - msg
-    - execution_id
-    - job_name
-    filter:
-      _and:
-      - execution:
-          configuration:
-            is_deleted:
-              _eq: false
-      - execution:
-          configuration:
-            project:
-              is_deleted:
-                _eq: false
-  role: manager
-- permission:
-    allow_aggregations: true
-    columns:
-    - execution_id
-    - id
-    - level
-    - msg
-    - stage
-    - timestamp
-    filter:
-      _and:
-      - execution:
-          configuration:
-            is_deleted:
-              _eq: false
-      - execution:
-          configuration:
-            project:
-              is_deleted:
-                _eq: false
-  role: reader
-- permission:
-    allow_aggregations: true
-    columns:
-    - id
-    - timestamp
-    - stage
-    - level
-    - msg
-    - execution_id
-    - job_name
-    filter:
-      _and:
-      - execution:
-          configuration:
-            is_deleted:
-              _eq: false
-      - execution:
-          configuration:
-            project:
-              is_deleted:
-                _eq: false
-  role: tenantadmin
-- permission:
-    allow_aggregations: true
-    columns:
-    - execution_id
-    - id
-    - level
-    - msg
-    - stage
-    - timestamp
-    filter:
-      _and:
-      - execution:
-          configuration:
-            is_deleted:
-              _eq: false
-      - execution:
-          configuration:
-            project:
-              is_deleted:
-                _eq: false
-  role: tester
-- permission:
-    allow_aggregations: true
-    columns:
-    - execution_id
-    - id
-    - level
-    - msg
-    - stage
-    - timestamp
-    filter:
-      execution_id:
-        _eq: X-Hasura-Testrunner-Id
-  role: testrunner
+  - role: manager
+    permission:
+      columns:
+        - id
+        - timestamp
+        - stage
+        - level
+        - msg
+        - execution_id
+        - job_name
+      filter:
+        _and:
+          - execution:
+              configuration:
+                is_deleted:
+                  _eq: false
+          - execution:
+              configuration:
+                project:
+                  is_deleted:
+                    _eq: false
+      allow_aggregations: true
+  - role: reader
+    permission:
+      columns:
+        - execution_id
+        - id
+        - level
+        - msg
+        - stage
+        - timestamp
+      filter:
+        _and:
+          - execution:
+              configuration:
+                is_deleted:
+                  _eq: false
+          - execution:
+              configuration:
+                project:
+                  is_deleted:
+                    _eq: false
+      allow_aggregations: true
+  - role: tenantadmin
+    permission:
+      columns:
+        - id
+        - timestamp
+        - stage
+        - level
+        - msg
+        - execution_id
+        - job_name
+      filter:
+        _and:
+          - execution:
+              configuration:
+                is_deleted:
+                  _eq: false
+          - execution:
+              configuration:
+                project:
+                  is_deleted:
+                    _eq: false
+      allow_aggregations: true
+  - role: tester
+    permission:
+      columns:
+        - execution_id
+        - id
+        - level
+        - msg
+        - stage
+        - timestamp
+      filter:
+        _and:
+          - execution:
+              configuration:
+                is_deleted:
+                  _eq: false
+          - execution:
+              configuration:
+                project:
+                  is_deleted:
+                    _eq: false
+      allow_aggregations: true
+  - role: testrunner
+    permission:
+      columns:
+        - execution_id
+        - id
+        - level
+        - msg
+        - stage
+        - timestamp
+      filter:
+        execution_id:
+          _eq: X-Hasura-Testrunner-Id
+      allow_aggregations: true
 event_triggers:
-- definition:
-    enable_manual: false
-    insert:
-      columns: "*"
-  name: BOLT_API_EXECUTION_STAGE_LOG_INSERT
-  retry_conf:
-    interval_sec: 10
-    num_retries: 0
-    timeout_sec: 60
-  webhook_from_env: BOLT_API_EXECUTION_STAGE_LOG_INSERT
+  - name: BOLT_API_EXECUTION_STAGE_LOG_INSERT
+    definition:
+      enable_manual: false
+      insert:
+        columns: '*'
+    retry_conf:
+      num_retries: 0
+      interval_sec: 10
+      timeout_sec: 60
+    webhook_from_env: BOLT_API_EXECUTION_STAGE_LOG_INSERT

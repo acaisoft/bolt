@@ -1,97 +1,97 @@
 table:
-  name: configuration_extension
   schema: public
+  name: configuration_extension
 object_relationships:
-- name: configuration
-  using:
-    foreign_key_constraint_on: configuration_id
+  - name: configuration
+    using:
+      foreign_key_constraint_on: configuration_id
 array_relationships:
-- name: extension_params
-  using:
-    foreign_key_constraint_on:
-      column: configuration_extension_id
-      table:
-        name: extension_params
-        schema: public
+  - name: extension_params
+    using:
+      foreign_key_constraint_on:
+        column: configuration_extension_id
+        table:
+          schema: public
+          name: extension_params
 select_permissions:
-- permission:
-    allow_aggregations: true
-    columns: []
-    filter:
-      _and:
-      - configuration:
-          is_deleted:
-            _eq: false
-      - configuration:
-          project:
-            is_deleted:
-              _eq: false
-      - configuration:
-          project:
-            userProjects:
-              user_id:
-                _eq: X-Hasura-User-Id
-  role: manager
-- permission:
-    allow_aggregations: true
-    columns:
-    - configuration_id
-    - id
-    - type
-    filter:
-      _and:
-      - configuration:
-          is_deleted:
-            _eq: false
-      - configuration:
-          project:
-            is_deleted:
-              _eq: false
-      - configuration:
-          project:
-            userProjects:
-              user_id:
-                _eq: X-Hasura-User-Id
-  role: reader
-- permission:
-    allow_aggregations: true
-    columns:
-    - configuration_id
-    - id
-    - type
-    filter:
-      _and:
-      - configuration:
-          is_deleted:
-            _eq: false
-      - configuration:
-          project:
-            is_deleted:
-              _eq: false
-      - configuration:
-          project:
-            userProjects:
-              user_id:
-                _eq: X-Hasura-User-Id
-  role: tenantadmin
-- permission:
-    allow_aggregations: true
-    columns:
-    - id
-    - configuration_id
-    - type
-    filter:
-      _and:
-      - configuration:
-          is_deleted:
-            _eq: false
-      - configuration:
-          project:
-            is_deleted:
-              _eq: false
-      - configuration:
-          project:
-            userProjects:
-              user_id:
-                _eq: X-Hasura-User-Id
-  role: tester
+  - role: manager
+    permission:
+      columns: []
+      filter:
+        _and:
+          - configuration:
+              is_deleted:
+                _eq: false
+          - configuration:
+              project:
+                is_deleted:
+                  _eq: false
+          - configuration:
+              project:
+                userProjects:
+                  user_id:
+                    _eq: X-Hasura-User-Id
+      allow_aggregations: true
+  - role: reader
+    permission:
+      columns:
+        - configuration_id
+        - id
+        - type
+      filter:
+        _and:
+          - configuration:
+              is_deleted:
+                _eq: false
+          - configuration:
+              project:
+                is_deleted:
+                  _eq: false
+          - configuration:
+              project:
+                userProjects:
+                  user_id:
+                    _eq: X-Hasura-User-Id
+      allow_aggregations: true
+  - role: tenantadmin
+    permission:
+      columns:
+        - configuration_id
+        - id
+        - type
+      filter:
+        _and:
+          - configuration:
+              is_deleted:
+                _eq: false
+          - configuration:
+              project:
+                is_deleted:
+                  _eq: false
+          - configuration:
+              project:
+                userProjects:
+                  user_id:
+                    _eq: X-Hasura-User-Id
+      allow_aggregations: true
+  - role: tester
+    permission:
+      columns:
+        - id
+        - configuration_id
+        - type
+      filter:
+        _and:
+          - configuration:
+              is_deleted:
+                _eq: false
+          - configuration:
+              project:
+                is_deleted:
+                  _eq: false
+          - configuration:
+              project:
+                userProjects:
+                  user_id:
+                    _eq: X-Hasura-User-Id
+      allow_aggregations: true

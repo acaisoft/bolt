@@ -19,32 +19,32 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { connect as echartsConnect } from 'echarts'
-import React, { useState, useMemo, useEffect } from 'react'
-import { useSubscription } from '@apollo/client'
-import { Grid, Paper } from '@material-ui/core'
+import {connect as echartsConnect} from 'echarts'
+import React, {useState, useMemo, useEffect} from 'react'
+import {useQuery} from '@apollo/client'
+import {Grid, Paper} from '@material-ui/core'
 import {
   SectionHeader,
-  ZoomButton,
   LoadingPlaceholder,
-  ErrorPlaceholder,
-} from 'components/index'
-import { Chart } from 'config/constants'
+  ErrorPlaceholder, ZoomButton,
+} from 'components'
+import {Chart} from 'config/constants'
 
-import RequestsChart from './RequestsChart'
-import ResponseTimeChart from './ResponseTimeChart'
-import UsersSpawnChart from './UsersSpawnChart'
-import { SUBSCRIBE_TO_EXECUTION_RESULTS_PER_TICK } from './graphql'
+import ResultsChart from './ResultsChart'
+import ResponseTimesChart from "./ResponseTimesChart"
+import ResponseLengthChart from "./ResponseLengthChart"
+import {QUERY_EXECUTION_RESULTS_PER_ENDPOINT_PER_TICK} from './graphql'
 
-function ResultsPerTick({
+function Results({
   classes,
-  execution,
+  executionId,
+  name,
   hideZoom = false,
   initZoomOut = false,
 }) {
   const [isZoomed, setIsZoomed] = useState(initZoomOut)
 
-  const { resultsPerTick, loading, error } = useResultsPerTickQuery(execution.id)
+  const {errorsPerTick, resultsPerTick, loading, error} = useResultsPerEndpointPerTickQuery(executionId, name)
 
   const syncGroup = 'chartsGroup'
 
@@ -52,14 +52,14 @@ function ResultsPerTick({
     echartsConnect(syncGroup)
   }, [])
 
-  if (loading || error || resultsPerTick.length <= 1) {
+  if (loading || error || (errorsPerTick.length === 0 && resultsPerTick.length === 0)) {
     return (
       <Grid item xs={12}>
         <Paper square className={classes.tile}>
           {loading ? (
-            <LoadingPlaceholder title="Loading data..." height={Chart.HEIGHT} />
+            <LoadingPlaceholder title="Loading data..." height={Chart.HEIGHT}/>
           ) : error ? (
-            <ErrorPlaceholder error={error} height={Chart.HEIGHT} />
+            <ErrorPlaceholder error={error} height={Chart.HEIGHT}/>
           ) : (
             <LoadingPlaceholder
               title="Waiting for test run results..."
@@ -78,7 +78,7 @@ function ResultsPerTick({
           <SectionHeader
             size="small"
             className={classes.tileTitle}
-            title="Requests/s"
+            title="Requests distribution"
           >
             {!hideZoom && (
               <ZoomButton
@@ -89,7 +89,12 @@ function ResultsPerTick({
             )}
           </SectionHeader>
           <div className={classes.chartContainer}>
-            <RequestsChart data={resultsPerTick} syncGroup={syncGroup} />
+            <ResultsChart
+              errorsData={errorsPerTick}
+              totalsData={resultsPerTick}
+              syncGroup={syncGroup}
+              isZoomed={isZoomed}
+            />
           </div>
         </Paper>
       </Grid>
@@ -98,7 +103,7 @@ function ResultsPerTick({
           <SectionHeader
             size="small"
             className={classes.tileTitle}
-            title="Requests Response Time"
+            title="Response Times"
           >
             {!hideZoom && (
               <ZoomButton
@@ -109,7 +114,7 @@ function ResultsPerTick({
             )}
           </SectionHeader>
           <div className={classes.chartContainer}>
-            <ResponseTimeChart data={resultsPerTick} syncGroup={syncGroup} />
+            <ResponseTimesChart responseData={resultsPerTick} syncGroup={syncGroup}/>
           </div>
         </Paper>
       </Grid>
@@ -118,7 +123,7 @@ function ResultsPerTick({
           <SectionHeader
             size="small"
             className={classes.tileTitle}
-            title="Users Spawn"
+            title="Total Response Length"
           >
             {!hideZoom && (
               <ZoomButton
@@ -129,7 +134,7 @@ function ResultsPerTick({
             )}
           </SectionHeader>
           <div className={classes.chartContainer}>
-            <UsersSpawnChart data={resultsPerTick} syncGroup={syncGroup} />
+            <ResponseLengthChart responseData={resultsPerTick} syncGroup={syncGroup}/>
           </div>
         </Paper>
       </Grid>
@@ -137,17 +142,26 @@ function ResultsPerTick({
   )
 }
 
-function useResultsPerTickQuery(executionId) {
+function useResultsPerEndpointPerTickQuery(executionId, name) {
   const {
-    data: { resultsPerTick } = {},
+    data: {errorsPerTick, resultsPerTick} = {},
     loading,
     error,
-  } = useSubscription(SUBSCRIBE_TO_EXECUTION_RESULTS_PER_TICK, {
-    variables: { executionId },
+  } = useQuery(QUERY_EXECUTION_RESULTS_PER_ENDPOINT_PER_TICK, {
+    variables: {executionId, name},
     fetchPolicy: 'cache-and-network',
   })
 
-  const preparedData = useMemo(
+  const preparedErrorsData = useMemo(
+    () =>
+      (errorsPerTick || []).map(result => ({
+        ...result,
+        timestamp: +new Date(result.timestamp),
+      })),
+    [errorsPerTick]
+  )
+
+  const preparedResultsData = useMemo(
     () =>
       (resultsPerTick || []).map(result => ({
         ...result,
@@ -157,10 +171,11 @@ function useResultsPerTickQuery(executionId) {
   )
 
   return {
-    resultsPerTick: preparedData,
+    errorsPerTick: preparedErrorsData,
+    resultsPerTick: preparedResultsData,
     loading,
     error,
   }
 }
 
-export default ResultsPerTick
+export default Results

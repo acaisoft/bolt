@@ -51,11 +51,10 @@ def execution_update():
 
 
 def update_execution_totals_per_request(config, execution_id):
-    # copy last entry of each execution_request to execution_request_totals (they're incremental data)
+    # copy entry of each execution_request to execution_request_totals after calculating their aggregated results
     resp = hce(config, '''query ($eid:uuid!) {
     execution_by_pk(id:$eid) {
         execution_requests (
-          distinct_on:identifier
           order_by:{identifier:asc, timestamp:desc}
         ) 
         {
@@ -75,6 +74,22 @@ def update_execution_totals_per_request(config, execution_id):
     if not data:
         return False
 
+    aggregated_data = []
+    for item in data:
+        new_entry = True
+        for endpoint_data in aggregated_data:
+            if item['identifier'] == endpoint_data['identifier']:
+                endpoint_data['num_failures'] += item['num_failures']
+                endpoint_data['num_requests'] += item['num_requests']
+                endpoint_data['requests_per_second'].append(item['requests_per_second'])
+                new_entry = False
+        if new_entry or len(aggregated_data) == 0:
+            item['requests_per_second'] = [item['requests_per_second']]
+            aggregated_data.append(item)
+
+    for item in aggregated_data:
+        item['requests_per_second'] = int(sum(item['requests_per_second']) / len(item['requests_per_second']))
+
     totals_response = hce(config, '''mutation ($data:[execution_request_totals_insert_input!]!) {
         insert_execution_request_totals(
             objects: $data,
@@ -86,7 +101,7 @@ def update_execution_totals_per_request(config, execution_id):
                 ]
             }
         ) { affected_rows }
-    }''', variable_values={'data': data})
+    }''', variable_values={'data': aggregated_data})
     err = totals_response.get('errors', None)
     if err is not None:
         logger.error(f'error inserting execution_request_totals: {str(err)}')

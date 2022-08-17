@@ -19,15 +19,4 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import accounting from 'accounting'
-
-export const formatNumber = accounting.formatNumber
-
-export const formatThousands = (n, precision = 0) => formatNumber(n, precision, ' ')
-export const formatPercent = (n, precision = 2) =>
-  `${formatNumber(n * 100.0, precision)}%`
-export const formatBytes = n =>
-  n < 1024 ? n + " B" :
-    n < 1024 * 1024 ? Math.floor(n / 1024) + " kB":
-      n < 1024 * 1024 * 1024 ? (n / (1024 * 1024)).toFixed(2) + " MB":
-        formatThousands(Math.floor(n / 1024 * 1024)) + " MB"
+export { default } from './ResponseLengthChart'
