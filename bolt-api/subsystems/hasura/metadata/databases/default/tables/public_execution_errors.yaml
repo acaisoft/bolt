@@ -47,6 +47,18 @@ select_permissions:
         - execution_id
       filter: {}
       allow_aggregations: true
+  - role: reportgenerator
+    permission:
+      columns:
+        - id
+        - number_of_occurrences
+        - exception_data
+        - identifier
+        - method
+        - name
+        - timestamp
+        - execution_id
+      filter: {}
   - role: tenantadmin
     permission:
       columns:

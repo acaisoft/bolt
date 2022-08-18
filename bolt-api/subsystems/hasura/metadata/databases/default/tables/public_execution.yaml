@@ -175,6 +175,11 @@ select_permissions:
                   user_id:
                     _eq: X-Hasura-User-Id
       allow_aggregations: true
+  - role: reportgenerator
+    permission:
+      columns:
+        - report
+      filter: {}
   - role: tenantadmin
     permission:
       columns:
@@ -294,6 +299,12 @@ update_permissions:
                 userProjects:
                   user_id:
                     _eq: X-Hasura-User-Id
+      check: null
+  - role: reportgenerator
+    permission:
+      columns:
+        - report
+      filter: {}
       check: null
   - role: testrunner
     permission:
