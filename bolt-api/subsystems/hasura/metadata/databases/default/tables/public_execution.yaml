@@ -125,18 +125,18 @@ select_permissions:
         - total_requests
       filter:
         _and:
-        - configuration:
-            is_deleted:
-              _eq: false
-        - configuration:
-            project:
+          - configuration:
               is_deleted:
                 _eq: false
-        - configuration:
-            project:
-              userProjects:
-                user_id:
-                  _eq: X-Hasura-User-Id
+          - configuration:
+              project:
+                is_deleted:
+                  _eq: false
+          - configuration:
+              project:
+                userProjects:
+                  user_id:
+                    _eq: X-Hasura-User-Id
       allow_aggregations: true
   - role: reader
     permission:
@@ -239,18 +239,18 @@ select_permissions:
         - test_preparation_job_statuscheck_timestamp
       filter:
         _and:
-        - configuration:
-            is_deleted:
-              _eq: false
-        - configuration:
-            project:
+          - configuration:
               is_deleted:
                 _eq: false
-        - configuration:
-            project:
-              userProjects:
-                user_id:
-                  _eq: X-Hasura-User-Id
+          - configuration:
+              project:
+                is_deleted:
+                  _eq: false
+          - configuration:
+              project:
+                userProjects:
+                  user_id:
+                    _eq: X-Hasura-User-Id
       allow_aggregations: true
   - role: testrunner
     permission:

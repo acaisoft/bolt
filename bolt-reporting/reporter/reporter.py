@@ -24,7 +24,6 @@ from reporting.reporting_utils import generate_pdf_report
 from storage import upload
 from const import *
 
-
 if __name__ == '__main__':
     api = None
     try:

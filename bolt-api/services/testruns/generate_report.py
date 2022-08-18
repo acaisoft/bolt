@@ -74,7 +74,7 @@ def trigger_report_generator(client: StorageClient, file_name: str, execution_id
     })
 
     try:
-        hasura_token, _ = generate_hasura_token(app_config, const.ROLE_READER)
+        hasura_token, _ = generate_hasura_token(app_config, const.ROLE_REPORTGENERATOR)
         workflow_data = {
             "tenant_id": "1",
             "project_id": "",

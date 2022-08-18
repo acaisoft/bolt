@@ -42,6 +42,8 @@ class APIClient:
         r = self.SESSION.post(self.URL, json=payload).json()
         if 'errors' in r:
             raise Exception(r['errors'][0]['message'])
+        if 'error' in r:
+            raise Exception(r['error'])
         return r
 
     def get_execution_endpoints(self, execution_id):
