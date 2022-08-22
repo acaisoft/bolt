@@ -122,7 +122,9 @@ select_permissions:
         - name
         - timestamp
         - execution_id
-      filter: {}
+      filter:
+        execution_id:
+          _eq: X-Hasura-Reportgenerator-Id
   - role: tenantadmin
     permission:
       columns:

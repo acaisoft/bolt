@@ -87,7 +87,9 @@ select_permissions:
         - timestamp
         - execution_id
         - average_response_size
-      filter: {}
+      filter:
+        execution_id:
+          _eq: X-Hasura-Reportgenerator-Id
   - role: tenantadmin
     permission:
       columns:

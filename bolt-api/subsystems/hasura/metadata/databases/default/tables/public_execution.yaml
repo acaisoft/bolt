@@ -178,8 +178,13 @@ select_permissions:
   - role: reportgenerator
     permission:
       columns:
+        - configuration_id
+        - configuration_snapshot
+        - id
         - report
-      filter: {}
+      filter:
+        id:
+          _eq: X-Hasura-Reportgenerator-Id
   - role: tenantadmin
     permission:
       columns:
@@ -304,7 +309,9 @@ update_permissions:
     permission:
       columns:
         - report
-      filter: {}
+      filter:
+        id:
+          _eq: X-Hasura-Reportgenerator-Id
       check: null
   - role: testrunner
     permission:
