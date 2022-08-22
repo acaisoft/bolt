@@ -16,6 +16,7 @@
 # COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+import json
 
 import requests
 
@@ -26,5 +27,9 @@ def upload(file_path: str, upload_url: str):
     """
 
     file = {"file": open(file_path, "rb")}
-
-    requests.post(upload_url, files=file, headers={"Content-Type": "application/pdf"},)
+    try:
+        url = json.loads(upload_url)
+        response = requests.post(url["url"], data=url["fields"], files=file)
+    except:
+        response = requests.post(upload_url, files=file, headers={"Content-Type": "application/pdf"},)
+    print(response)
