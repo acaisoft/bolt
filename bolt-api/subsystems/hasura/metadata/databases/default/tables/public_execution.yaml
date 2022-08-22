@@ -286,25 +286,6 @@ select_permissions:
         id:
           _eq: X-Hasura-Testruner-Id
 update_permissions:
-  - role: reader
-    permission:
-      columns:
-        - report
-      filter:
-        _and:
-          - configuration:
-              is_deleted:
-                _eq: false
-          - configuration:
-              project:
-                is_deleted:
-                  _eq: false
-          - configuration:
-              project:
-                userProjects:
-                  user_id:
-                    _eq: X-Hasura-User-Id
-      check: null
   - role: reportgenerator
     permission:
       columns:
