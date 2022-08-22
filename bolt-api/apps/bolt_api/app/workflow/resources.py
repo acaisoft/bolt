@@ -51,12 +51,12 @@ class WorkflowsResource:
     def run_tests(self, workflow_data: Dict[str, Any]):
         workflow = self._prepare_workflow(workflow_data)
         argo_workflow = self.argo.create_argo_tests_workflow(workflow)
-        self._create(argo_workflow)
+        return self._create(argo_workflow)
 
     def generate_report(self, workflow_data: Dict[str, Any]):
         workflow = self._prepare_workflow(workflow_data)
         argo_workflow = self.argo.create_argo_report_workflow(workflow)
-        self._create(argo_workflow)
+        return self._create(argo_workflow)
 
     def _create(self, argo_workflow: Dict[str, Any]):
         logger.info(f"Creating argo workflow in the kubernetes service.")

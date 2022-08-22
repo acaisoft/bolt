@@ -53,7 +53,7 @@ class Argo:
         Returns argoproj workflow for load tests
         """
         resource_definition = self._create_argo_workflow_base(workflow)
-        resource_definition["affinity"] = \
+        resource_definition["spec"]["affinity"] = \
             {
                 "nodeAffinity": {
                     "requiredDuringSchedulingIgnoredDuringExecution": {
@@ -85,9 +85,6 @@ class Argo:
         resource_definition = self._create_argo_workflow_base(workflow)
         resource_definition["spec"]["entrypoint"] = "generate-report"
         resource_definition["spec"]["templates"] = [self._generate_report_template(workflow)]
-        resource_definition["spec"]["volumes"].append(
-            {"name": "ssh", "secret": {"defaultMode": 384, "secretName": "ssh-files"}}
-        )
         return resource_definition
 
     def _create_argo_workflow_base(self, workflow: Workflow) -> Dict[str, Any]:
@@ -368,6 +365,7 @@ class Argo:
     @staticmethod
     def _generate_volumes(workflow: Workflow):
         return [
+            {"name": "ssh", "secret": {"defaultMode": 384, "secretName": "ssh-files"}},
             {"name": "google-secret", "secret": {"secretName": "google-secret"}},
         ]
 

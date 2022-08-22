@@ -1,4 +1,5 @@
 import datetime
+import json
 from enum import Enum
 
 from apps.bolt_api.app.utils.storage_client import StorageClient
@@ -74,7 +75,7 @@ def trigger_report_generator(client: StorageClient, file_name: str, execution_id
     })
 
     try:
-        hasura_token, _ = generate_hasura_token(app_config, const.ROLE_REPORTGENERATOR)
+        hasura_token, _ = generate_hasura_token(app_config, const.ROLE_REPORTGENERATOR, execution_id=str(execution_id))
         workflow_data = {
             "tenant_id": "1",
             "project_id": "",
@@ -89,7 +90,7 @@ def trigger_report_generator(client: StorageClient, file_name: str, execution_id
             "job_post_stop": None,
             "job_report": {
                 "env_vars": {
-                    "UPLOAD_URL": url
+                    "UPLOAD_URL": json.dumps(url)
                 }
             },
             "no_cache": True,

@@ -33,6 +33,10 @@ logger = setup_custom_logger(__file__)
 REQUEST_TIMEOUT = 5  # seconds
 
 
+class TestrunStartException(Exception):
+    ...
+
+
 def start(app_config, conf_id, user_id, no_cache):
     validate_test_configuration_by_id(str(conf_id))
     test_config_response = hce(app_config, '''query ($confId:uuid!, $userId:uuid!) {
@@ -184,12 +188,16 @@ def start(app_config, conf_id, user_id, no_cache):
         if test_config['has_post_test']:
             workflow_data['job_post_stop'] = {'env_vars': {}}
 
-        workflow = WorkflowsResource(KubernetesService(app_config))
-        workflow_state = workflow.run_tests(workflow_data)
-        # set argo_name for execution
-        initial_state['argo_name'] = workflow_state['name']
-        initial_state['argo_namespace'] = app_config.get(const.ARGO_KUBE_NAMESPACE)
-        logger.info(f'Added argo_name field to initial_state data {initial_state}')
+        try:
+            workflow = WorkflowsResource(KubernetesService(app_config))
+            workflow_state = workflow.run_tests(workflow_data)
+            # set argo_name for execution
+            initial_state['argo_name'] = workflow_state['name']
+            initial_state['argo_namespace'] = app_config.get(const.ARGO_KUBE_NAMESPACE)
+            logger.info(f'Added argo_name field to initial_state data {initial_state}')
+        except Exception as ex:
+            logger.error(ex)
+            raise TestrunStartException("Error while spinning Argo workflow")
     elif code_source == const.CONF_SOURCE_JSON:
         # TODO: DEPRECATED. NEED TO FIX (merge to argo)
         deployer_response, execution_id, hasura_token = None, None, None
