@@ -25,7 +25,7 @@ import jwt
 from flask import current_app
 from flask.cli import with_appcontext
 
-from services.hasura.hasura import hasura_token_for_testrunner, hasura_selfsignedtoken_for_testrunner
+from services.hasura.hasura import generate_hasura_token, hasura_selfsignedtoken_for_testrunner
 
 
 @click.command(name='job_token')
@@ -40,7 +40,7 @@ def job_token(debug=False):
     if debug:
         token, execution_id = hasura_selfsignedtoken_for_testrunner(current_app.config)
     else:
-        token, execution_id = hasura_token_for_testrunner(current_app.config)
+        token, execution_id = generate_hasura_token(current_app.config)
     claims = jwt.decode(token, options={"verify_signature": False})
     print(f'> execution_id:\n{execution_id}')
     print(f'> access_token:\n{token}')

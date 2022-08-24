@@ -16,8 +16,20 @@
 # COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+import json
 
-from .start import TestrunStart, TestrunStartObject
-from .status import TestrunQueries, StatusResponse
-from .terminate import TestrunTerminate, TestrunTerminateObject
-from .generate_report import TestrunReport, TestrunReportResponse
+import requests
+
+
+def upload(file_path: str, upload_url: str):
+    """
+    Boilerplate, bare upload handler
+    """
+
+    file = {"file": open(file_path, "rb")}
+    try:
+        url = json.loads(upload_url)
+        response = requests.post(url["url"], data=url["fields"], files=file)
+    except:
+        response = requests.post(upload_url, files=file, headers={"Content-Type": "application/pdf"},)
+    print(response)

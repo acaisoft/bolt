@@ -67,6 +67,8 @@ export function useReportState({ testStatus, reportGenerationStatus }) {
     isReportGenerated:
       reportGenerationStatus !== REPORT_GENERATION_STATUS.NOT_GENERATED &&
       reportGenerationStatus !== REPORT_GENERATION_STATUS.GENERATING,
+    isReportGenerating:
+      reportGenerationStatus === REPORT_GENERATION_STATUS.GENERATING,
   }
 }
 

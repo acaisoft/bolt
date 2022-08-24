@@ -32,11 +32,17 @@ from services.logger import setup_custom_logger
 logger = setup_custom_logger(__file__)
 
 
-def hasura_token_for_testrunner(config):
+def generate_hasura_token(
+        config,
+        role: str = const.ROLE_TESTRUNNER,
+        execution_id: str = str(uuid.uuid1())
+) -> tuple[str, str]:
     """
     Returns a token for use by a testrunner, granting access to a single execution.
     Token's generated either through Keycloak or locally depending on config
     :param config: flask app config
+    :param role: hasura role token needs to be issued for
+    :param execution_id: execution id to include in the token. Will generate new if missing.
     :return: tuple: jwt token, testrunner id
     """
 
@@ -69,17 +75,22 @@ def hasura_token_for_testrunner(config):
         return token['access_token'], claims['https://hasura.io/jwt/claims']['x-hasura-testruner-id']
     else:
         logger.info("Generating Hasura access token inside service")
-        execution_id = str(uuid.uuid4())
+        match role:
+            case const.ROLE_REPORTGENERATOR:
+                runner_id = {"x-hasura-reportgenerator-id": execution_id}
+            case _:
+                runner_id = {"x-hasura-testruner-id": execution_id}
         payload = {
             "https://hasura.io/jwt/claims": {
-                "x-hasura-allowed-roles": [const.ROLE_TESTRUNNER],
-                "x-hasura-default-role": const.ROLE_TESTRUNNER,
-                "x-hasura-testruner-id": execution_id,
+                "x-hasura-allowed-roles": [role],
+                "x-hasura-default-role": role,
+                "x-hasura-user-id": config.get('AUTH_USER_ID'),
+                **runner_id
             }}
         return generate_token(current_app.config, payload=payload), execution_id
 
 
-#TODO: can be removed once AUTH_KC-driven approach above is tested
+# TODO: can be removed once AUTH_KC-driven approach above is tested
 def hasura_selfsignedtoken_for_testrunner(config):
     """
     Returns a token for use by a testrunner, granting access to a single execution. Signed by config.SECRET_KEY, good for local tests.
@@ -90,7 +101,7 @@ def hasura_selfsignedtoken_for_testrunner(config):
 
     execution_id = os.getenv('SELFSIGNED_TOKEN_EXECUTION_ID', False)
     if not execution_id:
-        execution_id = str(uuid.uuid4())
+        execution_id = str(uuid.uuid1())
 
     payload = {"https://hasura.io/jwt/claims": {
         "x-hasura-allowed-roles": [const.ROLE_TESTRUNNER],

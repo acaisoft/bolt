@@ -119,7 +119,7 @@ class Create(CreateValidate):
         if testing.request_is_selftest(info):
             query_params['id'] = str(project_id)
         else:
-            query_params['id'] = str(uuid.uuid4())
+            query_params['id'] = str(uuid.uuid1())
 
         test_source_params = {
             'id': query_params['id'],

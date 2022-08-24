@@ -75,6 +75,21 @@ select_permissions:
                   is_deleted:
                     _eq: false
       allow_aggregations: true
+  - role: reportgenerator
+    permission:
+      columns:
+        - id
+        - number_of_errors
+        - number_of_fails
+        - number_of_successes
+        - number_of_users
+        - average_response_time
+        - timestamp
+        - execution_id
+        - average_response_size
+      filter:
+        execution_id:
+          _eq: X-Hasura-Reportgenerator-Id
   - role: tenantadmin
     permission:
       columns:

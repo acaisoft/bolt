@@ -48,6 +48,11 @@ class JobLoadTests:
 
 
 @dataclass
+class JobReport:
+    env_vars: Optional[Dict[str, str]] = None
+
+
+@dataclass
 class Workflow:
     tenant_id: str
     project_id: str
@@ -64,5 +69,6 @@ class Workflow:
     job_post_stop: Optional[JobPostStop]
     job_monitoring: Optional[JobMonitoring]
     job_load_tests: Optional[JobLoadTests]
+    job_report: Optional[JobReport]
 
     no_cache: bool

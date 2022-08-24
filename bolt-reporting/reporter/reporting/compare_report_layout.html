@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Load Tests Report for Test Runs {{model["first"]["id"]}} and {{model["second"]["id"]}}</title>
+    </head>
+<body>
+<div>
+    <img src="logo.png">
+    <h1 class="doctitle">
+        Test Report
+    </h1>
+    <div class="columns-container">
+        <div class="column">
+            {% if model['first']['notes']%}
+        <p class="subtitle">
+        Notes:
+        </p>
+        <p>{{model['first']['notes']}}</p>
+        <hr>
+        {% endif %}
+        <p class="subtitle">
+        Scenario details:
+        </p>
+        <table class="table-steps">
+        <tbody>
+        <tr class="odd">
+            <td class="param_name">Scenario name:</td>
+            <td class="param_value">{{model['first']['config']['name']}}</td>
+        </tr>
+        <tr class="even">
+            <td class="param_name">Execution time (UTC):</td>
+            <td class="param_value">{{model['first']['date']}}</td>
+        </tr>
+        <tr class="odd">
+            <td class="param_name">Bolt URL:</td>
+            <td class="param_value"><a href="{{model['first']['url']}}">{{model['first']['url']}}</a></td>
+        </tr>
+        </tbody>
+        </table>
+        <hr>
+        <div class="breaker"></div>
+        <h3>Scenario Configuration</h3>
+        {% if model['first']['config']['params']['load']%}
+        <p class="subtitle">Load<p>
+        <table class="table-steps">
+            <tbody>
+            <tr class="odd">
+            <td class="param_name">Host:</td>
+            <td class="param_value">{{model['first']['config']['params']['load']['host']}}</td>
+            </tr>
+            <tr class="even">
+            <td class="param_name">Duration:</td>
+            <td class="param_value">{{model['first']['config']['params']['load']['duration']}}</td>
+            </tr>
+            <tr class="odd">
+            <td class="param_name">Users/Second ramp up:</td>
+            <td class="param_value">{{model['first']['config']['params']['load']['rampup']}}</td>
+            </tr>
+            <tr class="even">
+            <td class="param_name">Total users:</td>
+            <td class="param_value">{{model['first']['config']['params']['load']['users']}}</td>
+            </tr>
+            </tbody>
+        </table>
+        {% endif %}
+        {% if model['first']['config']['params']['monitoring']%}
+        <p class="subtitle">Monitoring<p>
+        <table class="table-steps">
+            <tbody>
+            <tr class="odd">
+            <td class="param_name">Duration:</td>
+            <td class="param_value">{{model['first']['config']['params']['monitoring']['duration']}}</td>
+            </tr>
+            <tr class="even">
+            <td class="param_name">Interval:</td>
+            <td class="param_value">{{model['first']['config']['params']['monitoring']['interval']}}</td>
+            </tr>
+            </tbody>
+        </table>
+        {% endif %}
+        {% if model['first']['config']['envvars'] %}
+        <p class="subtitle">Environment variables<p>
+        <table class="table-steps">
+            <tbody>
+            {% for k, v in model['first']['config']['envvars'].items() %}
+            <tr class="{{ loop.cycle('odd', 'even') }}">
+            <td class="param_name">{{k}}</td>
+            <td class="param_value">{{v}}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+        <hr>
+        <h3>
+        Test results in time
+        </h3>
+        <img src="{{model['first']['time_plots']}}" style="max-width: 100%">
+        <div class="breaker"></div>
+         <h3>Endpoints Results</h3>
+        {% for r in model['first']['requests'] %}
+        <p class="subtitle"><b>{{r['method']}}</b>: {{r['name']}}<p>
+        <table class="table-steps">
+        <tbody>
+        <tr class="odd">
+            <td class="param_name">Avg. requests/second:</td>
+            <td class="param_value">{{r['req_second']}}</td>
+        </tr>
+        <tr class="even">
+            <td class="param_name">Total requests:</td>
+            <td class="param_value"><b>{{r['total']}}</b></td>
+        </tr>
+        <tr class="odd">
+            <td class="param_name">Success ratio:</td>
+            <td class="param_value">
+                <img src="{{r['pie_svg']}}" style="max-width: 100%; max-height: 150pt;">
+            </td>
+        </tr>
+        <tr class="even">
+            <td class="param_name">Min. response time:</td>
+            <td class="param_value">{{r['min_time_label']}}</td>
+        </tr>
+        <tr class="odd">
+            <td class="param_name">Avg. response time:</td>
+            <td class="param_value"><b>{{r['avg_time_label']}}</b></td>
+        </tr>
+        <tr class="even">
+            <td class="param_name">Max. response time:</td>
+            <td class="param_value">{{r['max_time_label']}}</td>
+        </tr>
+        <tr class="odd">
+            <td class="param_name">Time distribution:</td>
+            <td class="param_value">
+                <img src="{{r['distribution_svg']}}" style="max-width: 100%; max-height: 150pt;">
+            </td>
+        </tr>
+
+        </tbody>
+        </table>
+        {% if r['errors'] %}
+        <p class="subtitle">Request errors</p>
+        <table class="table-steps">
+        <tbody>
+        {% for e in r['errors'] %}
+            <tr class="{{ loop.cycle('odd', 'even') }}">
+            <td class="error_name">{{e['exception_data']}}</td>
+            <td class="error_value">{{e['number_of_occurrences']}} ({{e['percent']}}%)</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+        {% endif %}
+        <hr>
+        {% endfor %}
+        {% if model['first']['metrics_plots'] %}
+        <img src="{{model['first']['metrics_plots']}}" style="max-width: 100%">
+        {% endif %}
+        </div>
+        <div class="column">
+            {% if model['second']['notes']%}
+        <p class="subtitle">
+        Notes:
+        </p>
+        <p>{{model['second']['notes']}}</p>
+        <hr>
+        {% endif %}
+        <p class="subtitle">
+        Scenario details:
+        </p>
+        <table class="table-steps">
+        <tbody>
+        <tr class="odd">
+            <td class="param_name">Scenario name:</td>
+            <td class="param_value">{{model['second']['config']['name']}}</td>
+        </tr>
+        <tr class="even">
+            <td class="param_name">Execution time (UTC):</td>
+            <td class="param_value">{{model['second']['date']}}</td>
+        </tr>
+        <tr class="odd">
+            <td class="param_name">Bolt URL:</td>
+            <td class="param_value"><a href="{{model['second']['url']}}">{{model['second']['url']}}</a></td>
+        </tr>
+        </tbody>
+        </table>
+        <hr>
+        <div class="breaker"></div>
+        <h3>Scenario Configuration</h3>
+        {% if model['second']['config']['params']['load']%}
+        <p class="subtitle">Load<p>
+        <table class="table-steps">
+            <tbody>
+            <tr class="odd">
+            <td class="param_name">Host:</td>
+            <td class="param_value">{{model['second']['config']['params']['load']['host']}}</td>
+            </tr>
+            <tr class="even">
+            <td class="param_name">Duration:</td>
+            <td class="param_value">{{model['second']['config']['params']['load']['duration']}}</td>
+            </tr>
+            <tr class="odd">
+            <td class="param_name">Users/Second ramp up:</td>
+            <td class="param_value">{{model['second']['config']['params']['load']['rampup']}}</td>
+            </tr>
+            <tr class="even">
+            <td class="param_name">Total users:</td>
+            <td class="param_value">{{model['second']['config']['params']['load']['users']}}</td>
+            </tr>
+            </tbody>
+        </table>
+        {% endif %}
+        {% if model['second']['config']['params']['monitoring']%}
+        <p class="subtitle">Monitoring<p>
+        <table class="table-steps">
+            <tbody>
+            <tr class="odd">
+            <td class="param_name">Duration:</td>
+            <td class="param_value">{{model['second']['config']['params']['monitoring']['duration']}}</td>
+            </tr>
+            <tr class="even">
+            <td class="param_name">Interval:</td>
+            <td class="param_value">{{model['second']['config']['params']['monitoring']['interval']}}</td>
+            </tr>
+            </tbody>
+        </table>
+        {% endif %}
+        {% if model['second']['config']['envvars'] %}
+        <p class="subtitle">Environment variables<p>
+        <table class="table-steps">
+            <tbody>
+            {% for k, v in model['second']['config']['envvars'].items() %}
+            <tr class="{{ loop.cycle('odd', 'even') }}">
+            <td class="param_name">{{k}}</td>
+            <td class="param_value">{{v}}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+        <hr>
+        <h3 id="resultsintime">
+        Test results in time
+        </h3>
+        <img src="{{model['second']['time_plots']}}" style="max-width: 100%">
+        <div class="breaker"></div>
+         <h3>Endpoints Results</h3>
+        {% for r in model['second']['requests'] %}
+        <p class="subtitle"><b>{{r['method']}}</b>: {{r['name']}}<p>
+        <table class="table-steps">
+        <tbody>
+        <tr class="odd">
+            <td class="param_name">Avg. requests/second:</td>
+            <td class="param_value">{{r['req_second']}}</td>
+        </tr>
+        <tr class="even">
+            <td class="param_name">Total requests:</td>
+            <td class="param_value"><b>{{r['total']}}</b></td>
+        </tr>
+        <tr class="odd">
+            <td class="param_name">Success ratio:</td>
+            <td class="param_value">
+                <img src="{{r['pie_svg']}}" style="max-width: 100%; max-height: 150pt;">
+            </td>
+        </tr>
+        <tr class="even">
+            <td class="param_name">Min. response time:</td>
+            <td class="param_value">{{r['min_time_label']}}</td>
+        </tr>
+        <tr class="odd">
+            <td class="param_name">Avg. response time:</td>
+            <td class="param_value"><b>{{r['avg_time_label']}}</b></td>
+        </tr>
+        <tr class="even">
+            <td class="param_name">Max. response time:</td>
+            <td class="param_value">{{r['max_time_label']}}</td>
+        </tr>
+        <tr class="odd">
+            <td class="param_name">Time distribution:</td>
+            <td class="param_value">
+                <img src="{{r['distribution_svg']}}" style="max-width: 100%; max-height: 150pt;">
+            </td>
+        </tr>
+
+        </tbody>
+        </table>
+        {% if r['errors'] %}
+        <p class="subtitle">Request errors</p>
+        <table class="table-steps">
+        <tbody>
+        {% for e in r['errors'] %}
+            <tr class="{{ loop.cycle('odd', 'even') }}">
+            <td class="error_name">{{e['exception_data']}}</td>
+            <td class="error_value">{{e['number_of_occurrences']}} ({{e['percent']}}%)</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+        {% endif %}
+        <hr>
+        {% endfor %}
+        {% if model['second']['metrics_plots'] %}
+        <img src="{{model['second']['metrics_plots']}}" style="max-width: 100%">
+        {% endif %}
+        </div>
+    </div>
+</div>
+</body>
+</html>

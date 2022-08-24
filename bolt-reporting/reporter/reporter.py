@@ -17,7 +17,33 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-from .start import TestrunStart, TestrunStartObject
-from .status import TestrunQueries, StatusResponse
-from .terminate import TestrunTerminate, TestrunTerminateObject
-from .generate_report import TestrunReport, TestrunReportResponse
+from api.api_actions import APIClient
+from os import environ as env
+from models.model_builder import prepare_single_execution_model
+from reporting.reporting_utils import generate_pdf_report
+from storage import upload
+from const import *
+
+if __name__ == '__main__':
+    api = None
+    try:
+        hasura_url = env.get('HASURA_URL')
+        hasura_token = env.get('HASURA_TOKEN')
+        execution_id = env.get('EXECUTION_ID')
+        upload_url = env.get('UPLOAD_URL')
+
+        api = APIClient(
+            url=hasura_url,
+            token=hasura_token
+        )
+
+        api.update_report_status(execution_id, STATUS_GENERATING)
+
+        model = prepare_single_execution_model(execution_id=execution_id, api=api)
+        report_path = generate_pdf_report(model)
+        upload(report_path, upload_url)
+        api.update_report_status(execution_id, STATUS_READY)
+    except Exception as ex:
+        if api is not None:
+            api.update_report_status(execution_id, STATUS_NOT_GENERATED)
+        raise ex

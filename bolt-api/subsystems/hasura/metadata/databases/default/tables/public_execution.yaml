@@ -112,6 +112,7 @@ select_permissions:
         - failed_requests
         - id
         - passed_requests
+        - report
         - start
         - start_locust
         - status
@@ -149,6 +150,7 @@ select_permissions:
         - end
         - end_locust
         - id
+        - report
         - start
         - start_locust
         - status
@@ -173,6 +175,16 @@ select_permissions:
                   user_id:
                     _eq: X-Hasura-User-Id
       allow_aggregations: true
+  - role: reportgenerator
+    permission:
+      columns:
+        - configuration_id
+        - configuration_snapshot
+        - id
+        - report
+      filter:
+        id:
+          _eq: X-Hasura-Reportgenerator-Id
   - role: tenantadmin
     permission:
       columns:
@@ -186,6 +198,7 @@ select_permissions:
         - end_locust
         - failed_requests
         - id
+        - report
         - passed_requests
         - start
         - start_locust
@@ -224,6 +237,7 @@ select_permissions:
         - end
         - end_locust
         - id
+        - report
         - start
         - start_locust
         - status
@@ -259,6 +273,7 @@ select_permissions:
         - created_by_id
         - end
         - id
+        - report
         - start
         - status
         - test_job_error
@@ -271,6 +286,14 @@ select_permissions:
         id:
           _eq: X-Hasura-Testruner-Id
 update_permissions:
+  - role: reportgenerator
+    permission:
+      columns:
+        - report
+      filter:
+        id:
+          _eq: X-Hasura-Reportgenerator-Id
+      check: null
   - role: testrunner
     permission:
       columns:

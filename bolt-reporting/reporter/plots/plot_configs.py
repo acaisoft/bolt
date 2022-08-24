@@ -17,7 +17,21 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-from .start import TestrunStart, TestrunStartObject
-from .status import TestrunQueries, StatusResponse
-from .terminate import TestrunTerminate, TestrunTerminateObject
-from .generate_report import TestrunReport, TestrunReportResponse
+MAJOR_TICK_FONT_SIZE = 8
+MINOR_TICK_FONT_SIZE = 6
+X_AXIS_DATE_FORMATTER_MAJOR = {'axis': 'x', 'which': 'major', 'labelsize': 8, 'rotation': 45}
+X_AXIS_DATE_FORMATTER_MINOR = {'axis': 'x', 'which': 'minor', 'labelsize': 6, 'rotation': 45}
+TITLE_STYLE = {'fontsize': 11,
+               'fontweight': 'bold',
+               'color': 'black',
+               'verticalalignment': 'baseline',
+               'horizontalalignment': 'left',
+               'family': 'sans-serif'}
+Y_AXIS_STYLE = {'size': 2,
+                'labelsize': 8,
+                'axis': 'y',
+                'which': 'major'
+                }
+BLUE = 'lightskyblue'
+GREEN = 'lightgreen'
+RED = 'lightsalmon'

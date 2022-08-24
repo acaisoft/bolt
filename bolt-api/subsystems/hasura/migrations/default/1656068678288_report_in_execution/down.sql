@@ -1,0 +1,3 @@
+-- Could not auto-generate a down migration.
+-- Please write an appropriate down migration for the SQL below:
+-- ALTER TABLE "public"."execution" ADD COLUMN IF NOT EXISTS "report" text DEFAULT 'not_generated'::text NOT NULL;

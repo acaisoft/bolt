@@ -25,6 +25,7 @@ from .dao import JobLoadTests
 from .dao import JobMonitoring
 from .dao import JobPostStop
 from .dao import JobPreStart
+from .dao import JobReport
 from .dao import Workflow
 
 
@@ -49,6 +50,10 @@ class LoadTestsSchema(Schema):
     file = fields.String(allow_none=True)
 
 
+class JobReportSchema(Schema):
+    env_vars = fields.Dict()
+
+
 class WorkflowSchema(Schema):
     tenant_id = fields.Str(required=True)
     project_id = fields.Str(required=True)
@@ -65,29 +70,30 @@ class WorkflowSchema(Schema):
     job_post_stop = fields.Nested(PostStopSchema, missing=None)
     job_monitoring = fields.Nested(MonitoringSchema, missing=None)
     job_load_tests = fields.Nested(LoadTestsSchema, missing=None)
+    job_report = fields.Nested(JobReportSchema, missing=None)
 
     no_cache = fields.Boolean(required=False, missing=False)
 
     @post_load
     def make_workflow(self, data, **kwargs):
-        data["job_pre_start"] = (
-            JobPreStart(**data["job_pre_start"])
-            if data["job_pre_start"] is not None
-            else None
-        )
-        data["job_post_stop"] = (
-            JobPostStop(**data["job_post_stop"])
-            if data["job_post_stop"] is not None
-            else None
-        )
-        data["job_monitoring"] = (
-            JobMonitoring(**data["job_monitoring"])
-            if data["job_monitoring"] is not None
-            else None
-        )
-        data["job_load_tests"] = (
-            JobLoadTests(**data["job_load_tests"])
-            if data["job_load_tests"] is not None
-            else None
-        )
+        if data.get("job_pre_start") is not None:
+            data["job_pre_start"] = (
+                JobPreStart(**data["job_pre_start"])
+            )
+        if data.get("job_post_stop") is not None:
+            data["job_post_stop"] = (
+                JobPostStop(**data["job_post_stop"])
+            )
+        if data.get("job_monitoring") is not None:
+            data["job_monitoring"] = (
+                JobMonitoring(**data["job_monitoring"])
+            )
+        if data.get("job_load_tests") is not None:
+            data["job_load_tests"] = (
+                JobLoadTests(**data["job_load_tests"])
+            )
+        if data.get("job_report") is not None:
+            data["job_report"] = (
+                JobReport(**data["job_report"])
+            )
         return Workflow(**data)

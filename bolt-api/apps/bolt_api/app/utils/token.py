@@ -80,7 +80,7 @@ def generate_token(config: Config, priv_key: Optional[str] = None, payload: Opti
                     "tester",
                     "reader"
                 ],
-                "x-hasura-user-id": "96fa4735-f862-4cb9-b0df-f09c008e02e4"
+                "x-hasura-user-id": config.get('AUTH_USER_ID')
             },
             "name": "Bolt Dev",
             "preferred_username": "bolt+dev@acaisoft.com",

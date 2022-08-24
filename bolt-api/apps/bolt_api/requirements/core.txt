@@ -29,3 +29,4 @@ jsonschema==4.4.0
 pydevd-pycharm~=213.7172.26
 marshmallow==3.15.0
 kubernetes~=23.6.0
+cloudstorage==0.11.0

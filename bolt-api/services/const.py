@@ -24,6 +24,7 @@ JWT_VALID_PERIOD = 'JWT_VALID_PERIOD'
 AUTH_KC = 'AUTH_KC'
 AUTH_LOGIN = 'AUTH_LOGIN'
 AUTH_PASSWORD = 'AUTH_PASSWORD'
+AUTH_USER_ID = 'AUTH_USER_ID'
 JWT_AUTH_PRIV_KEY = 'JWT_AUTH_PRIV_KEY'
 JWT_AUTH_PUB_KEY = 'JWT_AUTH_PUB_KEY'
 AUTH_LOCAL_DEV = 'AUTH_LOCAL_DEV'
@@ -39,13 +40,43 @@ ARGO_KUBE_NAMESPACE = 'ARGO_KUBE_NAMESPACE'
 ARGO_HELM_RELEASE_NAME = 'ARGO_HELM_RELEASE_NAME'
 ARGO_CONTAINER_RESOURCES = 'ARGO_CONTAINER_RESOURCES'
 
+# storage services
+AZURE_ACCOUNT_NAME = "AZURE_ACCOUNT_NAME"
+AZURE_ACCOUNT_KEY = "AZURE_ACCOUNT_KEY"
+S3_KEY_ID = "S3_KEY_ID"
+S3_ACCESS_KEY = "S3_ACCESS_KEY"
+S3_REGION = "S3_REGION"
+STORAGE_PROVIDERS = {
+    'GCP': {
+        'vars': [
+            "GOOGLE_APPLICATION_CREDENTIALS"
+        ]
+    },
+    'AZURE': {
+        'vars': [
+            AZURE_ACCOUNT_NAME,
+            AZURE_ACCOUNT_KEY
+        ]
+    },
+    'S3': {
+        'vars': [
+            S3_KEY_ID,
+            S3_ACCESS_KEY,
+            S3_REGION
+        ]
+    }
+}
+STORAGE_SERVICE = 'STORAGE_SERVICE'
+STORAGE_CONTAINER_NAME = 'STORAGE_CONTAINER_NAME'
+
 ROLE_ADMIN = 'admin'
 ROLE_TENANT_ADMIN = 'tenantadmin'
 ROLE_MANAGER = 'manager'
 ROLE_TESTER = 'tester'
 ROLE_READER = 'reader'
 ROLE_TESTRUNNER = 'testrunner'  # internal use
-ROLE_CHOICE = (ROLE_ADMIN, ROLE_TENANT_ADMIN, ROLE_MANAGER, ROLE_TESTER, ROLE_READER)
+ROLE_REPORTGENERATOR = 'reportgenerator'  # internal use
+ROLE_CHOICE = (ROLE_ADMIN, ROLE_TENANT_ADMIN, ROLE_MANAGER, ROLE_TESTER, ROLE_READER, ROLE_REPORTGENERATOR)
 
 TENANT_ID = '1'
 
@@ -84,6 +115,8 @@ REQUIRED_BOLT_API_CONFIG_VARS = (
     'HASURA_GRAPHQL_ACCESS_KEY',
     'SECRET_KEY',
     'ARGO_CONTAINER_RESOURCES',
+    'STORAGE_SERVICE',
+    'STORAGE_CONTAINER_NAME'
 )
 
 REQUIRED_ENV_VARS = (
@@ -94,8 +127,11 @@ REQUIRED_ENV_VARS = (
     'GOOGLE_LOGS_BUCKET',
 )
 
-# default testrunner image for use by `test_creator` tests, override with BOLT_TEST_RUNNER_IMAGE
-DEFAULT_TEST_RUNNER_IMAGE = 'eu.gcr.io/acai-bolt/bolt-test-runner:0.1.31'
+# default testrunner image, override with IMAGE_BOLT_BUILDER
+DEFAULT_IMAGE_BOLT_BUILDER = 'eu.gcr.io/acai-bolt/argo-builder:revival-v4'
+
+# default report generator image, override with IMAGE_REPORT_BUILDER
+DEFAULT_IMAGE_REPORT_BUILDER = 'eu.gcr.io/acai-bolt/bolt-reporting:os-test-04'
 
 # allows load tests setup/teardown to work without getting ratelimited by repository hosting
 MOCK_REPOSITORY = 'git@mockbitbucket.org:repo'
@@ -107,6 +143,10 @@ EXTENSION_CHOICE = (EXTENSION_NFS,)
 
 # executions graphs
 MAX_GRAPH_POINTS = 1400
+
+# argo images
+IMAGE_BOLT_BUILDER = 'IMAGE_BOLT_BUILDER'
+IMAGE_REPORT_BUILDER = 'IMAGE_REPORT_BUILDER'
 
 # images upload
 BUCKET_PRIVATE_STORAGE = "uploads-bolt-acaisoft"

@@ -45,8 +45,49 @@ class Argo:
         self.CLOUDSDK_CORE_PROJECT = app_config.get(const.CLOUDSDK_CORE_PROJECT)
         self.IMAGE_REGISTRY_ADDRESS = app_config.get(const.IMAGE_REGISTRY_ADDRESS)
         self.GOOGLE_LOGS_BUCKET = app_config.get(const.GOOGLE_LOGS_BUCKET)
+        self.IMAGE_BOLT_BUILDER = app_config.get(const.IMAGE_BOLT_BUILDER, const.DEFAULT_IMAGE_BOLT_BUILDER)
+        self.IMAGE_REPORT_BUILDER = app_config.get(const.IMAGE_REPORT_BUILDER, const.DEFAULT_IMAGE_REPORT_BUILDER)
 
-    def create_argo_workflow(self, workflow: Workflow) -> Dict[str, Any]:
+    def create_argo_tests_workflow(self, workflow: Workflow) -> Dict[str, Any]:
+        """
+        Returns argoproj workflow for load tests
+        """
+        resource_definition = self._create_argo_workflow_base(workflow)
+        resource_definition["spec"]["affinity"] = \
+            {
+                "nodeAffinity": {
+                    "requiredDuringSchedulingIgnoredDuringExecution": {
+                        "nodeSelectorTerms": [
+                            {
+                                "matchExpressions": [
+                                    {
+                                        "key": "node_pool",
+                                        "operator": "In",
+                                        "values": [
+                                            "load-tests-workers-slaves",
+                                            "load-tests-workers-masters",
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            }
+        resource_definition["spec"]["entrypoint"] = "main"
+        resource_definition["spec"]["templates"] = self._generate_test_templates(workflow)
+        return resource_definition
+
+    def create_argo_report_workflow(self, workflow: Workflow) -> Dict[str, Any]:
+        """
+        Returns argoproj workflow for generating report
+        """
+        resource_definition = self._create_argo_workflow_base(workflow)
+        resource_definition["spec"]["entrypoint"] = "generate-report"
+        resource_definition["spec"]["templates"] = [self._generate_report_template(workflow)]
+        return resource_definition
+
+    def _create_argo_workflow_base(self, workflow: Workflow) -> Dict[str, Any]:
         """
         Returns argoproj.io/v1alpha1 Workflow as dict (in json format)
         """
@@ -61,37 +102,17 @@ class Argo:
                 "namespace": self.NAMESPACE,
             },
             "spec": {
-                "entrypoint": "main",
-                "templates": self._generate_templates(workflow),
+                "entrypoint": None,
+                "templates": None,
                 "volumes": self._generate_volumes(workflow),
-                "serviceAccountName": f"{self.HELM_RELEASE_NAME}-argo-workflows-workflow-controller",
-                "affinity": {
-                    "nodeAffinity": {
-                        "requiredDuringSchedulingIgnoredDuringExecution": {
-                            "nodeSelectorTerms": [
-                                {
-                                    "matchExpressions": [
-                                        {
-                                            "key": "node_pool",
-                                            "operator": "In",
-                                            "values": [
-                                                "load-tests-workers-slaves",
-                                                "load-tests-workers-masters",
-                                            ]
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
-                    }
-                }
+                "serviceAccountName": f"{self.HELM_RELEASE_NAME}-argo-workflows-workflow-controller"
             },
         }
         if workflow.job_post_stop:
             resource_definition["spec"]["onExit"] = "post-stop"
         return resource_definition
 
-    def _generate_templates(self, workflow: Workflow):
+    def _generate_test_templates(self, workflow: Workflow):
         main_template = self._generate_main_template(workflow)
         logger.info(f"The main template has been created.")
         build_template = self._generate_build_template(workflow)
@@ -109,7 +130,7 @@ class Argo:
             "container": {
                 # TODO we should used tagged image, but for now pull always...
                 "imagePullPolicy": "Always",
-                "image": "eu.gcr.io/acai-bolt/argo-builder:revival-v4",
+                "image": self.IMAGE_BOLT_BUILDER,
                 "command": ["python", "build.py"],
                 "volumeMounts": [
                     {"mountPath": "/root/.ssh", "name": "ssh"},
@@ -323,6 +344,23 @@ class Argo:
             templates.append(template_load_tests_slave)
 
         return templates
+
+    def _generate_report_template(self, workflow: Workflow):
+        return {
+            "name": "generate-report",
+            "container": {
+                # TODO we should used tagged image, but for now pull always...
+                "imagePullPolicy": "Always",
+                "image": self.IMAGE_REPORT_BUILDER,
+                "command": ["python", "reporter.py"],
+                "env": [
+                    *self._map_envs(workflow.job_report.env_vars),
+                    {"name": "EXECUTION_ID", "value": workflow.execution_id},
+                    {"name": "HASURA_URL", "value": self.HASURA_GQL},
+                    {"name": "HASURA_TOKEN", "value": workflow.auth_token},
+                ]
+            }
+        }
 
     @staticmethod
     def _generate_volumes(workflow: Workflow):

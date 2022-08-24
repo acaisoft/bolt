@@ -87,6 +87,7 @@ class TestrunMutations(graphene.ObjectType):
     # testrun management
     testrun_start = to_field(test_runs.TestrunStart)
     testrun_terminate = to_field(test_runs.TestrunTerminate)
+    testrun_get_report = to_field(test_runs.TestrunReport)
 
     # user management
     testrun_user_assign = to_field(users.UserAssignToProject)
@@ -113,6 +114,7 @@ AppSchema = graphene.Schema(
         test_creator.TestCreatorType,
         test_runs.TestrunStartObject,
         test_runs.TestrunTerminateObject,
+        test_runs.TestrunReportResponse,
         test_runs.StatusResponse,
         gql_util.ValidationResponse,
         project.SummaryResponse,

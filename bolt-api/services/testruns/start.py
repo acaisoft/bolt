@@ -22,7 +22,7 @@ import requests
 
 from apps.bolt_api.app.workflow import WorkflowsResource, KubernetesService
 from services import const
-from services.hasura.hasura import hasura_token_for_testrunner
+from services.hasura.hasura import generate_hasura_token
 from services.hasura import hce
 from services.logger import setup_custom_logger
 from services.testruns.defaults import DEFAULT_CHART_CONFIGURATION, NFS_CHART_CONFIGURATION
@@ -31,6 +31,10 @@ from services.validators.configuration import validate_test_configuration_by_id,
 
 logger = setup_custom_logger(__file__)
 REQUEST_TIMEOUT = 5  # seconds
+
+
+class TestrunStartException(Exception):
+    ...
 
 
 def start(app_config, conf_id, user_id, no_cache):
@@ -137,7 +141,7 @@ def start(app_config, conf_id, user_id, no_cache):
     }
 
     if code_source == const.CONF_SOURCE_REPO:
-        hasura_token, execution_id = hasura_token_for_testrunner(app_config)
+        hasura_token, execution_id = generate_hasura_token(app_config, const.ROLE_TESTRUNNER)
         # common workflow fields
         try:
             branch = [
@@ -160,6 +164,7 @@ def start(app_config, conf_id, user_id, no_cache):
             'job_load_tests': None,
             'job_monitoring': None,
             'job_post_stop': None,
+            'job_report': None,
             'no_cache': no_cache,
         }
         # pre start
@@ -183,13 +188,16 @@ def start(app_config, conf_id, user_id, no_cache):
         if test_config['has_post_test']:
             workflow_data['job_post_stop'] = {'env_vars': {}}
 
-        logger.info(f'Workflow creator data {workflow_data}')
-        workflow = WorkflowsResource(KubernetesService(app_config))
-        workflow_state = workflow.create(workflow_data)
-        # set argo_name for execution
-        initial_state['argo_name'] = workflow_state['name']
-        initial_state['argo_namespace'] = app_config.get(const.ARGO_KUBE_NAMESPACE)
-        logger.info(f'Added argo_name field to initial_state data {initial_state}')
+        try:
+            workflow = WorkflowsResource(KubernetesService(app_config))
+            workflow_state = workflow.run_tests(workflow_data)
+            # set argo_name for execution
+            initial_state['argo_name'] = workflow_state['name']
+            initial_state['argo_namespace'] = app_config.get(const.ARGO_KUBE_NAMESPACE)
+            logger.info(f'Added argo_name field to initial_state data {initial_state}')
+        except Exception as ex:
+            logger.error(ex)
+            raise TestrunStartException("Error while spinning Argo workflow")
     elif code_source == const.CONF_SOURCE_JSON:
         # TODO: DEPRECATED. NEED TO FIX (merge to argo)
         deployer_response, execution_id, hasura_token = None, None, None
