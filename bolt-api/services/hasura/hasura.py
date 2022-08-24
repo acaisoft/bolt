@@ -35,7 +35,7 @@ logger = setup_custom_logger(__file__)
 def generate_hasura_token(
         config,
         role: str = const.ROLE_TESTRUNNER,
-        execution_id: str = str(uuid.uuid1())
+        execution_id: str = None
 ) -> tuple[str, str]:
     """
     Returns a token for use by a testrunner, granting access to a single execution.
@@ -45,7 +45,8 @@ def generate_hasura_token(
     :param execution_id: execution id to include in the token. Will generate new if missing.
     :return: tuple: jwt token, testrunner id
     """
-
+    if execution_id is None:
+        execution_id = str(uuid.uuid1())
     if config.get(const.AUTH_KC, False):
         if config.get('SELFSIGNED_TOKEN_FOR_TESTRUNNER', False) or os.getenv('SELFSIGNED_TOKEN_FOR_TESTRUNNER', False):
             # provide token and execution id through environment, or one will be generated
