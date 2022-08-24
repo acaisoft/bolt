@@ -35,7 +35,7 @@ logger = setup_custom_logger(__file__)
 def generate_hasura_token(
         config,
         role: str = const.ROLE_TESTRUNNER,
-        execution_id: str = str(uuid.uuid4())
+        execution_id: str = str(uuid.uuid1())
 ) -> tuple[str, str]:
     """
     Returns a token for use by a testrunner, granting access to a single execution.
@@ -101,7 +101,7 @@ def hasura_selfsignedtoken_for_testrunner(config):
 
     execution_id = os.getenv('SELFSIGNED_TOKEN_EXECUTION_ID', False)
     if not execution_id:
-        execution_id = str(uuid.uuid4())
+        execution_id = str(uuid.uuid1())
 
     payload = {"https://hasura.io/jwt/claims": {
         "x-hasura-allowed-roles": [const.ROLE_TESTRUNNER],
