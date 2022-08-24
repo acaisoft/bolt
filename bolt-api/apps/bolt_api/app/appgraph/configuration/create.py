@@ -19,11 +19,11 @@
 
 import json
 import graphene
-import math
 
 from flask import current_app
 
 from apps.bolt_api.app.appgraph.configuration import types
+from apps.bolt_api.app.appgraph.configuration import utils
 from services import const, gql_util
 from services import validators
 from services.hasura import hce
@@ -75,7 +75,6 @@ class CreateValidate(graphene.Mutation):
             test_source_id=None, configuration_parameters=None, configuration_envvars=None,
             has_pre_test=False, has_post_test=False, has_load_tests=False, has_monitoring=False):
         project_id = str(project_id)
-
         assert type_slug in const.TESTTYPE_CHOICE, \
             f'invalid choice of type_slug (valid choices: {const.TESTTYPE_CHOICE})'
 
@@ -206,7 +205,7 @@ class CreateValidate(graphene.Mutation):
                     })
                     # calculate instances number based on num of users
                     if parameter_slug == const.TESTPARAM_USERS:
-                        query_data['instances'] = math.ceil(int(param_value) / const.TESTRUN_MAX_USERS_PER_INSTANCE)
+                        query_data['instances'] = utils.get_instances_count(patched_params, param_value)
 
         if has_monitoring:
             monitoring_parameters = validators.validate_monitoring_params(configuration_parameters or [], defaults=repo['parameter'])

@@ -155,7 +155,8 @@ VALIDATORS = {
     '-md': validate_duration,
     '-mi': validate_interval,
     '-f': validate_locustfile_name,
-    '-b': validate_repository_branch
+    '-b': validate_repository_branch,
+    'n/a': lambda x: True
 }
 
 if __name__ == '__main__':
