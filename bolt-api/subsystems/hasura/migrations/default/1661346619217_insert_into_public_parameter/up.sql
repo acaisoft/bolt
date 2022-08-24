@@ -1,1 +1,0 @@
-INSERT INTO "public"."parameter"("id", "name", "param_type", "default_value", "param_name", "type_slug", "slug_name") VALUES (E'a16aefb3-1ae2-492a-8492-03b9b1eea621', E'users/worker', E'int', E'1000', E'n/a', E'load_tests', E'load_tests_users_per_worker');
