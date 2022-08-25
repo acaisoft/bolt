@@ -43,6 +43,7 @@ class RepoTar:
 
 class LocustWrapper:
     tar_basename = '.'
+    commit_hash = ''
 
     _template_path: str
     _wrapper_template_url = 'git@bitbucket.org:acaisoft/bolt-locust-wrapper-template.git'
@@ -51,7 +52,6 @@ class LocustWrapper:
 
     def __init__(self):
         self._load_wrapper_template()
-        self.commit_hash = self._wrapper_repo.head.object.hexsha
 
     def wrap(self, directory: str, no_cache=False):
         self._validate_repo(directory)
@@ -77,6 +77,8 @@ class LocustWrapper:
             branch=self._wrapper_template_branch,
             depth=1,
         )
+
+        self.commit_hash = self._wrapper_repo.head.object.hexsha
 
         shutil.rmtree(os.path.join(template_path, '.git'))
 
