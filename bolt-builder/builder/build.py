@@ -72,14 +72,16 @@ repo = git.Repo.clone_from(repo_url, repo_path, branch=branch, depth=1)
 send_stage_log('SUCCEEDED', 'downloading_source')
 logger.info(f'Repository cloned to {repo_path}')
 tests_head_sha = repo.head.object.hexsha
+short_test_sha = repo.git.rev_parse(tests_head_sha, short=7)
 
 wrapper = LocustWrapper()
 wrapper_head_sha = wrapper.commit_hash
+short_wrapper_sha = repo.git.rev_parse(wrapper_head_sha, short=7)
 
 send_stage_log('PENDING', 'image_preparation')
 google_cloud_build = GoogleCloudBuild()
 google_cloud_build.activate_service_account()
-image_tag = get_image_tag(repo_url, f'{tests_head_sha}-{wrapper_head_sha}')
+image_tag = get_image_tag(repo_url, f'{short_test_sha}-{short_wrapper_sha}')
 image_address = get_docker_image_destination(image_tag)
 
 if not NO_CACHE:
