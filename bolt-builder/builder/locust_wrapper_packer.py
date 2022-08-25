@@ -51,6 +51,7 @@ class LocustWrapper:
 
     def __init__(self):
         self._load_wrapper_template()
+        self.commit_hash = self._wrapper_repo.head.object.hexsha
 
     def wrap(self, directory: str, no_cache=False):
         self._validate_repo(directory)

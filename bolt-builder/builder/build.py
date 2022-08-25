@@ -35,6 +35,7 @@ logger = logging.getLogger(__name__)
 
 IMAGE_REGISTRY_ADDRESS = os.environ['IMAGE_REGISTRY_ADDRESS']
 SPECIAL_CHARACTERS_REGEX = re.compile(r"[^A-Za-z0-9]")
+NO_CACHE = int(os.environ.get('NO_CACHE')) == 1
 
 
 def get_image_tag(repo_url: str, commit_hash: str):
@@ -70,15 +71,18 @@ logger.info(f'Cloning repository {repo_url}, branch {branch}...')
 repo = git.Repo.clone_from(repo_url, repo_path, branch=branch, depth=1)
 send_stage_log('SUCCEEDED', 'downloading_source')
 logger.info(f'Repository cloned to {repo_path}')
-head_sha = repo.head.object.hexsha
+tests_head_sha = repo.head.object.hexsha
+
+wrapper = LocustWrapper()
+wrapper_head_sha = wrapper.commit_hash
 
 send_stage_log('PENDING', 'image_preparation')
 google_cloud_build = GoogleCloudBuild()
 google_cloud_build.activate_service_account()
-image_tag = get_image_tag(repo_url, head_sha)
+image_tag = get_image_tag(repo_url, f'{tests_head_sha}-{wrapper_head_sha}')
 image_address = get_docker_image_destination(image_tag)
 
-if not int(os.environ.get('NO_CACHE')):
+if not NO_CACHE:
     is_image_exists = google_cloud_build.check_if_image_exist(IMAGE_REGISTRY_ADDRESS, image_tag)
     if is_image_exists:
         logger.info(f'Found image the registry: {image_address}')
@@ -87,7 +91,6 @@ if not int(os.environ.get('NO_CACHE')):
         exit(0)
 
 logger.info('Wrapping repository')
-wrapper = LocustWrapper()
 wrapper.wrap(repo_path)
 logger.info('Repository wrapped')
 
