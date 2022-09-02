@@ -17,6 +17,8 @@ insert_permissions:
       columns:
         - average_response_size
         - average_response_time
+        - max_response_time
+        - min_response_time
         - number_of_errors
         - number_of_fails
         - number_of_successes
@@ -56,6 +58,8 @@ select_permissions:
         - average_response_time
         - execution_id
         - id
+        - max_response_time
+        - min_response_time
         - number_of_errors
         - number_of_fails
         - number_of_successes
@@ -97,6 +101,8 @@ select_permissions:
         - average_response_time
         - execution_id
         - id
+        - max_response_time
+        - min_response_time
         - number_of_errors
         - number_of_fails
         - number_of_successes

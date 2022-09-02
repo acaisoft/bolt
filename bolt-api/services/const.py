@@ -152,3 +152,7 @@ IMAGE_REPORT_BUILDER = 'IMAGE_REPORT_BUILDER'
 # images upload
 BUCKET_PRIVATE_STORAGE = "uploads-bolt-acaisoft"
 BUCKET_PUBLIC_UPLOADS = "media.bolt.acaisoft.io"
+
+# stat gathering interval
+DEFAULT_STAT_GATHER_INTERVAL = 1
+STAT_GATHER_INTERVAL = 2

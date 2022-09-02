@@ -47,6 +47,7 @@ class Argo:
         self.GOOGLE_LOGS_BUCKET = app_config.get(const.GOOGLE_LOGS_BUCKET)
         self.IMAGE_BOLT_BUILDER = app_config.get(const.IMAGE_BOLT_BUILDER, const.DEFAULT_IMAGE_BOLT_BUILDER)
         self.IMAGE_REPORT_BUILDER = app_config.get(const.IMAGE_REPORT_BUILDER, const.DEFAULT_IMAGE_REPORT_BUILDER)
+        self.STAT_GATHER_INTERVAL = app_config.get(const.STAT_GATHER_INTERVAL, const.DEFAULT_STAT_GATHER_INTERVAL)
 
     def create_argo_tests_workflow(self, workflow: Workflow) -> Dict[str, Any]:
         """
@@ -152,6 +153,7 @@ class Argo:
                     {"name": "BOLT_HASURA_TOKEN", "value": workflow.auth_token},
                     {"name": "IMAGE_REGISTRY_ADDRESS", "value": self.IMAGE_REGISTRY_ADDRESS},
                     {"name": "GOOGLE_LOGS_BUCKET", "value": self.GOOGLE_LOGS_BUCKET},
+                    {"name": "BOLT_STAT_GATHER_INTERVAL", "value": self.STAT_GATHER_INTERVAL},
                 ],
             },
             "outputs": {
@@ -244,6 +246,7 @@ class Argo:
                         {"name": "BOLT_GRAPHQL_URL", "value": self.HASURA_GQL},
                         {"name": "BOLT_HASURA_TOKEN", "value": workflow.auth_token},
                         {"name": "BOLT_USERS", "value": str(workflow.job_load_tests.users)},
+                        {"name": "BOLT_STAT_GATHER_INTERVAL", "value": self.STAT_GATHER_INTERVAL},
                     ],
                     "resources": self.CONTAINER_RESOURCES["default"],
                 },
@@ -264,6 +267,7 @@ class Argo:
                         {"name": "BOLT_EXECUTION_ID", "value": workflow.execution_id},
                         {"name": "BOLT_GRAPHQL_URL", "value": self.HASURA_GQL},
                         {"name": "BOLT_HASURA_TOKEN", "value": workflow.auth_token},
+                        {"name": "BOLT_STAT_GATHER_INTERVAL", "value": self.STAT_GATHER_INTERVAL},
                     ],
                     "resources": self.CONTAINER_RESOURCES["default"],
                 },
@@ -283,6 +287,7 @@ class Argo:
                         {"name": "BOLT_EXECUTION_ID", "value": workflow.execution_id},
                         {"name": "BOLT_GRAPHQL_URL", "value": self.HASURA_GQL},
                         {"name": "BOLT_HASURA_TOKEN", "value": workflow.auth_token},
+                        {"name": "BOLT_STAT_GATHER_INTERVAL", "value": self.STAT_GATHER_INTERVAL},
                     ],
                     "resources": self.CONTAINER_RESOURCES["default"],
                 },
@@ -304,6 +309,7 @@ class Argo:
                         {"name": "BOLT_GRAPHQL_URL", "value": self.HASURA_GQL},
                         {"name": "BOLT_HASURA_TOKEN", "value": workflow.auth_token},
                         {"name": "BOLT_WORKER_TYPE", "value": "master"},
+                        {"name": "BOLT_STAT_GATHER_INTERVAL", "value": self.STAT_GATHER_INTERVAL},
                     ],
                     "resources": self.CONTAINER_RESOURCES["master"],
                 },
@@ -329,6 +335,7 @@ class Argo:
                             "value": "{{inputs.parameters.master-ip}}",
                         },
                         {"name": "BOLT_USERS", "value": str(workflow.job_load_tests.users)},
+                        {"name": "BOLT_STAT_GATHER_INTERVAL", "value": self.STAT_GATHER_INTERVAL},
                     ],
                     "resources": self.CONTAINER_RESOURCES["worker"],
                 },
