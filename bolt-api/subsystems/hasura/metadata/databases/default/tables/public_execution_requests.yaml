@@ -177,3 +177,13 @@ select_permissions:
                   is_deleted:
                     _eq: false
       allow_aggregations: true
+  - role: testrunner
+    permission:
+      columns:
+        - execution_id
+        - id
+        - identifier
+        - method
+        - name
+        - timestamp
+      filter: {}
