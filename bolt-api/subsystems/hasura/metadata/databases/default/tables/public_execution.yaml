@@ -306,14 +306,3 @@ update_permissions:
         id:
           _eq: X-Hasura-Testruner-Id
       check: null
-event_triggers:
-  - name: execution_update
-    definition:
-      update:
-        columns:
-          - status
-    retry_conf:
-      num_retries: 1
-      interval_sec: 5
-      timeout_sec: 10
-    webhook_from_env: BOLT_API_EXECUTION_STATE_CHANGE
