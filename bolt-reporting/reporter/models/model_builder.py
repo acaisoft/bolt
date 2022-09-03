@@ -20,7 +20,7 @@
 from api.api_actions import APIClient
 from models.report_models import request_data_model, report_model
 from plots.plot_builder import single_execution_plots_svg, request_distribution_svg, request_success_ratio_svg, \
-    metrics_svg_plots
+    metrics_svg_plots, endpoint_details_svg
 from dateutil import parser
 
 
@@ -40,6 +40,7 @@ def prepare_single_execution_model(execution_id: str, api: APIClient, notes=None
     distribution_data = {
         r['identifier']: api.get_request_distribution(r['identifier'])['data']['execution_distribution']
         for r in requests_data}
+    detailed_endpoint_data = api.get_detailed_endpoint_data(execution_id)['data']['execution_requests']
     errors_cumulated_data = api.get_errors_details(execution_id)['data']['execution_errors']
     exec_users_data = api.get_execution_results(execution_id)['data']['result_aggregate']
     config_data = api.get_execution_config(execution_id)['data']['execution_by_pk']
@@ -56,20 +57,28 @@ def prepare_single_execution_model(execution_id: str, api: APIClient, notes=None
     #    r['identifier']: API.get_endpoint_failures_in_time(r['identifier']).JSON for r in requests_data
     # }
     # ENDREGION
-    requests = [prepare_request_model(r, distribution_data[r['identifier']][0], errors_cumulated_data) for r in
-                requests_data]
     time_svg = single_execution_plots_svg(exec_users_data)
+    requests = [
+        prepare_request_model(
+            r, distribution_data[r['identifier']][0], errors_cumulated_data, detailed_endpoint_data
+        ) for r in requests_data
+    ]
     start_date = parser.parse(exec_users_data[0]['timestamp']).strftime("%Y/%m/%d, %H:%M:%S")
     return report_model(config_data=config_data, date=start_date, time_svg=time_svg, requests=requests,
                         execution_id=execution_id, notes=notes, metrics_svg=metrics_svg,
                         distribution=[v[0] for k, v in distribution_data.items()])
 
 
-def prepare_request_model(request_data, distribution_data, errors_data):
+def prepare_request_model(request_data, distribution_data, errors_data, detailed_endpoint_data):
     request_data['distribution'] = distribution_data
     request_data['errors'] = filter_request_errors(request_data, errors_data)
-    return request_data_model(request_data, request_success_ratio_svg(request_data),
-                              request_distribution_svg(request_data))
+    request_data['detailed'] = filter_detailed_data(request_data, detailed_endpoint_data)
+    return request_data_model(
+        request_data,
+        request_success_ratio_svg(request_data),
+        request_distribution_svg(request_data),
+        endpoint_details_svg(request_data)
+    )
 
 
 # REGION UTILS
@@ -79,5 +88,10 @@ def filter_request_errors(rd, errors):
     for e in request_errors:
         e['percent'] = round((e['number_of_occurrences'] / total) * 100, 2)
     return request_errors
+
+
+def filter_detailed_data(rd, details):
+    endpoint_details = list(filter(lambda x: x['method'] == rd['method'] and x['name'] == rd['name'], details))
+    return endpoint_details
 
 # ENDREGION

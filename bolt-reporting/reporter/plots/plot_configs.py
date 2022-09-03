@@ -23,15 +23,22 @@ X_AXIS_DATE_FORMATTER_MAJOR = {'axis': 'x', 'which': 'major', 'labelsize': 8, 'r
 X_AXIS_DATE_FORMATTER_MINOR = {'axis': 'x', 'which': 'minor', 'labelsize': 6, 'rotation': 45}
 TITLE_STYLE = {'fontsize': 11,
                'fontweight': 'bold',
-               'color': 'black',
+               'color': 'white',
                'verticalalignment': 'baseline',
                'horizontalalignment': 'left',
-               'family': 'sans-serif'}
+               'family': 'Montserrat'}
 Y_AXIS_STYLE = {'size': 2,
                 'labelsize': 8,
                 'axis': 'y',
                 'which': 'major'
                 }
-BLUE = 'lightskyblue'
-GREEN = 'lightgreen'
-RED = 'lightsalmon'
+BLUE = '#7297FF'
+GREEN = '#1EB1B1'
+RED = '#FF5EA1'
+CALM_WHITE = '#CFCFEA'
+BACKGROUND_ELEMENT = '#535273'
+MIN_MAX_AVG = [
+    (0.2, 1.0, 0.3),
+    (1.0, 0.2, 0.3),
+    (0.5, 0.5, 0.5)
+]

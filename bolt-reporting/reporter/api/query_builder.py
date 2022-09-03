@@ -45,6 +45,14 @@ def endpoint_errors(ex_id):
     return query(query_content(fields=fields, table=table, conditions=conditions))
 
 
+def detailed_endpoint_data(ex_id):
+    fields = ['timestamp', 'identifier', 'name', 'method', 'average_response_time', 'min_response_time',
+              'max_response_time', 'total_content_length', 'num_requests', 'id']
+    table = 'execution_requests'
+    conditions = f'where: {{execution_id: {{_eq: "{ex_id}"}}}}'
+    return query(query_content(fields=fields, table=table, conditions=conditions))
+
+
 def endpoint_distribution(request_id):
     fields = ['p100', 'p50', 'p66', 'p75', 'p80', 'p90', 'p95', 'p98', 'p99', 'method', 'name']
     table = 'execution_distribution'
@@ -53,10 +61,10 @@ def endpoint_distribution(request_id):
 
 
 def errors_query(execution_id):
-    fields = ['id', 'number_of_occurrences', 'name', 'method', 'exception_data']
+    fields = ['id', 'number_of_occurrences', 'name', 'method', 'exception_data', 'timestamp']
     table = 'execution_errors'
     conditions = f'where: {{execution_id: {{_eq: "{execution_id}"}}}}, ' \
-                 f'distinct_on: exception_data, order_by: {{exception_data: asc, timestamp: desc}}'
+                 f'order_by: {{timestamp: asc}}'
     return query(query_content(fields=fields, table=table, conditions=conditions))
 
 

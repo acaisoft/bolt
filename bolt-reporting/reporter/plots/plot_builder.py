@@ -16,7 +16,7 @@
 # COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
+from datetime import datetime
 from multiprocessing.pool import ThreadPool
 import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
@@ -40,6 +40,14 @@ def rotate_ticks(axis):
             t.set_rotation(45)
         for t in ax.get_xmajorticklabels():
             t.set_rotation(45)
+
+
+def get_epoch(timestamp):
+    return datetime.strptime(timestamp, "%Y-%m-%dT%H:%M:%S.%f%z").timestamp()
+
+
+def get_hms(epoch):
+    return datetime.fromtimestamp(epoch).strftime('%H:%M:%S')
 
 
 def get_metrics_data(metrics_data, charts_to_perform):
@@ -127,6 +135,7 @@ def single_execution_plots_svg(ex_data):
     df = pd.DataFrame(data_to_frame)
     fig, axis = plt.subplots(4)
     formate_axis_threads(axis, data_to_frame)
+    apply_style_to_axes(axis)
     ax1 = axis[0]
     ax2 = axis[1]
     ax3 = axis[2]
@@ -136,23 +145,133 @@ def single_execution_plots_svg(ex_data):
     ax2.set_title(label='Users', fontdict=TITLE_STYLE, loc='left')
     ax3.set_title(label='Avg. response time (ms)', fontdict=TITLE_STYLE, loc='left')
     ax4.set_title(label='Success ratio', fontdict=TITLE_STYLE, loc='left')
-    df.plot(kind='line', x='timestamp', y='number_of_successes', color=GREEN, ax=ax1, label='Success')
-    df.plot(kind='line', x='timestamp', y='number_of_fails', color=RED, ax=ax1, label='Fails')
+    df.plot.area(
+        x='timestamp',
+        y=['number_of_fails', 'number_of_successes'],
+        color=[RED, GREEN],
+        ax=ax1,
+        label=['Fails', 'Success'],
+        alpha=0.9
+    )
+    plt.grid(linestyle='dashed')
     df.plot(kind='line', x='timestamp', y='number_of_users', color=BLUE, ax=ax2)
     df.plot(kind='line', x='timestamp', y='average_response_time', color=BLUE, ax=ax3)
     df.plot(kind='line', x='timestamp', y='success_ratio', color=BLUE, ax=ax4)
-    ax1.legend(frameon=False)
+    ax1.legend(frameon=False, labelcolor=CALM_WHITE)
     ax2.get_legend().remove()
     ax3.get_legend().remove()
     ax4.get_legend().remove()
     ax4.yaxis.set_major_formatter(mtick.PercentFormatter())
     rotate_ticks(axis)
+    apply_y_grid(axis)
+    remove_gaol_spines(axis)
     fig.tight_layout(pad=3.0)
     svg = svg_path()
-    plt.savefig(svg, format="svg")
+    plt.savefig(svg, format="svg", transparent=True)
     plt.clf()
     plt.cla()
     print('Ended Execution SVG creation.')
+    return svg
+
+
+def endpoint_details_svg(data):
+    print('Started Endpoint Details SVG creation.')
+    errors_kinds = list(set([e['exception_data'] for e in data['errors']]))
+    timestamps = list(set([e['timestamp'] for e in data['errors']]))
+    raw_timestamps = sorted(list(map(
+        lambda x: get_epoch(x),
+        timestamps
+    )))
+    timestamps = list(map(lambda x: get_hms(x), raw_timestamps))
+
+    data_to_frame = {
+        'timestamp': timestamps,
+        'Min response time': [],
+        'Max response time': [],
+        'Average response time': [],
+        'Response size': []
+    }
+
+    # Convert all timestamps to epoch for easier ordering
+    for e in data['errors']:
+        e['timestamp'] = get_epoch(e['timestamp'])
+    for e in data['detailed']:
+        e['timestamp'] = get_epoch(e['timestamp'])
+
+    num_requests = []
+    for timestamp in raw_timestamps:
+        for detail in data['detailed']:
+            if detail['timestamp'] == timestamp:
+                num_requests.append(detail['num_requests'])
+                data_to_frame['Min response time'].append(detail['min_response_time'])
+                data_to_frame['Max response time'].append(detail['max_response_time'])
+                data_to_frame['Average response time'].append(detail['average_response_time'])
+                data_to_frame['Response size'].append(detail['total_content_length'])
+
+    for kind in errors_kinds:
+        data_to_frame[kind] = []
+        for i in range(0, len(raw_timestamps)):
+            for er in data['errors']:
+                if er['timestamp'] == raw_timestamps[i] and er['exception_data'] == kind:
+                    data_to_frame[kind].append(er['number_of_occurrences'])
+                    num_requests[i] -= er['number_of_occurrences']
+                    break
+    data_to_frame['Successes'] = num_requests
+    df = pd.DataFrame(data_to_frame)
+    fig, axis = plt.subplots(3)
+    formate_axis_threads(axis, data_to_frame)
+    apply_style_to_axes(axis)
+    ax1 = axis[0]
+    ax2 = axis[1]
+    ax3 = axis[2]
+    fig.set_size_inches(11, 15)
+    ax1.set_title(label='Error occurrences', fontdict=TITLE_STYLE, loc='left')
+    ax2.set_title(label='Response times', fontdict=TITLE_STYLE, loc='left')
+    ax3.set_title(label='Content size', fontdict=TITLE_STYLE, loc='left')
+
+    # Create a set of colors for all errors and amount of successes (dark to red gradient topped with one light green)
+    colors = [((x / 7) % 1.0, 0.1, 0.2) for x in range(len(errors_kinds) + 1)]
+    colors.pop(0)
+    colors.append(GREEN)
+    x = 'timestamp'
+    df.plot(
+        kind='area',
+        color=colors,
+        ax=ax1,
+        x=x,
+        y=[*errors_kinds, 'Successes'],
+        alpha=0.8
+    )
+    df.plot.line(
+        color=MIN_MAX_AVG,
+        ax=ax2,
+        x=x,
+        y=['Min response time', 'Max response time', 'Average response time'],
+        alpha=0.9
+    )
+    df.plot.line(
+        color=[MIN_MAX_AVG[2]],
+        ax=ax3,
+        x=x,
+        y='Response size',
+        alpha=0.9
+    )
+    handles1, labels1 = ax1.get_legend_handles_labels()
+    ax1.legend(reversed(handles1), reversed(labels1), frameon=False, labelcolor=CALM_WHITE, loc='lower left')
+    ax2.legend(frameon=False, labelcolor=CALM_WHITE, loc='upper left')
+    ax3.legend(frameon=False, labelcolor=CALM_WHITE, loc='upper left')
+    rotate_ticks(axis)
+    apply_y_grid(axis)
+    remove_gaol_spines(axis)
+    for a in axis:
+        a.set_facecolor((0, 0, 0, 0))
+    fig.tight_layout(pad=3.0)
+    svg = svg_path()
+    plt.savefig(svg, format="svg", transparent=True)
+    plt.clf()
+    plt.cla()
+    plt.close('all')
+    print('Ended Endpoint Details SVG creation.')
     return svg
 
 
@@ -168,8 +287,8 @@ def formate_ax(a, data_to_frame=None):
     a.xaxis.axis_date()
     a.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M:%S'))
     a.xaxis.set_minor_formatter(mdates.DateFormatter('%M:%S'))
-    a.xaxis.set_major_locator(mdates.SecondLocator(interval=45))
-    a.xaxis.set_minor_locator(mdates.SecondLocator(interval=15))
+    a.xaxis.set_major_locator(mdates.SecondLocator(bysecond=[0, 60], interval=60))
+    a.xaxis.set_minor_locator(mdates.SecondLocator(bysecond=[0, 30], interval=15))
     a.tick_params(**X_AXIS_DATE_FORMATTER_MAJOR)
     a.tick_params(**X_AXIS_DATE_FORMATTER_MINOR)
     a.tick_params(**Y_AXIS_STYLE)
@@ -187,8 +306,9 @@ def formate_ax(a, data_to_frame=None):
 def request_success_ratio_svg(req_data):
     plot_data = [req_data['num_requests'] - req_data['num_failures'], req_data['num_failures']]
     fig, ax = plt.subplots()
+    apply_style_to_axes([ax])
     wedges, text, autotext = ax.pie(plot_data, colors=[GREEN, RED],
-                                    labels=['Success', 'Fail'], autopct='%1.1f%%')
+                                    labels=['Success', 'Fail'], autopct='%1.1f%%', textprops={'color': CALM_WHITE})
     plt.setp(wedges, width=0.75)
     ax.set_aspect("equal")
     svg = svg_path()
@@ -211,6 +331,7 @@ def request_distribution_svg(req_data):
             ]
     labels = ['50%', '66%', '75%', '80%', '90%', '95%', '98%', '99%', '100%']
     fig, ax = plt.subplots()
+    apply_style_to_axes([ax])
     new_x = [4 * i for i in (range(len(labels)))]
     ax.bar(new_x, data, align='center', width=2, tick_label=labels, color=BLUE)
     ax.spines['top'].set_visible(False)
@@ -222,3 +343,23 @@ def request_distribution_svg(req_data):
     plt.clf()
     plt.cla()
     return svg
+
+
+def apply_style_to_axes(axes):
+    for ax in axes:
+        ax.xaxis.label.set_visible(False)
+        ax.tick_params(color=CALM_WHITE, labelcolor=CALM_WHITE)
+        for spine in ax.spines.values():
+            spine.set_edgecolor(CALM_WHITE)
+
+
+def apply_y_grid(axes):
+    for ax in axes:
+        ax.grid(linestyle='dashed', axis='y', color=BACKGROUND_ELEMENT)
+        ax.set_axisbelow(True)
+
+
+def remove_gaol_spines(axes):
+    for ax in axes:
+        ax.spines['top'].set_visible(False)
+        ax.spines['right'].set_visible(False)
