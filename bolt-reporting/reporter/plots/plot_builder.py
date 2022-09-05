@@ -179,10 +179,10 @@ def endpoint_details_svg(data):
     errors_kinds = list(set([e['exception_data'] for e in data['errors']]))
     timestamps = list(set([e['timestamp'] for e in data['errors']]))
     raw_timestamps = sorted(list(map(
-        lambda x: get_epoch(x),
+        lambda millis: get_epoch(millis),
         timestamps
     )))
-    timestamps = list(map(lambda x: get_hms(x), raw_timestamps))
+    timestamps = list(map(lambda epoch: get_hms(epoch), raw_timestamps))
 
     data_to_frame = {
         'timestamp': timestamps,
