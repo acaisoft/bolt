@@ -47,7 +47,7 @@ class Argo:
         self.GOOGLE_LOGS_BUCKET = app_config.get(const.GOOGLE_LOGS_BUCKET)
         self.IMAGE_BOLT_BUILDER = app_config.get(const.IMAGE_BOLT_BUILDER, const.DEFAULT_IMAGE_BOLT_BUILDER)
         self.IMAGE_REPORT_BUILDER = app_config.get(const.IMAGE_REPORT_BUILDER, const.DEFAULT_IMAGE_REPORT_BUILDER)
-        self.STAT_GATHER_INTERVAL = app_config.get(const.STAT_GATHER_INTERVAL, const.DEFAULT_STAT_GATHER_INTERVAL)
+        self.STAT_GATHER_INTERVAL = const.STAT_GATHER_INTERVAL
         logger.info(f"Stat gather interval: {self.STAT_GATHER_INTERVAL}")
 
     def create_argo_tests_workflow(self, workflow: Workflow) -> Dict[str, Any]:
