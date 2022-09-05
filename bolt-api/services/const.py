@@ -132,7 +132,7 @@ REQUIRED_ENV_VARS = (
 DEFAULT_IMAGE_BOLT_BUILDER = 'eu.gcr.io/acai-bolt/argo-builder:revival-v4'
 
 # default report generator image, override with IMAGE_REPORT_BUILDER
-DEFAULT_IMAGE_REPORT_BUILDER = 'eu.gcr.io/acai-bolt/bolt-reporting:os-test-04'
+DEFAULT_IMAGE_REPORT_BUILDER = 'eu.gcr.io/acai-bolt/bolt-reporting:os-test-05'
 
 # allows load tests setup/teardown to work without getting ratelimited by repository hosting
 MOCK_REPOSITORY = 'git@mockbitbucket.org:repo'
