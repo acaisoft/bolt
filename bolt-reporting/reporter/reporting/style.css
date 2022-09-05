@@ -1,24 +1,33 @@
     @page {
     @bottom-right {
-        font-family: Verdana, "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
+        font-family: Montserrat, "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
         /* font-family: "Lucida Console", Courier, monospace; */
         content: counter(page) " of " counter(pages);
         font-size: 10pt;
     }
     @bottom-center {
         content: "Copyright Acaisoft ";
-        font-family: Verdana, "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
+        font-family: Montserrat, "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
         /* font-family: "Lucida Console", Courier, monospace; */
         font-size: 10pt;
     }
+        color: #CFCFEA;
+        background: #24223B;
         margin-left: 10%;
         margin-right: 10%;
+    }
+    .header-image {
+        width: 100%;
+        height: 100%;
+        margin: 20%;
+    }
+    .header-image img {
+        width: 60%;
     }
     body
     th{
         border: none !important;
-        background-color: #e6e6e6;
-        font-size: 6pt;
+        font-size: 8pt;
         min-height: 30pt;
         padding: 1pt;
         font-weight: bold;
@@ -58,7 +67,7 @@
         overflow-wrap: break-word;
     }
     .odd{
-        background: lightgray;
+        background: rgba(106, 104, 140, 0.24);
         padding-bottom: 3pt;
     }
     .even{
@@ -114,18 +123,26 @@
     }
 
     body {
-        font-family: Verdana, "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
+        font-family: Montserrat, "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
         /* font-family: "Lucida Console", Courier, monospace; */
         counter-reset: section subsection;
+        background: #24223B;
+        font-weight: bold;
+        line-height: 1.2;
+        color: #CFCFEA;
     }
 
     h1 {
         font-size: 20pt;
     }
 
+    h3 {
+        color: #FFFFFF;
+    }
+
     a {
         text-decoration: none;
-        color: #000000 !important;
+        color: #CFCFEA;
     }
 
     p {
@@ -136,16 +153,17 @@
         font-size: 11pt;
         text-transform: uppercase !important;
         font-weight: 300;
+        color: #FFFFFF !important;
     }
     .doctitle {
-        font-size: 13pt;
         text-transform: uppercase !important;
-        font-weight: 500;
+        color: #FFFFFF;
     }
 
     .toc-title {
         font-size: 14pt !important;
         text-align: center;
+        color: #FFFFFF;
     }
 
     .empty-page {

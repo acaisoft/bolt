@@ -46,7 +46,7 @@ def config_data_model(config_data):
             'envvars': list_of_envars(config_data)}
 
 
-def request_data_model(request_data, pie_svg, distribution_svg):
+def request_data_model(request_data, pie_svg, distribution_svg, endpoint_details_svg):
     return {
         'name': request_data['name'],
         'method': request_data['method'],
@@ -57,6 +57,7 @@ def request_data_model(request_data, pie_svg, distribution_svg):
         'avg_time_label': seconds_form(request_data['average_response_time']),
         'pie_svg': pie_svg,
         'distribution_svg': distribution_svg,
+        'endpoint_details_svg': endpoint_details_svg,
         'errors': request_data['errors']
     }
 

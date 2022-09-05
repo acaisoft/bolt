@@ -5,6 +5,27 @@ object_relationships:
   - name: execution
     using:
       foreign_key_constraint_on: execution_id
+insert_permissions:
+  - role: testrunner
+    permission:
+      check: {}
+      columns:
+        - num_failures
+        - num_requests
+        - average_content_size
+        - average_response_time
+        - max_content_size
+        - max_response_time
+        - median_response_time
+        - min_content_size
+        - min_response_time
+        - requests_per_second
+        - identifier
+        - method
+        - name
+        - timestamp
+        - execution_id
+      backend_only: false
 select_permissions:
   - role: manager
     permission:
@@ -155,3 +176,24 @@ select_permissions:
                   is_deleted:
                     _eq: false
       allow_aggregations: true
+update_permissions:
+  - role: testrunner
+    permission:
+      columns:
+        - num_failures
+        - num_requests
+        - average_content_size
+        - average_response_time
+        - max_content_size
+        - max_response_time
+        - median_response_time
+        - min_content_size
+        - min_response_time
+        - requests_per_second
+        - identifier
+        - method
+        - name
+        - timestamp
+        - execution_id
+      filter: {}
+      check: null

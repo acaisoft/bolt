@@ -2,11 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css" />
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,600,800"
+        rel="stylesheet" />
     <title>Load Tests Report for Test Run {{model["id"]}}</title>
     </head>
 <body>
 <div>
-    <img src="logo.png">
+    <div class="header-image">
+        <img src="logo.png">
+    </div>
     <h1 class="doctitle">
         Test Report
     </h1>
@@ -38,7 +43,6 @@
         </tbody>
         </table>
         <hr>
-        <div class="breaker"></div>
         <h3>Scenario Configuration</h3>
         {% if model['config']['params']['load']%}
         <p class="subtitle">Load<p>
@@ -135,6 +139,7 @@
         </tbody>
         </table>
         {% endif %}
+        <div class="breaker"></div>
         {% for r in model['requests'] %}
         <p class="subtitle"><b>{{r['method']}}</b>: {{r['name']}}<p>
         <table class="table-steps">
@@ -174,19 +179,12 @@
 
         </tbody>
         </table>
-        {% if r['errors'] %}
-        <p class="subtitle">Request errors</p>
-        <table class="table-steps">
-        <tbody>
-        {% for e in r['errors'] %}
-            <tr class="{{ loop.cycle('odd', 'even') }}">
-            <td class="error_name">{{e['exception_data']}}</td>
-            <td class="error_value">{{e['number_of_occurrences']}} ({{e['percent']}}%)</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-        </table>
-        {% endif %}
+        <div class="breaker"></div>
+        <div>
+            <p class="subtitle"><b>{{r['method']}}</b>: {{r['name']}} detailed time data</p>
+            <img src="{{r['endpoint_details_svg']}}" style="max-width: 100%">
+        </div>
+        <div class="breaker"></div>
         <hr>
         {% endfor %}
         {% if model['metrics_plots'] %}

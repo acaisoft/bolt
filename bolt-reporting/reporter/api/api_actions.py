@@ -52,6 +52,12 @@ class APIClient:
         print('Get execution data ended.')
         return data
 
+    def get_detailed_endpoint_data(self, execution_id):
+        print('Get endpoint detailed data started.')
+        data = self.__graphQL(payload=detailed_endpoint_data(execution_id))
+        print('Get endpoint detailed data ended.')
+        return data
+
     def get_endpoint_errors(self, execution_id):
         data = self.__graphQL(payload=endpoint_errors(execution_id))
         return data
