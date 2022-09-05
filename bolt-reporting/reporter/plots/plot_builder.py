@@ -216,6 +216,10 @@ def endpoint_details_svg(data):
                     data_to_frame[kind].append(er['number_of_occurrences'])
                     num_requests[i] -= er['number_of_occurrences']
                     break
+        diff = len(data_to_frame['timestamp']) - len(data_to_frame[kind])
+        for i in range(0, diff):
+            data_to_frame[kind].append(0)
+
     data_to_frame['Successes'] = num_requests
     df = pd.DataFrame(data_to_frame)
     fig, axis = plt.subplots(3)
