@@ -116,10 +116,11 @@ function generateFields({
   const additionalTestSourceParams = parameters
     .filter(({ slug_name }) => testSourceParameters.includes(slug_name))
     .reduce(
-      (acc, { slug_name, name, default_value }) => ({
+      (acc, { slug_name, name, default_value, tooltip }) => ({
         [slug_name]: {
           inputProps: {
             label: capitalizeWords(name),
+            tooltip: tooltip,
           },
           defaultValue: default_value,
           ...nonEmptyRepoValidator,
@@ -209,6 +210,7 @@ function generateFields({
             },
             inputProps: {
               label: parameter.name,
+              tooltip: parameter.tooltip
             },
             defaultValue: parameter.default_value,
             group: parameter.type_slug,
@@ -248,6 +250,7 @@ function generateFields({
             inputProps: {
               select: true,
               label: `Select ${type.label}`,
+              tooltip: 'Repository of your test code, defined in the Test Sources section.',
             },
           },
         }),

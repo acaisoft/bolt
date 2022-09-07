@@ -65,18 +65,20 @@ function NavBreadcrumbs() {
     return <Loader loading />
   }
 
+  const options = projects.map(item => ({
+    value: item.id,
+    label: _.truncate(item.name, { length: 45, omission: '...' })
+  }))
+
   const breadcrumbs = [
     {
       key: 'projects',
       render: () => (
         <Selector
           label="Project"
-          options={projects.map(item => ({
-            value: item.id,
-            label: _.truncate(item.name, { length: 45, omission: '...' }),
-          }))}
+          options={options}
           generateUrl={getProjectUrl}
-          value={projectId || ''}
+          value={options.find(item => item.value === projectId) ? projectId : ''}
         />
       ),
     },

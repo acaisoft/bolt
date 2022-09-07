@@ -168,6 +168,7 @@ export const GET_PARAMETERS = gql`
       default_value
       slug_name
       type_slug
+      tooltip
     }
   }
 `

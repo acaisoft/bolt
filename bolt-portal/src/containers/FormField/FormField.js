@@ -24,6 +24,7 @@ import PropTypes from 'prop-types'
 
 import { TextField } from 'final-form-material-ui'
 import { Field } from 'react-final-form'
+import { Tooltip } from "@material-ui/core";
 
 function FormField({
   children,
@@ -40,9 +41,13 @@ function FormField({
   ...rest
 }) {
   return (
-    <Field component={component} name={name} {...inputProps} {...rest}>
-      {children}
-    </Field>
+    <Tooltip title={ inputProps.tooltip || "" } placement="top" arrow>
+      <div>
+        <Field component={component} name={name} {...inputProps} {...rest}>
+          {children}
+        </Field>
+      </div>
+    </Tooltip>
   )
 }
 FormField.propTypes = {

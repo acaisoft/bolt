@@ -23,6 +23,7 @@ select_permissions:
         - param_name
         - param_type
         - slug_name
+        - tooltip
         - type_slug
       filter: {}
       allow_aggregations: true
@@ -35,19 +36,21 @@ select_permissions:
         - param_name
         - param_type
         - slug_name
+        - tooltip
         - type_slug
       filter: {}
       allow_aggregations: true
   - role: tenantadmin
     permission:
       columns:
+        - default_value
         - id
         - name
-        - param_type
-        - default_value
         - param_name
-        - type_slug
+        - param_type
         - slug_name
+        - tooltip
+        - type_slug
       filter: {}
       allow_aggregations: true
   - role: tester
@@ -59,19 +62,21 @@ select_permissions:
         - param_name
         - param_type
         - slug_name
+        - tooltip
         - type_slug
       filter: {}
       allow_aggregations: true
   - role: testrunner
     permission:
       columns:
+        - default_value
         - id
         - name
-        - param_type
-        - default_value
         - param_name
-        - type_slug
+        - param_type
         - slug_name
+        - tooltip
+        - type_slug
       filter:
         configuration_parameter:
           configuration:
