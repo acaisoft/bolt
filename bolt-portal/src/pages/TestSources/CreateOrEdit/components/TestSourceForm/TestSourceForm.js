@@ -104,7 +104,7 @@ function TestSourceForm({ onCancel, onSubmit, onTestConnection = () => {} }) {
     if (mode === 'edit') {
       handleConnectionTest(initialValues)
     }
-  }, [])
+  }, [handleConnectionTest, initialValues, mode])
 
   if (repositoryKeyLoading || testSourceLoading || fieldsLoading) {
     return <Loader loading />

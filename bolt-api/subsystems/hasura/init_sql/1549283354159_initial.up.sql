@@ -923,7 +923,8 @@ CREATE TABLE public.parameter (
     param_type text NOT NULL,
     default_value text,
     param_name text,
-    type_id uuid
+    type_id uuid,
+    tooltip text
 );
 
 
