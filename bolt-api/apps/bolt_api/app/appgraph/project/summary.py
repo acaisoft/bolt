@@ -24,7 +24,7 @@ from services import const, gql_util
 from services.projects.summary import get_project_summary
 
 
-class SummaryItem(graphene.ObjectType):
+class SummaryInterface(graphene.Interface):
     project_id = graphene.String()
     description = graphene.String()
     image_url = graphene.String()
@@ -37,13 +37,16 @@ class SummaryItem(graphene.ObjectType):
 
 
 class SummaryResponse(graphene.ObjectType):
-    projects = graphene.List(SummaryItem)
+    class Meta:
+        description = ''
+        interfaces = (SummaryInterface,)
 
 
 class TestrunQueries(graphene.ObjectType):
 
     testrun_project_summary = graphene.Field(
         SummaryResponse,
+        name='testrun_project_summary',
         description='Summary of all projects.',
     )
 
@@ -52,6 +55,6 @@ class TestrunQueries(graphene.ObjectType):
 
         stats = get_project_summary(current_app.config, user_id, role)
 
-        out = [SummaryItem(**i) for i in stats]
+        out = [SummaryInterface(**i) for i in stats]
 
         return SummaryResponse(projects=out)
