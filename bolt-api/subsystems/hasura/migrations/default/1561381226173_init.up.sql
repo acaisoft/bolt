@@ -275,7 +275,8 @@ CREATE TABLE public.parameter (
     default_value text,
     param_name text,
     type_slug text DEFAULT 'load_tests'::text,
-    slug_name text
+    slug_name text,
+    tooltip text
 );
 CREATE TABLE public.project (
     id uuid DEFAULT public.gen_random_uuid() NOT NULL,

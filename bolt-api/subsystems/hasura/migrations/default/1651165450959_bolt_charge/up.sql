@@ -6,6 +6,6 @@ INSERT INTO parameter (name, param_name, param_type, slug_name, default_value, t
     ('duration (s)', '-t', 'str', 'load_tests_duration', '10', 'How long your test will run.'),
     ('users/second', '-r', 'int', 'load_tests_rampup', '500', 'How many users will be spawned every second until the target amount is reached.'),
     ('users', '-u', 'int', 'load_tests_users', '1000', 'Total amount of users to be spawned.'),
-    ('monitoring duration', '-md', 'int', 'monitoring_duration', '10'),
-    ('monitoring interval', '-mi', 'int', 'monitoring_interval', '5'),
+    ('monitoring duration', '-md', 'int', 'monitoring_duration', '10', ''),
+    ('monitoring interval', '-mi', 'int', 'monitoring_interval', '5', ''),
     ('host', '-H', 'str', 'load_tests_host', '', 'Address of service to be tested.');
