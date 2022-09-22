@@ -72,7 +72,6 @@ function TestSourceForm({ onCancel, onSubmit, onTestConnection = () => {} }) {
   )
 
   const { fields, loading: fieldsLoading } = useFormSchema({ mode })
-
   const {
     isConnectionOk,
     connectionError,
@@ -104,7 +103,7 @@ function TestSourceForm({ onCancel, onSubmit, onTestConnection = () => {} }) {
     if (mode === 'edit') {
       handleConnectionTest(initialValues)
     }
-  }, [handleConnectionTest, initialValues, mode])
+  }, [initialValues, mode])
 
   if (repositoryKeyLoading || testSourceLoading || fieldsLoading) {
     return <Loader loading />
