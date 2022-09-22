@@ -7,6 +7,9 @@ ARG auth_keycloak_url
 ARG auth_service="bolt"
 ARG auth_service_url
 ARG argo_url
+ARG auth0_domain
+ARG auth0_client
+ARG auth0_audience
 
 ENV REACT_APP_AUTH_SERVICE=$auth_service
 ENV REACT_APP_AUTH_SERVICE_BASE_URL=$auth_service_url
@@ -14,6 +17,9 @@ ENV REACT_APP_KEYCLOAK_URL=$auth_keycloak_url
 ENV REACT_APP_HASURA_WS_URL=$hasura_ws_url
 ENV REACT_APP_HASURA_API_URL=$hasura_api_url
 ENV REACT_APP_ARGO_URL=$argo_url
+ENV REACT_APP_AUTH0_DOMAIN=$auth0_domain
+ENV REACT_APP_AUTH0_CLIENT_ID=$auth0_client
+ENV REACT_APP_AUTH0_AUDIENCE=$auth0_audience
 
 ENV PATH /app/node_modules/.bin:$PATH
 

@@ -18,29 +18,24 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import json
-import os
 
 import click
 import jwt
-from flask import current_app
 from flask.cli import with_appcontext
 
-from services.hasura.hasura import generate_hasura_token, hasura_selfsignedtoken_for_testrunner
+from services import const
+from services.hasura.hasura import generate_hasura_token
 
 
 @click.command(name='job_token')
-@click.option('--debug', default=False, is_flag=True)
+@click.option('--role', default=const.ROLE_TESTRUNNER)
+@click.option('--execution_id')
 @with_appcontext
-def job_token(debug=False):
+def job_token(role: str = None, execution_id: str = None):
     """
-    Obtain and print access token for testrunner. KEYCLOAK_XXX has to be configured.
-
-    [DEBUG] - by default token is issued by Keycloak, if true then a debug self-signed token will be used
+    Request generation of Auth0 token with given role, for given execution_id (optional)
     """
-    if debug:
-        token, execution_id = hasura_selfsignedtoken_for_testrunner(current_app.config)
-    else:
-        token, execution_id = generate_hasura_token(current_app.config)
+    token, execution_id = generate_hasura_token(role=role, execution_id=execution_id)
     claims = jwt.decode(token, options={"verify_signature": False})
     print(f'> execution_id:\n{execution_id}')
     print(f'> access_token:\n{token}')

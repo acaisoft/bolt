@@ -20,9 +20,31 @@
  */
 
 import React from 'react'
+import { Button } from 'components'
+import logo from 'assets/images/bolt-logo.png'
+import { useAuth0 } from '@auth0/auth0-react'
+import useStyles from './Login.styles'
 
-export function Login() {
-  return <div>Login Form</div>
+const Login = () => {
+  const classes = useStyles()
+  const { loginWithRedirect, isAuthenticated } = useAuth0()
+  return (
+    <div className={classes.textCenter}>
+      <img src={logo} alt="logo" className={classes.boltLogo} />
+      <div>
+        {!isAuthenticated && (
+          <Button
+            data-testid={`login-button`}
+            variant="contained"
+            color="primary"
+            onClick={() => loginWithRedirect()}
+          >
+            Log in
+          </Button>
+        )}
+      </div>
+    </div>
+  )
 }
 
 export default Login

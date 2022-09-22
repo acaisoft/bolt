@@ -5,7 +5,7 @@
             "request": {
                 "method": "POST",
                 "uri": "http://localhost:8080/v1alpha1/graphql",
-                "body": "{\"query\": \"mutation ($pk: uuid!, $userId: uuid!) {\\n  update_project(where: {id: {_eq: $pk}, is_deleted: {_eq: false}, userProjects: {user_id: {_eq: $userId}}}, _set: {is_deleted: true}) {\\n    affected_rows\\n    returning {\\n      id\\n      name\\n      description\\n      image_url\\n    }\\n  }\\n}\\n\", \"variables\": {\"pk\": \"04ce4055-5278-4fd5-aab9-2148faa58cdd\", \"userId\": \"7f1aab7a-e941-46a2-b63a-5b28b80ad384\"}}",
+                "body": "{\"query\": \"mutation ($pk: uuid!, $userId: String!) {\\n  update_project(where: {id: {_eq: $pk}, is_deleted: {_eq: false}, userProjects: {user_id: {_eq: $userId}}}, _set: {is_deleted: true}) {\\n    affected_rows\\n    returning {\\n      id\\n      name\\n      description\\n      image_url\\n    }\\n  }\\n}\\n\", \"variables\": {\"pk\": \"04ce4055-5278-4fd5-aab9-2148faa58cdd\", \"userId\": \"7f1aab7a-e941-46a2-b63a-5b28b80ad384\"}}",
                 "headers": {
                     "User-Agent": [
                         "python-requests/2.21.0"

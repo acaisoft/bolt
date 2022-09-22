@@ -18,3 +18,4 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from .hasura_client import hasura_client, hce, hce_with_user
+from .hasura import generate_hasura_token

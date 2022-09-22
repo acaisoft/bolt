@@ -132,7 +132,7 @@ CREATE TABLE public.configuration (
     name text NOT NULL,
     project_id uuid NOT NULL,
     performed boolean DEFAULT false NOT NULL,
-    created_by_id uuid,
+    created_by_id text,
     type_slug text,
     test_source_id uuid,
     instances integer DEFAULT 1 NOT NULL,
@@ -170,7 +170,7 @@ CREATE TABLE public.execution (
     test_preparation_job_status text,
     test_preparation_job_statuscheck_timestamp timestamp with time zone,
     test_preparation_job_error text,
-    created_by_id uuid,
+    created_by_id text,
     test_job_error text,
     commit_hash text,
     start_locust timestamp with time zone,
@@ -204,7 +204,7 @@ ALTER SEQUENCE public.execution_errors_id_seq OWNED BY public.execution_errors.i
 CREATE TABLE public.execution_export_token (
     id uuid DEFAULT public.gen_random_uuid() NOT NULL,
     execution_id uuid,
-    created_by_id uuid,
+    created_by_id text,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     project_id uuid,
     oid integer NOT NULL,
@@ -284,7 +284,7 @@ CREATE TABLE public.project (
     description text,
     image_url text,
     is_deleted boolean DEFAULT false,
-    created_by_id uuid
+    created_by_id text
 );
 CREATE TABLE public.repository (
     id uuid DEFAULT public.gen_random_uuid() NOT NULL,
@@ -292,7 +292,7 @@ CREATE TABLE public.repository (
     url text NOT NULL,
     project_id uuid,
     performed boolean DEFAULT false NOT NULL,
-    created_by_id uuid,
+    created_by_id text,
     type_slug text DEFAULT 'load_tests'::text,
     is_deleted boolean DEFAULT false NOT NULL
 );
@@ -311,7 +311,7 @@ CREATE SEQUENCE public.result_error_id_seq
     CACHE 1;
 ALTER SEQUENCE public.result_error_id_seq OWNED BY public.result_error.id;
 CREATE TABLE public.test_creator (
-    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    id text DEFAULT public.gen_random_uuid() NOT NULL,
     data json,
     created_by_id uuid,
     created_at timestamp with time zone DEFAULT now(),
@@ -329,7 +329,7 @@ CREATE TABLE public.test_source (
     project_id uuid NOT NULL,
     source_type text DEFAULT 'repository'::text NOT NULL,
     repository_id uuid,
-    test_creator_id uuid,
+    test_creator_id text,
     is_deleted boolean DEFAULT false NOT NULL
 );
 CREATE TABLE public.user_project (

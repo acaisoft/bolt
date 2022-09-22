@@ -22,15 +22,15 @@
 import { ListItemIcon, ListItemText, MenuItem } from '@material-ui/core'
 import { ExitToApp, ExpandMore } from '@material-ui/icons'
 import React from 'react'
-import { useAuth } from 'contexts/AuthContext'
 import { PopoverMenu, Button } from 'components'
 import UserAvatar from '../UserAvatar'
 import useStyles from './UserMenu.styles'
+import { useAuth0 } from '@auth0/auth0-react'
+import { AUTH_TOKEN_NAME } from 'config/constants'
 
 function UserMenu() {
   const classes = useStyles()
-  const { logout, user } = useAuth()
-
+  const { user, logout } = useAuth0()
   return (
     <div>
       <PopoverMenu
@@ -42,8 +42,8 @@ function UserMenu() {
             aria-label="User Menu"
             color="inherit"
           >
-            <UserAvatar />
-            <span className={classes.userName}>{user.firstName}</span>
+            <UserAvatar avatar={user.picture} />
+            <span className={classes.userName}>{user.nickname}</span>
             <ExpandMore className={classes.expandIcon} />
           </Button>
         }
@@ -59,7 +59,12 @@ function UserMenu() {
           },
         }}
       >
-        <MenuItem onClick={() => logout()}>
+        <MenuItem
+          onClick={() => {
+            localStorage.removeItem(AUTH_TOKEN_NAME)
+            logout()
+          }}
+        >
           <ListItemIcon>
             <ExitToApp />
           </ListItemIcon>

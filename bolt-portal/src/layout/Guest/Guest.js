@@ -31,7 +31,6 @@ export function Guest() {
   return (
     <div className={classes.root}>
       <div>
-        <div>Guest Routes</div>
         <GuestPages />
       </div>
     </div>

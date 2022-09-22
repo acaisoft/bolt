@@ -53,7 +53,7 @@ def setup_demo_project(config, name, req_user_id, req_user_email, _async=True):
     elif req_user_id:
         # assign user to project
         logger.info(f'assigning user {req_user_id} to project {project_id}')
-        hce(config, '''mutation ($id:uuid!, $user_id:uuid!) {
+        hce(config, '''mutation ($id:uuid!, $user_id:String!) {
             insert_user_project (objects:[{id:$id,, project_id:$id, user_id:$user_id}]) {affected_rows}
         }''', {'id': project_id, 'user_id': req_user_id})
 

@@ -84,7 +84,7 @@ class UpdateValidate(graphene.Mutation):
             'configuration_parameters': {'data': []}
         }
 
-        original = hce(current_app.config, '''query ($confId:uuid!, $userId:uuid!) {
+        original = hce(current_app.config, '''query ($confId:uuid!, $userId:String!) {
             configuration (where:{
                 id:{_eq:$confId}, 
                 project:{
@@ -126,7 +126,7 @@ class UpdateValidate(graphene.Mutation):
             'fetchSource': bool(test_source_id),
         }
 
-        repo = hce(current_app.config, '''query ($confId:uuid!, $confName:String, $sourceId:uuid!, $fetchSource:Boolean!, $userId:uuid!, $type_slug:String!) {
+        repo = hce(current_app.config, '''query ($confId:uuid!, $confName:String, $sourceId:uuid!, $fetchSource:Boolean!, $userId:String!, $type_slug:String!) {
             test_source (where:{
                     id:{_eq:$sourceId},
                     is_deleted: {_eq:false}, 

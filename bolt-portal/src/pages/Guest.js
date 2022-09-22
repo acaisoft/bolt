@@ -22,16 +22,18 @@
 import React from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 
-import { useAuth } from 'contexts/AuthContext'
 import LoginPage from './Login'
+import { useAuth0 } from '@auth0/auth0-react'
 
 export function Guest() {
-  const { hasToken } = useAuth()
+  const { isAuthenticated } = useAuth0()
 
   return (
     <Routes>
       <Route path="login" element={<LoginPage />} />
-      {!hasToken && <Route path="*" element={<Navigate to="login" replace />} />}
+      {!isAuthenticated && (
+        <Route path="*" element={<Navigate to="login" replace />} />
+      )}
     </Routes>
   )
 }

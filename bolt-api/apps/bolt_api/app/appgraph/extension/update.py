@@ -44,7 +44,7 @@ class UpdateValidate(graphene.Mutation):
 
         role, user_id = gql_util.get_request_role_userid(info, (const.ROLE_ADMIN, const.ROLE_TENANT_ADMIN, const.ROLE_MANAGER))
 
-        resp = hce(current_app.config, '''query ($obj_id:uuid!, $user_id:uuid!) {
+        resp = hce(current_app.config, '''query ($obj_id:uuid!, $user_id:String!) {
             configuration_extension(where:{
                 id:{ _eq:$obj_id }
                 configuration:{

@@ -154,7 +154,7 @@ def user_unassign_from_project(user_id, project_id):
     p.validate(user_id)
     p.validate(project_id)
 
-    return hce(current_app.config, '''mutation ($user_id:UUID!, $project_id:UUID!) {
+    return hce(current_app.config, '''mutation ($user_id:String!, $project_id:UUID!) {
         delete_user_project(where:{
             user_id:{_eq:$user_id}
             project_id:{_eq:$project_id}

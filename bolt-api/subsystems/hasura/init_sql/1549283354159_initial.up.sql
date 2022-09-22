@@ -824,7 +824,7 @@ CREATE TABLE public.repository (
     project_id uuid,
     type_id uuid DEFAULT '27c6ee12-7cd9-410b-83fc-448e3c4b9272'::uuid NOT NULL,
     performed boolean DEFAULT false NOT NULL,
-    created_by_id uuid
+    created_by_id text
 );
 
 

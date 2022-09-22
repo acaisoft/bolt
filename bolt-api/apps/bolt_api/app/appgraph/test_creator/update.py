@@ -57,7 +57,7 @@ class Update(validate.Validate):
 
         role, user_id = gql_util.get_request_role_userid(info, (const.ROLE_ADMIN, const.ROLE_TENANT_ADMIN, const.ROLE_MANAGER, const.ROLE_TESTER))
 
-        original = hce(current_app.config, '''query ($objId:uuid!, $userId:uuid!) {
+        original = hce(current_app.config, '''query ($objId:uuid!, $userId:String!) {
             test_creator (where:{
                     id:{_eq:$objId}
                     project:{

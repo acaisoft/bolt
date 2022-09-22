@@ -49,7 +49,7 @@ class UpdateValidate(graphene.Mutation):
         if name:
             name = validators.validate_text(name)
 
-        query = hce(current_app.config, '''query ($repoName:String!, $repoUrl:String!, $repoId:uuid!, $userId:uuid!, $confType:String) {
+        query = hce(current_app.config, '''query ($repoName:String!, $repoUrl:String!, $repoId:uuid!, $userId:String!, $confType:String) {
             uniqueName: repository(where:{
                 name:{_eq:$repoName},
                 is_deleted: {_eq:false},

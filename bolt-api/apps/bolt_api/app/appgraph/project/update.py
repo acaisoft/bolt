@@ -51,7 +51,7 @@ class UpdateValidate(graphene.Mutation):
         if name:
             name = validators.validate_text(name)
 
-        projects = hce(current_app.config, '''query ($projId:uuid!, $userId:uuid!, $name:String!) {
+        projects = hce(current_app.config, '''query ($projId:uuid!, $userId:String!, $name:String!) {
             original: project_by_pk(id:$projId) { id name }
             
             uniqueName: project (where:{

@@ -27,6 +27,7 @@ COPY --from=builder /usr/bin/argo /usr/bin/argo
 COPY apps /apps
 COPY services /services
 COPY instance /instance
+COPY cmds /cmds
 RUN mkdir /apps/executions
 WORKDIR /
 

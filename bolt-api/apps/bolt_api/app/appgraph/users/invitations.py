@@ -59,7 +59,7 @@ class GetProjectInvitationToken(graphene.Mutation):
             assert role not in (const.ROLE_ADMIN, const.ROLE_TENANT_ADMIN), \
                 f'admins can not allow registration of admin roles'
 
-        projects = hce(current_app.config, '''query ($pid:uuid!, $uid:uuid!) {
+        projects = hce(current_app.config, '''query ($pid:uuid!, $uid:String!) {
             project(where:{
                 id:{_eq:$pid}
                 is_deleted:{_eq:false}
@@ -116,7 +116,7 @@ class DisableInvitation(graphene.Mutation):
 
         req_role, req_user_id = gql_util.get_request_role_userid(info, (const.ROLE_ADMIN, const.ROLE_TENANT_ADMIN, const.ROLE_MANAGER))
 
-        projects = hce(current_app.config, '''query ($pid:uuid!, $uid:uuid!) {
+        projects = hce(current_app.config, '''query ($pid:uuid!, $uid:String!) {
             project(where:{
                 id:{_eq:$pid}
                 is_deleted:{_eq:false}

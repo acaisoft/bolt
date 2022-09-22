@@ -36,7 +36,7 @@ class Delete(graphene.Mutation):
     def mutate(self, info, pk):
         _, user_id = gql_util.get_request_role_userid(info, (const.ROLE_ADMIN, const.ROLE_TENANT_ADMIN, const.ROLE_MANAGER))
 
-        query = '''mutation ($pk:uuid!, $userId:uuid!) {
+        query = '''mutation ($pk:uuid!, $userId:String!) {
             update_configuration(
                 where:{
                     id:{_eq:$pk}

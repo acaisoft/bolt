@@ -62,7 +62,7 @@ class Validate(graphene.Mutation):
 
         # validate configuration exists and user has access to it
         creators = hce(current_app.config, '''
-            query ($userId: uuid!, $project_id: uuid!, $name:String!) {
+            query ($userId: String!, $project_id: uuid!, $name:String!) {
                 project (where: {
                     id: {_eq: $project_id}, 
                     is_deleted: {_eq:false},

@@ -22,22 +22,22 @@
 import React from 'react'
 import 'react-toastify/dist/ReactToastify.min.css'
 import { ToastContainer } from 'react-toastify'
-import { useAuth } from 'contexts/AuthContext'
 
 import { CloseToast } from 'assets/icons'
 import Authorized from './Authorized'
 import Guest from './Guest'
 import Splash from './Splash'
-
+import { useAuth0 } from '@auth0/auth0-react'
 import useStyles from './Layout.styles'
 
 export function Layout() {
   const classes = useStyles()
-  const { isAuthenticated, isInitialized } = useAuth()
+  const { isAuthenticated, isLoading } = useAuth0()
 
   function CloseButton({ closeToast }) {
     return <CloseToast onClick={closeToast} className={classes.closeIcon} />
   }
+  if (isLoading) return <Splash />
 
   return (
     <React.Fragment>
@@ -48,7 +48,7 @@ export function Layout() {
         theme="colored"
       />
       <div className={classes.root}>
-        {isInitialized ? isAuthenticated ? <Authorized /> : <Guest /> : <Splash />}
+        {isAuthenticated ? <Authorized /> : <Guest />}
       </div>
     </React.Fragment>
   )

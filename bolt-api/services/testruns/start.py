@@ -18,11 +18,10 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import json
-import requests
 
 from apps.bolt_api.app.workflow import WorkflowsResource, KubernetesService
 from services import const
-from services.hasura.hasura import generate_hasura_token
+import services.hasura.hasura as hasura
 from services.hasura import hce
 from services.logger import setup_custom_logger
 from services.testruns.defaults import DEFAULT_CHART_CONFIGURATION, NFS_CHART_CONFIGURATION
@@ -39,7 +38,7 @@ class TestrunStartException(Exception):
 
 def start(app_config, conf_id, user_id, no_cache):
     validate_test_configuration_by_id(str(conf_id))
-    test_config_response = hce(app_config, '''query ($confId:uuid!, $userId:uuid!) {
+    test_config_response = hce(app_config, '''query ($confId:uuid!, $userId:String!) {
         parameter {
             id
             default_value
@@ -141,7 +140,7 @@ def start(app_config, conf_id, user_id, no_cache):
     }
 
     if code_source == const.CONF_SOURCE_REPO:
-        hasura_token, execution_id = generate_hasura_token(app_config, const.ROLE_TESTRUNNER)
+        hasura_token, execution_id = hasura.generate_hasura_token(role=const.ROLE_TESTRUNNER)
         # common workflow fields
         try:
             branch = [

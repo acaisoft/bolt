@@ -78,7 +78,7 @@ class TestrunTerminate(graphene.Mutation):
     @staticmethod
     def validate_user_assigned_to_project(argo_name, user_id):
         query = '''
-            query ($argo_name: String, $user_id: uuid){
+            query ($argo_name: String, $user_id: String){
                 user_project(where: {
                     project: {configurations: {executions: {status: {_eq: $argo_name}}}}, 
                     user_id: {_eq: $user_id}}) {

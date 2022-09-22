@@ -98,7 +98,7 @@ class CreateValidate(graphene.Mutation):
         }
         repo = hce(current_app.config, '''query (
                 $confName:String, $sourceId:uuid!, $fetchSource:Boolean!, 
-                $projId:uuid!, $userId:uuid!, $type_slug:String!
+                $projId:uuid!, $userId:String!, $type_slug:String!
         ) {
             test_source (where:{
                     id:{_eq:$sourceId}, 

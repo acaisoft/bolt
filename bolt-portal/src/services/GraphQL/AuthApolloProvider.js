@@ -28,16 +28,37 @@ import {
 } from '@apollo/client'
 import { LocalStorageWrapper, persistCache } from 'apollo3-cache-persist'
 import { useAuth } from 'contexts/AuthContext'
+import jwtDecode from 'jwt-decode'
 import {
   makeErrorHandlingLink,
   makeRequestLink,
   makeTransportLinks,
 } from './handlers'
+import { useAuth0 } from '@auth0/auth0-react'
 
 const cache = new InMemoryCache()
 
 function AuthApolloProvider({ children }) {
-  const { getToken, getFreshToken } = useAuth()
+  const { getAccessTokenSilently, logout } = useAuth0()
+
+  const getToken = async () => {
+    let token = localStorage.getItem('AUTH_TOKEN')
+    if (!token)
+      token = await getAccessTokenSilently({
+        audience: process.env.REACT_APP_AUTH0_AUDIENCE,
+      })
+    try {
+      localStorage.setItem('AUTH_TOKEN', token)
+      const { exp: expires, given_name: firstName } = jwtDecode(token)
+      const isExpired = Date.now() >= expires * 1000
+      if (isExpired) return logout()
+
+      return token
+    } catch (e) {
+      console.error(e)
+      return logout()
+    }
+  }
 
   // I don't think that we need to put our cache results in local storage when we have apollo client devtools to inspect cache
   useEffect(() => {
@@ -58,13 +79,13 @@ function AuthApolloProvider({ children }) {
           makeErrorHandlingLink(),
           makeRequestLink(),
           makeTransportLinks({
-            getFreshToken,
+            undefined,
             getToken,
           }),
         ]),
         cache,
       }),
-    [getFreshToken, getToken]
+    [getAccessTokenSilently]
   )
 
   return <ApolloProvider client={client}>{children}</ApolloProvider>

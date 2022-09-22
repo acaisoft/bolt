@@ -29,6 +29,7 @@ import {
   AuthBoltProvider,
   AuthKeycloakProvider,
 } from './providers'
+import { Auth0Provider } from '@auth0/auth0-react'
 
 const keycloak = new AuthKeycloak(Config.keycloak)
 
@@ -39,6 +40,18 @@ export function AuthProvider({ children }) {
     return <AuthKeycloakProvider client={keycloak}>{children}</AuthKeycloakProvider>
   if (authService === AuthServiceName.BOLT)
     return <AuthBoltProvider>{children}</AuthBoltProvider>
+  if (authService === AuthServiceName.AUTH0) {
+    return (
+      <Auth0Provider
+        domain={process.env.REACT_APP_AUTH0_DOMAIN}
+        clientId={process.env.REACT_APP_AUTH0_CLIENT_ID}
+        audience={process.env.REACT_APP_AUTH0_AUDIENCE}
+        redirectUri={window.location.origin + '/projects'}
+      >
+        {children}
+      </Auth0Provider>
+    )
+  }
 
   return <p>Auth provider {authService} not implemented</p>
 }
@@ -52,7 +65,6 @@ export function useAuth() {
       : authService === AuthServiceName.BOLT
       ? AuthBoltContext
       : null
-
   const context = useContext(authContext)
   if (context === undefined) {
     throw new Error(`Auth provider ${authService} not implemented`)

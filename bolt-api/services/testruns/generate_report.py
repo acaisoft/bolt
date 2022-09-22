@@ -6,7 +6,7 @@ from apps.bolt_api.app.utils.storage_client import StorageClient
 from apps.bolt_api.app.workflow import WorkflowsResource, KubernetesService
 from services import const
 from services.hasura import hce
-from services.hasura.hasura import generate_hasura_token
+import services.hasura.hasura as hasura
 from services.logger import setup_custom_logger
 
 logger = setup_custom_logger(__name__)
@@ -75,7 +75,10 @@ def trigger_report_generator(client: StorageClient, file_name: str, execution_id
     })
 
     try:
-        hasura_token, _ = generate_hasura_token(app_config, const.ROLE_REPORTGENERATOR, execution_id=str(execution_id))
+        hasura_token, _ = hasura.generate_hasura_token(
+            role=const.ROLE_REPORTGENERATOR,
+            execution_id=str(execution_id)
+        )
         workflow_data = {
             "tenant_id": "1",
             "project_id": "",

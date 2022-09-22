@@ -26,7 +26,7 @@ def get_project_summary(config, user_id, role):
     if role != const.ROLE_ADMIN:
         project_filter += ', userProjects: {user_id: {_eq: $uid}}'
 
-    query = '''query ($uid: uuid!) {
+    query = '''query ($uid: String!) {
       project(where: {%s}) {
         id
         name

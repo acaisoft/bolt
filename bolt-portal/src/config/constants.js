@@ -56,4 +56,5 @@ export const AUTH_TOKEN_NAME = 'AUTH_TOKEN'
 export const AuthServiceName = {
   KEYCLOAK: 'keycloak',
   BOLT: 'bolt',
+  AUTH0: 'auth0',
 }
