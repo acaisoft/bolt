@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Button } from 'components'
 import logo from 'assets/images/bolt-logo.png'
 import { useAuth0 } from '@auth0/auth0-react'
@@ -28,6 +28,13 @@ import useStyles from './Login.styles'
 const Login = () => {
   const classes = useStyles()
   const { loginWithRedirect, isAuthenticated } = useAuth0()
+
+  useEffect(() => {
+    const cachekey = 'AUTH_TOKEN'
+    if (localStorage.getItem(cachekey)) {
+      localStorage.removeItem(cachekey)
+    }
+  }, [])
   return (
     <div className={classes.textCenter}>
       <img src={logo} alt="logo" className={classes.boltLogo} />
