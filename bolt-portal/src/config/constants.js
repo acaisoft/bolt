@@ -58,3 +58,6 @@ export const AuthServiceName = {
   BOLT: 'bolt',
   AUTH0: 'auth0',
 }
+
+export const isAuth0AuthService =
+  process.env.REACT_APP_AUTH_SERVICE === AuthServiceName.AUTH0
