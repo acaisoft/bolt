@@ -24,7 +24,7 @@ import PropTypes from 'prop-types'
 import moment from 'moment'
 import { useSubscription } from '@apollo/client'
 
-import { IconButton, Box } from '@material-ui/core'
+import {IconButton, Box, Tooltip} from '@material-ui/core'
 import { Add, History } from '@material-ui/icons'
 import {
   Button,
@@ -112,10 +112,16 @@ export function TestConfigurationsList({
     let filtered = parameters.filter(
           e => e.parameter_slug === slug
     )
-    let result = filtered.length > 0 && filtered[0].hasOwnProperty("value") ? filtered[0].value : "Unknown"
+    let result = filtered.length > 0 && filtered[0].hasOwnProperty("value")
+      ? filtered[0].value
+      : "Unknown"
     return result.length > 30 ?
-      result.substring(0, 20) + "…" + result.substring(result.length - 4, result.length) :
-      result
+      <Tooltip title={ result } placement="top" arrow>
+        <div>
+          { result.substring(0, 20) + "…" + result.substring(result.length - 4, result.length) }
+        </div>
+      </Tooltip>
+      : result
   }
 
   const totalCount = configurationsAggregate
