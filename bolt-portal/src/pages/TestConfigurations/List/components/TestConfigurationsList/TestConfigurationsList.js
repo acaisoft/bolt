@@ -109,10 +109,13 @@ export function TestConfigurationsList({
   }
 
   const getValueFromSlug = (parameters, slug) => {
-    let result = parameters.filter(
+    let filtered = parameters.filter(
           e => e.parameter_slug === slug
     )
-    return result.length > 0 && result[0].hasOwnProperty("value") ? result[0].value : "Unknown"
+    let result = filtered.length > 0 && filtered[0].hasOwnProperty("value") ? filtered[0].value : "Unknown"
+    return result.length > 30 ?
+      result.substring(0, 20) + "…" + result.substring(result.length - 4, result.length) :
+      result
   }
 
   const totalCount = configurationsAggregate
