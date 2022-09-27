@@ -62,7 +62,7 @@ function UserMenu() {
         <MenuItem
           onClick={() => {
             localStorage.removeItem(AUTH_TOKEN_NAME)
-            logout()
+            logout({ returnTo: `${window.location.origin}/login` })
           }}
         >
           <ListItemIcon>
