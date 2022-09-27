@@ -188,7 +188,7 @@ export function TestConfigurationsList({
                   <IconButton className={classes.icon} disabled>
                     <History />
                   </IconButton>
-                  <span>{moment(executions[0].start).format('YYYY-MM-DD HH:mm:SS')}</span>
+                  <span>{moment(executions[0].start).format('YYYY-MM-DD HH:mm:ss')}</span>
                 </React.Fragment>
               )}
             </NoWrap>
