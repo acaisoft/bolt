@@ -32,8 +32,8 @@ import { AUTH_TOKEN_NAME, isAuth0AuthService } from 'config/constants'
 function UserMenu() {
   const classes = useStyles()
   const { user: auth0User, logout: auth0Logout } = useAuth0()
-  const boltAuth = useAuth()
-  const user = isAuth0AuthService ? auth0User : boltAuth.user
+  const { boltLogout, boltUser } = useAuth()
+  const user = isAuth0AuthService ? auth0User : boltUser
 
   return (
     <div>
@@ -70,7 +70,7 @@ function UserMenu() {
             localStorage.removeItem(AUTH_TOKEN_NAME)
             if (isAuth0AuthService)
               auth0Logout({ returnTo: `${window.location.origin}/login` })
-            else boltAuth.boltLogout()
+            else boltLogout()
           }}
         >
           <ListItemIcon>

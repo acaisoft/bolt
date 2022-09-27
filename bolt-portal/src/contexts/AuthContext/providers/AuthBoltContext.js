@@ -33,18 +33,18 @@ import { redirectToExternalLoginPage } from 'utils/router'
 
 const AuthBoltContext = createContext(null)
 
-const fetchToken = async logout => {
+const fetchToken = async boltLogout => {
   return await axios
     .get(`${process.env.REACT_APP_AUTH_SERVICE_BASE_URL}/session`, {
       withCredentials: true,
     })
     .then(({ data }) => data)
-    .catch(() => logout())
+    .catch(() => boltLogout())
 }
 
-const requestToken = async logout => {
-  const resp = await fetchToken(logout)
-  if (!resp?.AUTH_TOKEN) return logout()
+const requestToken = async boltLogout => {
+  const resp = await fetchToken(boltLogout)
+  if (!resp?.AUTH_TOKEN) return boltLogout()
 
   const token = resp?.AUTH_TOKEN
   localStorage.setItem(AUTH_TOKEN_NAME, token)
@@ -56,33 +56,33 @@ function AuthBoltProvider({ children }) {
   const [hasToken, setHasToken] = useState(false)
   const [isInitialized, setIsInitialized] = useState(false)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [user, setUser] = useState(null)
+  const [boltUser, setBoltUser] = useState(null)
 
-  const logout = useCallback(() => {
+  const boltLogout = useCallback(() => {
     localStorage.removeItem(AUTH_TOKEN_NAME)
     return redirectToExternalLoginPage()
   }, [])
 
   const getToken = useCallback(async () => {
     let token = localStorage.getItem(AUTH_TOKEN_NAME)
-    if (!token) token = await requestToken(logout)
+    if (!token) token = await requestToken(boltLogout)
     setHasToken(true)
 
     try {
       const { exp: expires, name: firstName } = jwtDecode(token)
       const isExpired = Date.now() >= expires * 1000
-      if (isExpired) return logout()
+      if (isExpired) return boltLogout()
 
       setIsAuthenticated(true)
-      setUser({ firstName })
+      setBoltUser({ firstName })
       setIsInitialized(true)
 
       return token
     } catch (e) {
       console.error(e)
-      return logout()
+      return boltLogout()
     }
-  }, [logout])
+  }, [boltLogout])
 
   useEffect(() => {
     async function initAuth() {
@@ -95,13 +95,13 @@ function AuthBoltProvider({ children }) {
   const context = useMemo(
     () => ({
       getToken,
-      logout,
-      user,
+      boltLogout,
+      boltUser,
       isAuthenticated,
       isInitialized,
       hasToken,
     }),
-    [getToken, logout, user, isAuthenticated, isInitialized, hasToken]
+    [getToken, boltLogout, boltUser, isAuthenticated, isInitialized, hasToken]
   )
 
   return (
