@@ -118,7 +118,7 @@ export function TestConfigurationsList({
     return result.length > 30 ?
       <Tooltip title={ result } placement="top" arrow>
         <div>
-          { result.substring(0, 20) + "…" + result.substring(result.length - 4, result.length) }
+          { result.substring(0, 20) + "…" + result.substring(result.length - 5, result.length) }
         </div>
       </Tooltip>
       : result
