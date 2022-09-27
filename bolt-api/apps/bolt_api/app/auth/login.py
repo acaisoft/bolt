@@ -53,7 +53,7 @@ def login():
 
             response = make_response(redirect(redirect_url))
 
-            if current_app.config.get(const.AUTH_LOCAL_DEV, False):
+            if current_app.config.get(const.AUTH_PROVIDER, 'BOLT') == 'BOLT':
                 response.set_cookie('AUTH_TOKEN', token, samesite='None', secure=True)
                 response.set_cookie('APP_URL', app_url, samesite='None', secure=True)
             else:
