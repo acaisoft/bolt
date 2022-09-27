@@ -146,8 +146,6 @@ class Argo:
                         "value": "/etc/google/google-secret.json",
                     },
                     {"name": "CLOUDSDK_CORE_PROJECT", "value": self.CLOUDSDK_CORE_PROJECT},
-                    {"name": "TENANT_ID", "value": workflow.tenant_id},
-                    {"name": "PROJECT_ID", "value": workflow.project_id},
                     {"name": "NO_CACHE", "value": no_cache_value},
                     {"name": "BOLT_EXECUTION_ID", "value": workflow.execution_id},
                     {"name": "BOLT_GRAPHQL_URL", "value": self.HASURA_GQL},

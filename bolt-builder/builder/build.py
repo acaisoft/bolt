@@ -63,8 +63,6 @@ send_stage_log('SUCCEEDED', 'start')
 repo_url = os.environ.get('REPOSITORY_URL')
 branch = os.environ.get('BRANCH')
 repo_path = tempfile.mkdtemp()
-tenant_id = os.environ.get('TENANT_ID')
-project_id = os.environ.get('PROJECT_ID')
 
 send_stage_log('PENDING', stage='downloading_source')
 logger.info(f'Cloning repository {repo_url}, branch {branch}...')

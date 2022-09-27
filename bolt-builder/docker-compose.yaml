@@ -5,14 +5,6 @@ services:
     build:
       context: .
     command: [ "/bin/bash", "-c", "--", "while true; do sleep 30; done;" ]
-    environment:
-      - GOOGLE_APPLICATION_CREDENTIALS=./creds.json
-      - REPOSITORY_URL=git@bitbucket.org:acaisoft/bolt-sample-load.git
-      - BRANCH=master
-      - TENANT_ID=1
-      - PROJECT_ID=43c1e03c-49b1-4058-94b9-590525b3fa10
-      - NO_CACHE=0
-      - BOLT_GRAPHQL_URL=localhost:5000/graphql
     volumes:
       - ~/.ssh:/root/.ssh:ro
       - ./creds.json:/builder/creds.json
