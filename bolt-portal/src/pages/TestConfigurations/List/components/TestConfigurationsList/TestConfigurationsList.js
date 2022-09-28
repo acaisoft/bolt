@@ -24,7 +24,7 @@ import PropTypes from 'prop-types'
 import moment from 'moment'
 import { useSubscription } from '@apollo/client'
 
-import { IconButton, Box } from '@material-ui/core'
+import {IconButton, Box, Tooltip} from '@material-ui/core'
 import { Add, History } from '@material-ui/icons'
 import {
   Button,
@@ -108,6 +108,22 @@ export function TestConfigurationsList({
     )
   }
 
+  const getValueFromSlug = (parameters, slug) => {
+    let filtered = parameters.filter(
+          e => e.parameter_slug === slug
+    )
+    let result = filtered.length > 0 && filtered[0].hasOwnProperty("value")
+      ? filtered[0].value
+      : "Unknown"
+    return result.length > 30 ?
+      <Tooltip title={ result } placement="top" arrow>
+        <div>
+          { result.substring(0, 20) + "…" + result.substring(result.length - 5, result.length) }
+        </div>
+      </Tooltip>
+      : result
+  }
+
   const totalCount = configurationsAggregate
     ? configurationsAggregate.aggregate.count
     : 0
@@ -143,16 +159,25 @@ export function TestConfigurationsList({
           title="Name"
         />
         <DataTable.Column
-          key="type"
-          render={configuration => configuration.configuration_type.name}
-          title="Type"
+          key="host"
+          render={
+            configuration => getValueFromSlug(configuration.configuration_parameters, "load_tests_host")
+          }
+          title="Host"
         />
         <DataTable.Column
-          key="source"
-          render={({ test_source }) =>
-            test_source && test_source[test_source.source_type].name
+          key="users"
+          render={
+            configuration => getValueFromSlug(configuration.configuration_parameters, "load_tests_users")
           }
-          title="Source"
+          title="Users"
+        />
+        <DataTable.Column
+          key="duration"
+          render={
+            configuration => getValueFromSlug(configuration.configuration_parameters, "load_tests_duration") + "s"
+          }
+          title="Duration"
         />
         <DataTable.Column
           key="lastRun"
@@ -163,7 +188,7 @@ export function TestConfigurationsList({
                   <IconButton className={classes.icon} disabled>
                     <History />
                   </IconButton>
-                  <span>{moment(executions[0].start).format('YYYY-MM-DD')}</span>
+                  <span>{moment(executions[0].start).format('YYYY-MM-DD HH:mm:ss')}</span>
                 </React.Fragment>
               )}
             </NoWrap>
@@ -199,31 +224,6 @@ export function TestConfigurationsList({
             )
           }}
           title="Success Rate"
-        />
-
-        <DataTable.Column
-          key="last_execution_response_time"
-          render={({ executions }) => {
-            if (executions.length === 0) {
-              return null
-            }
-
-            const totals = executions[0].execution_request_totals_aggregate.aggregate
-            return (
-              <NoWrap>
-                {formatThousands(totals.min.min_response_time)} /{' '}
-                {formatThousands(totals.avg.average_response_time)} /{' '}
-                {formatThousands(totals.max.max_response_time)}
-              </NoWrap>
-            )
-          }}
-          title={
-            <NoWrap>
-              Response Times [ms]
-              <br />
-              Min / Avg / Max
-            </NoWrap>
-          }
         />
 
         <DataTable.Column
