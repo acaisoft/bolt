@@ -28,16 +28,22 @@ import Authorized from './Authorized'
 import Guest from './Guest'
 import Splash from './Splash'
 import { useAuth0 } from '@auth0/auth0-react'
+import { useAuth } from 'contexts/AuthContext'
+import { isAuth0AuthService } from '../config/constants'
 import useStyles from './Layout.styles'
 
 export function Layout() {
   const classes = useStyles()
-  const { isAuthenticated, isLoading } = useAuth0()
+  const { isAuthenticated: auth0IsAuthenticated, isLoading } = useAuth0()
+  const boltAuth = useAuth()
+  const isAuthenticated = isAuth0AuthService
+    ? auth0IsAuthenticated
+    : boltAuth.isAuthenticated
 
   function CloseButton({ closeToast }) {
     return <CloseToast onClick={closeToast} className={classes.closeIcon} />
   }
-  if (isLoading) return <Splash />
+  if (isAuth0AuthService ? isLoading : !boltAuth.isInitialized) return <Splash />
 
   return (
     <React.Fragment>

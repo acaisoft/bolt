@@ -24,9 +24,15 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 
 import LoginPage from './Login'
 import { useAuth0 } from '@auth0/auth0-react'
+import { useAuth } from 'contexts/AuthContext'
+import { isAuth0AuthService } from '../config/constants'
 
 export function Guest() {
-  const { isAuthenticated } = useAuth0()
+  const { isAuthenticated: auth0IsAuthenticated } = useAuth0()
+  const boltAuth = useAuth()
+  const isAuthenticated = isAuth0AuthService
+    ? auth0IsAuthenticated
+    : boltAuth.hasToken
 
   return (
     <Routes>

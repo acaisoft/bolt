@@ -19,7 +19,10 @@
 
 import uuid
 
+from flask import current_app
+
 from apps.bolt_api.app.auth0_client import Auth0Client
+from apps.bolt_api.app.utils.token import generate_token
 from services import const
 from services.logger import setup_custom_logger
 
@@ -32,14 +35,34 @@ def generate_hasura_token(
 ) -> tuple[str, str]:
     """
     Returns a token for use by a testrunner, granting access to a single execution.
-    Token's generated through Auth0 service
+    Token's generated through either Auth0 service, or self-signed here.
+
     :param role: hasura role token needs to be issued for
     :param execution_id: execution id to include in the token. Will generate new if missing.
+
     :return: tuple: jwt token, testrunner id
     """
     if execution_id is None:
         execution_id = str(uuid.uuid1())
-    logger.info("Generating Hasura access token via Auth0")
-    token = Auth0Client(management_token=False).get_auth0_access_token(role=role, execution_id=execution_id)
+
+    selfsigned = current_app.config.get(const.AUTH_PROVIDER)
+    if selfsigned:
+        logger.info("Generating Hasura access token inside service")
+        match role:
+            case const.ROLE_REPORTGENERATOR:
+                runner_id = {"x-hasura-reportgenerator-id": execution_id}
+            case _:
+                runner_id = {"x-hasura-testruner-id": execution_id}
+        payload = {
+            "https://hasura.io/jwt/claims": {
+                "x-hasura-allowed-roles": [role],
+                "x-hasura-default-role": role,
+                "x-hasura-user-id": current_app.config.get(const.AUTH_USER_ID),
+                **runner_id
+            }}
+        token = generate_token(current_app.config, payload=payload)
+    else:
+        logger.info("Generating Hasura access token via Auth0")
+        token = Auth0Client(management_token=False).get_auth0_access_token(role=role, execution_id=execution_id)
     return token, execution_id
 
