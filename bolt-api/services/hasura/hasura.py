@@ -45,7 +45,7 @@ def generate_hasura_token(
     if execution_id is None:
         execution_id = str(uuid.uuid1())
 
-    selfsigned = current_app.config.get(const.AUTH_PROVIDER)
+    selfsigned = current_app.config.get(const.AUTH_PROVIDER) == 'BOLT'
     if selfsigned:
         logger.info("Generating Hasura access token inside service")
         match role:
