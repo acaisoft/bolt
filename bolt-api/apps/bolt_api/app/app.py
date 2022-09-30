@@ -21,7 +21,7 @@ import logging
 
 from flask import Flask
 
-from apps.bolt_api.app import appgraph, healthcheck, webhooks, auth
+from apps.bolt_api.app import appgraph, healthcheck, webhooks, auth, remote_schema_check
 from services.configure import configure, validate, validate_conditional_config
 from services.logger import setup_custom_logger
 from services import const
@@ -67,6 +67,7 @@ def create_app(test_config=None):
 
     ## healthchecks
     healthcheck.register_app(app)
+    remote_schema_check.verify_remote_schema_state(app)
 
     ## webhooks
     webhooks.register_app(app)
