@@ -32,7 +32,7 @@ export function Details() {
 
   return (
     <div className={classes.root}>
-      <Typography variant="body2">Here you see test source details</Typography>
+      <Typography variant="body2">Here you can see test source details</Typography>
       <div className={classes.tableContainer}>
         Test source details for {sourceId}
       </div>
