@@ -26,6 +26,10 @@ from prometheus_flask_exporter import PrometheusMetrics
 from sentry_sdk.integrations.flask import FlaskIntegration
 
 
+class ConfigurationError(OSError):
+    ...
+
+
 def configure(app: Flask):
     # common flask app configuration
     app.logger.setLevel(logging.DEBUG if app.debug else logging.INFO)
@@ -79,19 +83,48 @@ def validate(app, required_config_vars, required_env_vars):
     app.logger.info("config valid")
 
 
-def validate_storage_service(app, supported_storage_services, storage_service_var):
-    missing = []
-    storage_service = app.config.get(storage_service_var)
-    if storage_service not in supported_storage_services:
-        raise EnvironmentError(
-            f"{storage_service_var} config variable needs to be one of: {', '.join(list(supported_storage_services))}"
+def validate_conditional_config(
+        app: Flask,
+        supported_choices: dict,
+        chosen_variant_var: str,
+        config_kind: str
+):
+    """
+    Validate grouped configuration variables, like storage or auth provider, that change depending on chosen variant.
+
+    :param app: Flask | application object instance, post-configuration
+    :param supported_choices: const nested dictionary containing supported choices for given config group
+    :param chosen_variant_var: config string representing desired configuration group
+    :param config_kind: string defining config group, just for logging purposes
+
+    :raises: EnvironmentError
+    :raises: ConfigurationError
+    """
+    missing_vars = []
+    missing_env = []
+    chosen_variant = app.config.get(chosen_variant_var)
+    if chosen_variant not in supported_choices:
+        raise ConfigurationError(
+            f"{chosen_variant_var} config variable needs to be one of: {', '.join(list(supported_choices))}"
         )
-    for var_name in supported_storage_services[storage_service]["vars"]:
-        if app.config.get(var_name) is None:
-            missing.append(var_name)
-    if missing:
+    if "vars" in supported_choices[chosen_variant]:
+        for var_name in supported_choices[chosen_variant]["vars"]:
+            if app.config.get(var_name) is None:
+                missing_vars.append(var_name)
+    if "env" in supported_choices[chosen_variant]:
+        for env_name in supported_choices[chosen_variant]["env"]:
+            if not os.environ.get(env_name):
+                missing_env.append(env_name)
+    if missing_env:
         raise EnvironmentError(
-            f"{len(missing)} undefined config variable{'s' if len(missing) > 1 else ''} for {storage_service} service:\n"
-            f"{', '.join(missing)}"
+            f"{len(missing_env)} undefined environment variable{'s' if len(missing_env) > 1 else ''} "
+            f"for {chosen_variant}:\n"
+            f"{', '.join(missing_env)}"
         )
-    app.logger.info("storage config valid")
+    if missing_vars:
+        raise ConfigurationError(
+            f"{len(missing_vars)} undefined configuration variable{'s' if len(missing_vars) > 1 else ''} "
+            f"for {chosen_variant}:\n"
+            f"{', '.join(missing_vars)}"
+        )
+    app.logger.info(f"{config_kind} config valid")

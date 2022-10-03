@@ -69,7 +69,7 @@ function AuthBoltProvider({ children }) {
     setHasToken(true)
 
     try {
-      const { exp: expires, given_name: firstName } = jwtDecode(token)
+      const { exp: expires, name: firstName } = jwtDecode(token)
       const isExpired = Date.now() >= expires * 1000
       if (isExpired) return logout()
 

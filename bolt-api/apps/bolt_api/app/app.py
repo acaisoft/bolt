@@ -21,8 +21,8 @@ import logging
 
 from flask import Flask
 
-from apps.bolt_api.app import appgraph, healthcheck, webhooks, auth
-from services.configure import configure, validate, validate_storage_service
+from apps.bolt_api.app import appgraph, healthcheck, webhooks, auth, remote_schema_check
+from services.configure import configure, validate, validate_conditional_config
 from services.logger import setup_custom_logger
 from services import const
 from services.hasura import hasura_client
@@ -56,7 +56,8 @@ def create_app(test_config=None):
 
     validate(app, const.REQUIRED_BOLT_API_CONFIG_VARS, const.REQUIRED_ENV_VARS)
 
-    validate_storage_service(app, const.STORAGE_PROVIDERS, const.STORAGE_SERVICE)
+    validate_conditional_config(app, const.STORAGE_PROVIDERS, const.STORAGE_SERVICE, "Storage provider")
+    validate_conditional_config(app, const.AUTH, const.AUTH_PROVIDER, "Authentication provider")
 
     ## initialize the hasura client
     hasura_client(app.config)
@@ -66,6 +67,7 @@ def create_app(test_config=None):
 
     ## healthchecks
     healthcheck.register_app(app)
+    remote_schema_check.verify_remote_schema_state(app)
 
     ## webhooks
     webhooks.register_app(app)

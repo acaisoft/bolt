@@ -60,11 +60,7 @@ export function useAuth() {
   const authService = process.env.REACT_APP_AUTH_SERVICE || AuthServiceName.BOLT
 
   const authContext =
-    authService === AuthServiceName.KEYCLOAK
-      ? AuthKeycloakContext
-      : authService === AuthServiceName.BOLT
-      ? AuthBoltContext
-      : null
+    authService === AuthServiceName.KEYCLOAK ? AuthKeycloakContext : AuthBoltContext
   const context = useContext(authContext)
   if (context === undefined) {
     throw new Error(`Auth provider ${authService} not implemented`)

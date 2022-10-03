@@ -26,11 +26,15 @@ import { PopoverMenu, Button } from 'components'
 import UserAvatar from '../UserAvatar'
 import useStyles from './UserMenu.styles'
 import { useAuth0 } from '@auth0/auth0-react'
-import { AUTH_TOKEN_NAME } from 'config/constants'
+import { useAuth } from 'contexts/AuthContext'
+import { AUTH_TOKEN_NAME, isAuth0AuthService } from 'config/constants'
 
 function UserMenu() {
   const classes = useStyles()
-  const { user, logout } = useAuth0()
+  const { user: auth0User, logout: auth0Logout } = useAuth0()
+  const boltAuth = useAuth()
+  const user = isAuth0AuthService ? auth0User : boltAuth.user
+
   return (
     <div>
       <PopoverMenu
@@ -42,8 +46,10 @@ function UserMenu() {
             aria-label="User Menu"
             color="inherit"
           >
-            <UserAvatar avatar={user.picture} />
-            <span className={classes.userName}>{user.nickname}</span>
+            <UserAvatar avatar={isAuth0AuthService ? user.picture : null} />
+            <span className={classes.userName}>
+              {isAuth0AuthService ? user.nickname : user.firstName}
+            </span>
             <ExpandMore className={classes.expandIcon} />
           </Button>
         }
@@ -62,7 +68,9 @@ function UserMenu() {
         <MenuItem
           onClick={() => {
             localStorage.removeItem(AUTH_TOKEN_NAME)
-            logout({ returnTo: `${window.location.origin}/login` })
+            if (isAuth0AuthService)
+              auth0Logout({ returnTo: `${window.location.origin}/login` })
+            else boltAuth.logout()
           }}
         >
           <ListItemIcon>

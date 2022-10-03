@@ -23,7 +23,7 @@ import React from 'react'
 import moment from 'moment'
 import { useQuery } from '@apollo/client'
 
-import { DataTable, SectionHeader, NoWrap, Button } from 'components'
+import {DataTable, SectionHeader, NoWrap, Button, TestRunStatus} from 'components'
 import { useListFilters } from 'hooks'
 
 import { GET_TEST_EXECUTIONS } from './graphql'
@@ -95,7 +95,7 @@ function TestExecutionsList({ projectId, getExecutionDetailsUrl }) {
         />
         <DataTable.Column
           key="status"
-          render={execution => execution.status}
+          render={execution => <TestRunStatus status={execution.status} />}
           title="Status"
         />
         <DataTable.Column
@@ -111,23 +111,23 @@ function TestExecutionsList({ projectId, getExecutionDetailsUrl }) {
           title="Total"
         />
         <DataTable.Column
-          key="passed"
+          key="successes"
           render={execution =>
             formatThousands(
               execution.result_aggregate_aggregate.aggregate.sum
                 .number_of_successes || 0
             )
           }
-          title="Passed"
+          title="Successes"
         />
         <DataTable.Column
-          key="fails"
+          key="failures"
           render={execution =>
             formatThousands(
               execution.result_aggregate_aggregate.aggregate.sum.number_of_fails || 0
             )
           }
-          title="Fails"
+          title="Failures"
         />
         <DataTable.Column
           key="actions"
