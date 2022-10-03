@@ -149,7 +149,7 @@ function TestExecutionsList({
           }
         />
         <DataTable.Column
-          key="passed"
+          key="successes"
           render={({ executionTotals }) => {
             const successes =
               (executionTotals.aggregate.sum.num_requests || 0) -
@@ -163,10 +163,10 @@ function TestExecutionsList({
               </NoWrap>
             )
           }}
-          title="Passed"
+          title="Successes"
         />
         <DataTable.Column
-          key="fails"
+          key="failures"
           render={({ executionTotals }) => {
             const failures = executionTotals.aggregate.sum.num_failures || 0
             const total = executionTotals.aggregate.sum.num_requests || 0
@@ -178,7 +178,7 @@ function TestExecutionsList({
               </NoWrap>
             )
           }}
-          title="Fails"
+          title="Failures"
         />
         <DataTable.Column
           key="total"

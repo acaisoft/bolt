@@ -50,7 +50,7 @@ export function List() {
   return (
     <div className={classes.root}>
       <Typography variant="body2">
-        Here you see results of all tests performed in all of your projects
+        Here you can see results of all tests performed in all of your projects
       </Typography>
       <div className={classes.tableContainer}>
         <TestExecutionsList
