@@ -30,6 +30,7 @@ from apps.bolt_api.app.appgraph import (
     test_runs,
     uploads,
     users,
+    healthcheck
 )
 from apps.bolt_api.app.appgraph.project import demo
 from services import gql_util
@@ -39,6 +40,7 @@ class TestrunQuery(
     test_runs.TestrunQueries,
     project.TestrunQueries,
     execution_metrics.ExecutionMetricsQueries,
+    healthcheck.RemoteSchemaQueries
 ):
     pass
 
