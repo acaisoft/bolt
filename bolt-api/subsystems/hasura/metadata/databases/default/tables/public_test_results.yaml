@@ -1,0 +1,15 @@
+table:
+  schema: public
+  name: test_results
+object_relationships:
+  - name: test_run
+    using:
+      foreign_key_constraint_on: test_run_id
+array_relationships:
+  - name: test_cases
+    using:
+      foreign_key_constraint_on:
+        column: test_result_id
+        table:
+          schema: public
+          name: test_case

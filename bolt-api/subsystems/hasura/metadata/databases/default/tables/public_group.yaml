@@ -1,0 +1,38 @@
+table:
+  schema: public
+  name: group
+array_relationships:
+  - name: test_cases
+    using:
+      foreign_key_constraint_on:
+        column: group_id
+        table:
+          schema: public
+          name: test_case
+insert_permissions:
+  - role: tenantadmin
+    permission:
+      check: {}
+      columns:
+        - name
+        - id
+      backend_only: false
+select_permissions:
+  - role: tenantadmin
+    permission:
+      columns:
+        - name
+        - id
+      filter: {}
+update_permissions:
+  - role: tenantadmin
+    permission:
+      columns:
+        - name
+        - id
+      filter: {}
+      check: null
+delete_permissions:
+  - role: tenantadmin
+    permission:
+      filter: {}

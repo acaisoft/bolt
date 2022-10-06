@@ -1,0 +1,55 @@
+table:
+  schema: public
+  name: test_run
+object_relationships:
+  - name: scenario
+    using:
+      foreign_key_constraint_on: external_scenario_id
+array_relationships:
+  - name: custom_fields
+    using:
+      foreign_key_constraint_on:
+        column: test_run_id
+        table:
+          schema: public
+          name: custom_field
+  - name: test_results
+    using:
+      foreign_key_constraint_on:
+        column: test_run_id
+        table:
+          schema: public
+          name: test_result
+insert_permissions:
+  - role: tenantadmin
+    permission:
+      check: {}
+      columns:
+        - duration
+        - timestamp
+        - external_scenario_id
+        - id
+      backend_only: false
+select_permissions:
+  - role: tenantadmin
+    permission:
+      columns:
+        - duration
+        - timestamp
+        - external_scenario_id
+        - id
+      filter: {}
+update_permissions:
+  - role: tenantadmin
+    permission:
+      columns:
+        - duration
+        - timestamp
+        - external_scenario_id
+        - id
+      filter: {}
+      check: null
+delete_permissions:
+  - role: tenantadmin
+    permission:
+      filter: {}
