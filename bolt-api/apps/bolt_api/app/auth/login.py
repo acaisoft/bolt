@@ -5,6 +5,7 @@ from urllib.parse import urlparse
 
 from apps.bolt_api.app.utils.token import generate_token
 from apps.bolt_api.app.auth0_client import ProcessBoltUser
+from apps.bolt_api.app.auth.requires_auth import requires_auth
 from services import const
 from services.logger import setup_custom_logger
 
@@ -72,6 +73,7 @@ def login():
 
 
 @bp.route('/process_user', methods=['POST'])
+@requires_auth
 def process_user():
     email = request.get_json().get('email')
     project_id = request.get_json().get('project_id')
