@@ -5,9 +5,14 @@ object_relationships:
   - name: group
     using:
       foreign_key_constraint_on: group_id
-  - name: test_result
+array_relationships:
+  - name: test_results
     using:
-      foreign_key_constraint_on: test_result_id
+      foreign_key_constraint_on:
+        column: test_case_id
+        table:
+          schema: public
+          name: test_result
 insert_permissions:
   - role: tenantadmin
     permission:
@@ -15,10 +20,9 @@ insert_permissions:
       columns:
         - custom_name
         - description
-        - name_from_file
         - group_id
         - id
-        - test_result_id
+        - name_from_file
       backend_only: false
 select_permissions:
   - role: tenantadmin
@@ -26,21 +30,19 @@ select_permissions:
       columns:
         - custom_name
         - description
-        - name_from_file
         - group_id
         - id
-        - test_result_id
+        - name_from_file
       filter: {}
 update_permissions:
   - role: tenantadmin
     permission:
       columns:
+        - id
+        - name_from_file
         - custom_name
         - description
-        - name_from_file
         - group_id
-        - id
-        - test_result_id
       filter: {}
       check: null
 delete_permissions:
