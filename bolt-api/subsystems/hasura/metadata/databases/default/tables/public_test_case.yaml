@@ -18,11 +18,11 @@ insert_permissions:
     permission:
       check: {}
       columns:
+        - id
+        - name_from_file
         - custom_name
         - description
         - group_id
-        - id
-        - name_from_file
       backend_only: false
 select_permissions:
   - role: tenantadmin
@@ -30,19 +30,19 @@ select_permissions:
       columns:
         - custom_name
         - description
+        - name_from_file
         - group_id
         - id
-        - name_from_file
       filter: {}
 update_permissions:
   - role: tenantadmin
     permission:
       columns:
-        - id
-        - name_from_file
         - custom_name
         - description
+        - name_from_file
         - group_id
+        - id
       filter: {}
       check: null
 delete_permissions:
