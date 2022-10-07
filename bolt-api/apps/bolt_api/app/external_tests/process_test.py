@@ -22,10 +22,6 @@ def upload_external_tests():
             status=400,
             mimetype="application/json",
         )
-    project_id = data["scenario_id"]
-    scenario_id = data["scenario_id"]
-    custom_fields = data["custom_fields"]
-    report_format = data["report_format"]
     root = JunitParser(request.files['file'], data).process_xml()
     return make_response({"data": root})
 
