@@ -1,11 +1,42 @@
 from flask import current_app
-from services.hasura import hce, hce_with_user
+from services.hasura import hce
+
+from services.logger import setup_custom_logger
+logger = setup_custom_logger(__file__)
 
 
 class ExternalTestsLoader:
 
+    def get_groups_and_test_cases_for_project(self, project_id):
+        query = """
+            query ($project_id: uuid) {
+              group(
+                where:{test_cases:{test_results:{test_run:{scenario:{project_id:{_eq: $project_id}}}}}}
+                )
+              {
+                id
+                name
+              }
+              test_case(
+                where:{test_results:{test_run:{scenario:{project_id:{_eq: $project_id}}}}}
+              )
+              {
+                id
+                name_from_file
+              }
+            }
+        """
+        response = hce(current_app.config, query, variable_values={"project_id": project_id})
+        groups_dict = {}
+        test_cases_dict = {}
+        for group in response.get("group"):
+            groups_dict[group.get("name")] = group
+        for test_case in response.get("test_case"):
+            test_cases_dict[test_case.get("name_from_file")] = test_case
+        return groups_dict, test_cases_dict
+
     def bulk_insert_all(self, objects):
-        query = '''
+        query = """
             mutation insertTestRunWithResults (
               $test_run: test_run_insert_input!
               $groups: [group_insert_input!]!
@@ -20,6 +51,7 @@ class ExternalTestsLoader:
               insert_test_result (objects: $results) {affected_rows}
               insert_custom_field (objects: $custom_fields) {affected_rows}
             }
-                '''
+                """
         # TODO add error handling
         hce(current_app.config, query, variable_values=objects)
+

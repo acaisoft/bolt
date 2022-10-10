@@ -8,14 +8,16 @@ logger = setup_custom_logger(__file__)
 class JunitParser(BaseXMLParser):
 
     def get_test_cases(self, test_case):
-        test_case_obj = {
-            "id": str(uuid.uuid4()),
-            "name_from_file": test_case.attrib.get("name"),
-            "group_id": self.get_group(test_case).get("id"),
-            # "project": self.project_id,
-        }
-        self.test_cases_objects.append(test_case_obj)
-        return test_case_obj
+        name = test_case.attrib.get("name")
+        if not (etc := self.existing_test_cases_dict.get(name)):
+            test_case_obj = {
+                "id": str(uuid.uuid4()),
+                "name_from_file": name,
+                "group_id": self.get_group(test_case).get("id"),
+            }
+            self.test_cases_objects.append(test_case_obj)
+            return test_case_obj
+        return etc
 
     def get_test_result(self, test_case, test_case_id, test_run_id):
         if (reason := test_case.find('failure')) is not None:
@@ -40,15 +42,19 @@ class JunitParser(BaseXMLParser):
         })
 
     def get_group(self, test_case):
-        if (group_name := test_case.attrib.get("classname")) not in self.groups_objects.keys():
-            group_object = {
-                "id": str(uuid.uuid4()),
-                "name": group_name.split(".")[-1]
-            }
-            self.groups_objects[group_name] = group_object
-            return group_object
+        group_name = test_case.attrib.get("classname").split(".")[-1]
+        if not self.existing_groups_dict.get(group_name):
+            if group_name not in self.groups_objects.keys():
+                group_object = {
+                    "id": str(uuid.uuid4()),
+                    "name": group_name
+                }
+                self.groups_objects[group_name] = group_object
+                return group_object
+            else:
+                return self.groups_objects.get(group_name)
         else:
-            return self.groups_objects.get(group_name)
+            return self.existing_groups_dict[group_name]
 
     def get_custom_fields(self, custom_fields, test_run_id):
         custom_fields_list = []
@@ -81,6 +87,6 @@ class JunitParser(BaseXMLParser):
                 "groups": list(self.groups_objects.values()),
                 "custom_fields": self.get_custom_fields(self.custom_fields, test_run_id)
             }
-            logger.info(f">>>>>>>>>>>>>>>>>>>>>>>>>> {result}")
+
             self.loader.bulk_insert_all(result)
             return result
