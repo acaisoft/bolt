@@ -70,11 +70,17 @@ class JunitParser(BaseXMLParser):
     def process_xml(self):
         for test_siute in self.root.find("."):
             test_run_id = str(uuid.uuid4())
+            attrib = test_siute.attrib
             test_run_object = {
                 "id": test_run_id,
-                "duration": test_siute.attrib.get("time"),
+                "duration": attrib.get("time"),
                 "external_scenario_id": self.scenario_id,
-                "timestamp": test_siute.attrib.get("timestamp")
+                "timestamp": attrib.get("timestamp"),
+                "successes": int(attrib.get("successes", 0)),
+                "failures": int(attrib.get("failures", 0)),
+                "skipped": int(attrib.get("skipped", 0)),
+                "errors": int(attrib.get("errors", 0)),
+                "total": int(attrib.get("tests", 0)),
             }
             for test_case in test_siute.findall("testcase"):
                 self.get_test_result(
