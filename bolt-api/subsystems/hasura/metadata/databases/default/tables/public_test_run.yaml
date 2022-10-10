@@ -25,15 +25,23 @@ insert_permissions:
     permission:
       check: {}
       columns:
-        - duration
-        - timestamp
-        - external_scenario_id
         - id
+        - external_scenario_id
+        - timestamp
+        - duration
+        - successes
+        - failures
+        - skipped
+        - total
       backend_only: false
 select_permissions:
   - role: tenantadmin
     permission:
       columns:
+        - failures
+        - skipped
+        - successes
+        - total
         - duration
         - timestamp
         - external_scenario_id
@@ -43,6 +51,10 @@ update_permissions:
   - role: tenantadmin
     permission:
       columns:
+        - failures
+        - skipped
+        - successes
+        - total
         - duration
         - timestamp
         - external_scenario_id
