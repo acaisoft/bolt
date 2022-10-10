@@ -25,40 +25,43 @@ insert_permissions:
     permission:
       check: {}
       columns:
-        - id
-        - external_scenario_id
-        - timestamp
         - duration
-        - successes
+        - errors
+        - external_scenario_id
         - failures
+        - id
         - skipped
+        - successes
+        - timestamp
         - total
       backend_only: false
 select_permissions:
   - role: tenantadmin
     permission:
       columns:
+        - duration
+        - errors
+        - external_scenario_id
         - failures
+        - id
         - skipped
         - successes
-        - total
-        - duration
         - timestamp
-        - external_scenario_id
-        - id
+        - total
       filter: {}
 update_permissions:
   - role: tenantadmin
     permission:
       columns:
+        - duration
+        - errors
+        - external_scenario_id
         - failures
+        - id
         - skipped
         - successes
-        - total
-        - duration
         - timestamp
-        - external_scenario_id
-        - id
+        - total
       filter: {}
       check: null
 delete_permissions:
