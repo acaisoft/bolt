@@ -1,0 +1,51 @@
+table:
+  schema: public
+  name: test_case
+object_relationships:
+  - name: group
+    using:
+      foreign_key_constraint_on: group_id
+array_relationships:
+  - name: test_results
+    using:
+      foreign_key_constraint_on:
+        column: test_case_id
+        table:
+          schema: public
+          name: test_result
+insert_permissions:
+  - role: tenantadmin
+    permission:
+      check: {}
+      columns:
+        - id
+        - name_from_file
+        - custom_name
+        - description
+        - group_id
+      backend_only: false
+select_permissions:
+  - role: tenantadmin
+    permission:
+      columns:
+        - custom_name
+        - description
+        - name_from_file
+        - group_id
+        - id
+      filter: {}
+update_permissions:
+  - role: tenantadmin
+    permission:
+      columns:
+        - custom_name
+        - description
+        - name_from_file
+        - group_id
+        - id
+      filter: {}
+      check: null
+delete_permissions:
+  - role: tenantadmin
+    permission:
+      filter: {}

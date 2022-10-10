@@ -1,0 +1,49 @@
+table:
+  schema: public
+  name: test_result
+object_relationships:
+  - name: test_case
+    using:
+      foreign_key_constraint_on: test_case_id
+  - name: test_run
+    using:
+      foreign_key_constraint_on: test_run_id
+insert_permissions:
+  - role: tenantadmin
+    permission:
+      check: {}
+      columns:
+        - duration
+        - id
+        - message
+        - result
+        - test_case_id
+        - test_run_id
+      backend_only: false
+select_permissions:
+  - role: tenantadmin
+    permission:
+      columns:
+        - duration
+        - id
+        - message
+        - result
+        - test_case_id
+        - test_run_id
+      filter: {}
+update_permissions:
+  - role: tenantadmin
+    permission:
+      columns:
+        - duration
+        - id
+        - message
+        - result
+        - test_case_id
+        - test_run_id
+      filter: {}
+      check: null
+delete_permissions:
+  - role: tenantadmin
+    permission:
+      filter: {}

@@ -1,0 +1,70 @@
+table:
+  schema: public
+  name: group
+array_relationships:
+  - name: test_cases
+    using:
+      foreign_key_constraint_on:
+        column: group_id
+        table:
+          schema: public
+          name: test_case
+insert_permissions:
+  - role: tenantadmin
+    permission:
+      check:
+        test_cases:
+          test_results:
+            test_run:
+              scenario:
+                project:
+                  userProjects:
+                    user_id:
+                      _eq: X-Hasura-User-Id
+      columns:
+        - name
+        - id
+      backend_only: false
+select_permissions:
+  - role: tenantadmin
+    permission:
+      columns:
+        - name
+        - id
+      filter:
+        test_cases:
+          test_results:
+            test_run:
+              scenario:
+                project:
+                  userProjects:
+                    user_id:
+                      _eq: X-Hasura-User-Id
+update_permissions:
+  - role: tenantadmin
+    permission:
+      columns:
+        - name
+        - id
+      filter:
+        test_cases:
+          test_results:
+            test_run:
+              scenario:
+                project:
+                  userProjects:
+                    user_id:
+                      _eq: X-Hasura-User-Id
+      check: null
+delete_permissions:
+  - role: tenantadmin
+    permission:
+      filter:
+        test_cases:
+          test_results:
+            test_run:
+              scenario:
+                project:
+                  userProjects:
+                    user_id:
+                      _eq: X-Hasura-User-Id

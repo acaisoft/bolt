@@ -1,0 +1,44 @@
+table:
+  schema: public
+  name: external_test_scenario
+object_relationships:
+  - name: project
+    using:
+      foreign_key_constraint_on: project_id
+array_relationships:
+  - name: test_runs
+    using:
+      foreign_key_constraint_on:
+        column: external_scenario_id
+        table:
+          schema: public
+          name: test_run
+insert_permissions:
+  - role: tenantadmin
+    permission:
+      check: {}
+      columns:
+        - description
+        - id
+        - project_id
+      backend_only: false
+select_permissions:
+  - role: tenantadmin
+    permission:
+      columns:
+        - id
+        - project_id
+        - description
+      filter: {}
+update_permissions:
+  - role: tenantadmin
+    permission:
+      columns:
+        - description
+        - project_id
+      filter: {}
+      check: null
+delete_permissions:
+  - role: tenantadmin
+    permission:
+      filter: {}
