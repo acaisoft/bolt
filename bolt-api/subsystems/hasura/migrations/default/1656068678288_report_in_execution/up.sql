@@ -1,1 +1,0 @@
-ALTER TABLE "public"."execution" ADD COLUMN IF NOT EXISTS "report" text DEFAULT 'not_generated'::text NOT NULL;
