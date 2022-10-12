@@ -28,6 +28,9 @@ export default makeStyles(({ palette, spacing, typography }) => ({
   marginBottom: {
     marginBottom: spacing(2),
   },
+  marginTop: {
+    marginTop: spacing(5),
+  },
   description: {
     ...typography.subtitle1,
     fontWeight: 'normal',

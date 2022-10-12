@@ -19,25 +19,22 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { makeStyles } from '@material-ui/core'
+import { gql } from '@apollo/client'
 
-export default makeStyles(({ palette, spacing }) => ({
-  actionsContainer: {
-    display: 'flex',
-  },
-  dateContainer: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  rateContainer: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  rateMeter: {
-    marginLeft: spacing(1.5),
-  },
-  newScenarioButtonContainer: {
-    textAlign: 'right',
-    marginBottom: spacing(2),
-  },
-}))
+export const GET_SCENARIO = gql`
+  query getTestConfiguration($scenarioId: uuid!) {
+    externalTestScenario: external_test_scenario_by_pk(id: $scenarioId) {
+      id
+      name
+      description
+      test_runs {
+        total
+        failures
+        errors
+        skipped
+        timestamp
+        id
+      }
+    }
+  }
+`

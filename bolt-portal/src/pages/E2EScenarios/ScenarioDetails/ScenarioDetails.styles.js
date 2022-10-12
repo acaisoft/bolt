@@ -21,23 +21,14 @@
 
 import { makeStyles } from '@material-ui/core'
 
-export default makeStyles(({ palette, spacing }) => ({
-  actionsContainer: {
-    display: 'flex',
+export default makeStyles(({ spacing, palette }) => ({
+  marginTop: {
+    marginTop: spacing(4),
   },
-  dateContainer: {
-    display: 'flex',
-    alignItems: 'center',
+  success: {
+    color: palette.text.success,
   },
-  rateContainer: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  rateMeter: {
-    marginLeft: spacing(1.5),
-  },
-  newScenarioButtonContainer: {
-    textAlign: 'right',
-    marginBottom: spacing(2),
+  failure: {
+    color: palette.text.error,
   },
 }))
