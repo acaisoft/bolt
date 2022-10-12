@@ -21,7 +21,6 @@
 
 import { useCallback } from 'react'
 import { useMutationWithState } from 'hooks'
-import { preparePayload } from './formSchema'
 import { ADD_CONFIGURATION_MUTATION, EDIT_CONFIGURATION_MUTATION } from './graphql'
 
 export const testsPerformedMessage =
@@ -31,6 +30,7 @@ export function useConfigurationSubmit({
   mode,
   configurationId,
   projectId,
+  preparePayload,
   onSubmit,
 }) {
   const { mutation: submitMutation } = useMutationWithState(
@@ -53,7 +53,7 @@ export function useConfigurationSubmit({
       const { errorMessage } = await submitMutation({ variables })
       onSubmit({ values, errorMessage })
     },
-    [submitMutation, mode, configurationId, projectId, onSubmit]
+    [submitMutation, mode, configurationId, projectId, preparePayload, onSubmit]
   )
 
   return handleSubmit

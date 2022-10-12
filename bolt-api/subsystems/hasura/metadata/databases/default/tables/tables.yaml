@@ -19,7 +19,6 @@
 - "!include public_execution_stage_log.yaml"
 - "!include public_execution_users.yaml"
 - "!include public_extension_params.yaml"
-- "!include public_external_test_scenario.yaml"
 - "!include public_group.yaml"
 - "!include public_parameter.yaml"
 - "!include public_project.yaml"

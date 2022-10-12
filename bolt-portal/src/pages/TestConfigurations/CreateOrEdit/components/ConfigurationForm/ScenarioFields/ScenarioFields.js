@@ -19,12 +19,16 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import React from 'react'
+import React , { useEffect } from 'react'
 import { Grid, MenuItem } from '@material-ui/core'
 import { FormField } from 'containers'
 import { ExpandablePanel } from 'components'
 
-function ScenarioFields({ fields }) {
+function ScenarioFields({ fields, configurationType, externalConfigurationHook }) {
+  useEffect(()=> {
+    externalConfigurationHook(configurationType !== "load_tests")
+  })
+
   return (
     <ExpandablePanel defaultExpanded title="Scenario">
       <Grid container spacing={4}>
@@ -47,8 +51,6 @@ function ScenarioFields({ fields }) {
             field={fields.configuration_type}
             variant="filled"
             fullWidth
-            // TODO: remove disabled prop when more options will be added
-            disabled
           >
             {fields.configuration_type.options.map(option => (
               <MenuItem key={option.key} value={option.value}>

@@ -40,6 +40,13 @@ array_relationships:
         table:
           schema: public
           name: execution
+  - name: test_runs
+    using:
+      foreign_key_constraint_on:
+        column: scenario_id
+        table:
+          schema: public
+          name: test_run
 select_permissions:
   - role: manager
     permission:
