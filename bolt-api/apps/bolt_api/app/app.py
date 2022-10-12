@@ -19,9 +19,10 @@
 
 import logging
 
-from flask import Flask
+from flask import Flask, jsonify
 
-from apps.bolt_api.app import appgraph, healthcheck, webhooks, auth, remote_schema_check
+from apps.bolt_api.app import appgraph, healthcheck, webhooks, auth, remote_schema_check, external_tests
+from apps.bolt_api.app.auth.requires_auth import AuthError
 from services.configure import configure, validate, validate_conditional_config
 from services.logger import setup_custom_logger
 from services import const
@@ -29,6 +30,12 @@ from services.hasura import hasura_client
 
 
 logger = setup_custom_logger(__name__)
+
+
+def handle_auth_error(ex):
+    response = jsonify(ex.error)
+    response.status_code = ex.status_code
+    return response
 
 
 def create_app(test_config=None):
@@ -75,7 +82,13 @@ def create_app(test_config=None):
     ## auth
     auth.register_app(app)
 
+    ## upload
+    external_tests.register_app(app)
+
     logger.info('application ready')
+
+    app.register_error_handler(AuthError, handle_auth_error)
+
     return app
 
 

@@ -1,0 +1,40 @@
+table:
+  schema: public
+  name: custom_field
+object_relationships:
+  - name: test_run
+    using:
+      foreign_key_constraint_on: test_run_id
+insert_permissions:
+  - role: tenantadmin
+    permission:
+      check: {}
+      columns:
+        - name
+        - value
+        - id
+        - test_run_id
+      backend_only: false
+select_permissions:
+  - role: tenantadmin
+    permission:
+      columns:
+        - name
+        - value
+        - id
+        - test_run_id
+      filter: {}
+update_permissions:
+  - role: tenantadmin
+    permission:
+      columns:
+        - name
+        - value
+        - id
+        - test_run_id
+      filter: {}
+      check: null
+delete_permissions:
+  - role: tenantadmin
+    permission:
+      filter: {}
