@@ -51,6 +51,10 @@ const routes = {
         },
       },
     },
+    E2EScenarios: {
+      list: '/projects/:projectId/E2EScenarios/:scenarioId/runs',
+      details: '/projects/:projectId/E2EScenarios/:scenarioId/runs/:testRunId',
+    },
     executions: {
       list: '/projects/:projectId/runs',
     },

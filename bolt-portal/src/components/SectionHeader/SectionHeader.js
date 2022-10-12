@@ -32,6 +32,7 @@ function SectionHeader({
   className,
   description,
   marginBottom = false,
+  marginTop = false,
   size = 'medium',
   subtitle,
   title,
@@ -52,6 +53,7 @@ function SectionHeader({
       container
       className={classNames(className, {
         [classes.marginBottom]: Boolean(marginBottom),
+        [classes.marginTop]: Boolean(marginTop),
       })}
       {...gridProps}
     >

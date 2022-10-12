@@ -103,3 +103,30 @@ export const SUBSCRIBE_TO_TEST_CONFIGURATION_LIST_ITEM = gql`
 
   ${TEST_CONFIGURATION_LIST_ITEM}
 `
+
+export const SUBSCRIBE_TO_EXTERNAL_TEST_SCENARIOS_LIST_ITEM = gql`
+  subscription subscribeExternalTestScenarioListItem(
+    $projectId: uuid
+    $limit: Int
+    $offset: Int
+    $order_by: [external_test_scenario_order_by!]
+  ) {
+    externalTestScenarios: external_test_scenario(
+      where: { project_id: { _eq: $projectId } }
+      limit: $limit
+      offset: $offset
+      order_by: $order_by
+    ) {
+      id
+      name
+      description
+      test_runs {
+        total
+        failures
+        errors
+        skipped
+        timestamp
+      }
+    }
+  }
+`

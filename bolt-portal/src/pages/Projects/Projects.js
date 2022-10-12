@@ -25,6 +25,7 @@ import TestConfigurationsPage from 'pages/TestConfigurations'
 import TestExecutionsPage from 'pages/TestExecutions'
 import TestSourcesPage from 'pages/TestSources'
 import TestsCompare from 'pages/TestsCompare'
+import TestRun from 'pages/E2EScenarios'
 import ListPage from './List'
 // import DetailsPage from './Details'
 
@@ -42,6 +43,7 @@ export function ProjectSubpages() {
   return (
     <Routes>
       {/* <Route exact path="/" element={DetailsPage} /> */}
+      <Route path="E2EScenarios/:scenarioId/runs" element={<TestRun />} />
       <Route path="runs/*" element={<TestExecutionsPage />} />
       <Route path="sources/*" element={<TestSourcesPage />} />
       <Route path="configs/*" element={<TestConfigurationsPage />} />

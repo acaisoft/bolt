@@ -24,7 +24,7 @@ import PropTypes from 'prop-types'
 import moment from 'moment'
 import { useSubscription } from '@apollo/client'
 
-import {IconButton, Box, Tooltip} from '@material-ui/core'
+import { IconButton, Box, Tooltip } from '@material-ui/core'
 import { Add, History } from '@material-ui/icons'
 import {
   Button,
@@ -45,6 +45,7 @@ import { SuccessRatePieChart } from 'components'
 import {
   SUBSCRIBE_TO_TEST_CONFIGURATION_LIST_ITEM,
   SUBSCRIBE_TO_TEST_CONFIGURATION_AGGREGATE_LIST_ITEM,
+  SUBSCRIBE_TO_EXTERNAL_TEST_SCENARIOS_LIST_ITEM,
 } from './graphql'
 import useStyles from './TestConfigurationsList.styles'
 import ConfigurationActionsMenu from './ConfigurationActionsMenu'
@@ -53,6 +54,7 @@ export function TestConfigurationsList({
   getTestConfigurationCreateUrl = () => {},
   getTestConfigurationDetailsUrl = () => {},
   getTestConfigurationEditUrl = () => {},
+  getE2ETestRunsListUrl = () => {},
   onClone = () => {},
   onRun = () => {},
   projectId,
@@ -68,6 +70,19 @@ export function TestConfigurationsList({
     loading: loadingConfigurations,
     error,
   } = useSubscription(SUBSCRIBE_TO_TEST_CONFIGURATION_LIST_ITEM, {
+    variables: {
+      projectId,
+      limit: pagination.rowsPerPage,
+      offset: pagination.offset,
+      order_by: orderBy,
+    },
+    fetchPolicy: 'cache-and-network',
+  })
+
+  const {
+    data: { externalTestScenarios = [] } = {},
+    loading: loadingExternalTestScenarios,
+  } = useSubscription(SUBSCRIBE_TO_EXTERNAL_TEST_SCENARIOS_LIST_ITEM, {
     variables: {
       projectId,
       limit: pagination.rowsPerPage,
@@ -109,19 +124,22 @@ export function TestConfigurationsList({
   }
 
   const getValueFromSlug = (parameters, slug) => {
-    let filtered = parameters.filter(
-          e => e.parameter_slug === slug
-    )
-    let result = filtered.length > 0 && filtered[0].hasOwnProperty("value")
-      ? filtered[0].value
-      : "Unknown"
-    return result.length > 30 ?
-      <Tooltip title={ result } placement="top" arrow>
+    let filtered = parameters.filter(e => e.parameter_slug === slug)
+    let result =
+      filtered.length > 0 && filtered[0].hasOwnProperty('value')
+        ? filtered[0].value
+        : 'Unknown'
+    return result.length > 30 ? (
+      <Tooltip title={result} placement="top" arrow>
         <div>
-          { result.substring(0, 20) + "…" + result.substring(result.length - 5, result.length) }
+          {result.substring(0, 20) +
+            '…' +
+            result.substring(result.length - 5, result.length)}
         </div>
       </Tooltip>
-      : result
+    ) : (
+      result
+    )
   }
 
   const totalCount = configurationsAggregate
@@ -130,14 +148,7 @@ export function TestConfigurationsList({
 
   return (
     <React.Fragment>
-      <SectionHeader title="Scenarios" subtitle={`(${totalCount})`} marginBottom>
-        {!loading && (
-          <Pagination
-            {...pagination}
-            onChange={setPagination}
-            totalCount={totalCount}
-          />
-        )}
+      <div className={classes.newScenarioButtonContainer}>
         <Button
           data-testid="new-scenario-button"
           icon={Add}
@@ -147,6 +158,20 @@ export function TestConfigurationsList({
         >
           New
         </Button>
+      </div>
+
+      <SectionHeader
+        title="Performance Scenarios"
+        subtitle={`(${totalCount})`}
+        marginBottom
+      >
+        {!loading && (
+          <Pagination
+            {...pagination}
+            onChange={setPagination}
+            totalCount={totalCount}
+          />
+        )}
       </SectionHeader>
       <DataTable
         data={configurations}
@@ -160,22 +185,31 @@ export function TestConfigurationsList({
         />
         <DataTable.Column
           key="host"
-          render={
-            configuration => getValueFromSlug(configuration.configuration_parameters, "load_tests_host")
+          render={configuration =>
+            getValueFromSlug(
+              configuration.configuration_parameters,
+              'load_tests_host'
+            )
           }
           title="Host"
         />
         <DataTable.Column
           key="users"
-          render={
-            configuration => getValueFromSlug(configuration.configuration_parameters, "load_tests_users")
+          render={configuration =>
+            getValueFromSlug(
+              configuration.configuration_parameters,
+              'load_tests_users'
+            )
           }
           title="Users"
         />
         <DataTable.Column
           key="duration"
-          render={
-            configuration => getValueFromSlug(configuration.configuration_parameters, "load_tests_duration") + "s"
+          render={configuration =>
+            getValueFromSlug(
+              configuration.configuration_parameters,
+              'load_tests_duration'
+            ) + 's'
           }
           title="Duration"
         />
@@ -188,7 +222,9 @@ export function TestConfigurationsList({
                   <IconButton className={classes.icon} disabled>
                     <History />
                   </IconButton>
-                  <span>{moment(executions[0].start).format('YYYY-MM-DD HH:mm:ss')}</span>
+                  <span>
+                    {moment(executions[0].start).format('YYYY-MM-DD HH:mm:ss')}
+                  </span>
                 </React.Fragment>
               )}
             </NoWrap>
@@ -257,6 +293,104 @@ export function TestConfigurationsList({
           }}
         />
       </DataTable>
+      {externalTestScenarios.length > 0 && (
+        <div>
+          <SectionHeader
+            title="E2E Scenarios"
+            subtitle={`(${externalTestScenarios.length})`}
+            marginTop
+          >
+            {!loading && (
+              <Pagination
+                {...pagination}
+                onChange={setPagination}
+                totalCount={externalTestScenarios.length}
+              />
+            )}
+          </SectionHeader>
+          <DataTable
+            data={externalTestScenarios}
+            isLoading={loadingExternalTestScenarios}
+            rowKey={configuration => configuration.id}
+          >
+            <DataTable.Column
+              key="name"
+              render={scenario => scenario.name}
+              title="Name"
+            />
+
+            <DataTable.Column
+              key="lastRun"
+              render={({ test_runs }) => (
+                <NoWrap className={classes.dateContainer}>
+                  {(test_runs[0] || {}).timestamp && (
+                    <React.Fragment>
+                      <IconButton className={classes.icon} disabled>
+                        <History />
+                      </IconButton>
+                      <span>
+                        {moment(test_runs[0].timestamp).format(
+                          'YYYY-MM-DD HH:mm:ss'
+                        )}
+                      </span>
+                    </React.Fragment>
+                  )}
+                </NoWrap>
+              )}
+              title="Last Run"
+            />
+            <DataTable.Column
+              key="success_rate"
+              render={({ test_runs }) => {
+                if (test_runs.length === 0) {
+                  return null
+                }
+                const lastRun = test_runs[0]
+                const totals = lastRun.total
+                const successRate =
+                  totals === 0
+                    ? 0
+                    : (totals - (lastRun.failures + lastRun.errors)) / totals
+
+                return (
+                  <div className={classes.rateContainer}>
+                    <SuccessRatePieChart
+                      value={successRate * 100}
+                      size={20}
+                      variant="multicolor"
+                    />
+
+                    <span className={classes.rateMeter}>
+                      {formatPercent(successRate)}
+                    </span>
+                  </div>
+                )
+              }}
+              title="Success Rate"
+            />
+            <DataTable.Column
+              key="actions"
+              render={scenario => {
+                return (
+                  <div className={classes.actionsContainer}>
+                    <Button
+                      data-testid={`scenario-${scenario.id}-details`}
+                      href={getE2ETestRunsListUrl({
+                        id: scenario.id,
+                      })}
+                      title="Show scenario details"
+                      variant="link"
+                    >
+                      Details
+                    </Button>
+                  </div>
+                )
+              }}
+              title="Actions"
+            />
+          </DataTable>
+        </div>
+      )}
     </React.Fragment>
   )
 }

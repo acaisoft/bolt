@@ -38,6 +38,7 @@ export function List() {
     getTestConfigurationCreateUrl,
     getTestConfigurationDetailsUrl,
     getTestConfigurationEditUrl,
+    getE2ETestRunsListUrl,
     handleClone,
   } = useHandlers(navigate, params)
 
@@ -48,6 +49,7 @@ export function List() {
         getTestConfigurationCreateUrl={getTestConfigurationCreateUrl}
         getTestConfigurationDetailsUrl={getTestConfigurationDetailsUrl}
         getTestConfigurationEditUrl={getTestConfigurationEditUrl}
+        getE2ETestRunsListUrl={getE2ETestRunsListUrl}
         onClone={handleClone}
       />
     </div>
@@ -70,6 +72,15 @@ function useHandlers(navigate, params) {
     configuration => {
       return getRedirectUrl(routes.projects.configurations.details, {
         configurationId: configuration.id,
+      })
+    },
+    [getRedirectUrl]
+  )
+
+  const getE2ETestRunsListUrl = useCallback(
+    scenario => {
+      return getRedirectUrl(routes.projects.E2EScenarios.list, {
+        scenarioId: scenario.id,
       })
     },
     [getRedirectUrl]
@@ -118,6 +129,7 @@ function useHandlers(navigate, params) {
     getTestConfigurationDetailsUrl,
     handleRun,
     getTestConfigurationEditUrl,
+    getE2ETestRunsListUrl,
     handleClone,
   }
 }
