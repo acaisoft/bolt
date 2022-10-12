@@ -130,3 +130,15 @@ export const SUBSCRIBE_TO_EXTERNAL_TEST_SCENARIOS_LIST_ITEM = gql`
     }
   }
 `
+
+export const SUBSCRIBE_TO_EXTERNAL_TEST_SCENARIOS_COUNT = gql`
+  subscription subscribeConfigurationListItem($projectId: uuid) {
+    externalTestScenariosAgregate: external_test_scenario_aggregate(
+      where: { project_id: { _eq: $projectId } }
+    ) {
+      aggregate {
+        count
+      }
+    }
+  }
+`

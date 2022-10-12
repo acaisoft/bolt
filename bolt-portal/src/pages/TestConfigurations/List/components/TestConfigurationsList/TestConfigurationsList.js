@@ -46,6 +46,7 @@ import {
   SUBSCRIBE_TO_TEST_CONFIGURATION_LIST_ITEM,
   SUBSCRIBE_TO_TEST_CONFIGURATION_AGGREGATE_LIST_ITEM,
   SUBSCRIBE_TO_EXTERNAL_TEST_SCENARIOS_LIST_ITEM,
+  SUBSCRIBE_TO_EXTERNAL_TEST_SCENARIOS_COUNT,
 } from './graphql'
 import useStyles from './TestConfigurationsList.styles'
 import ConfigurationActionsMenu from './ConfigurationActionsMenu'
@@ -61,6 +62,15 @@ export function TestConfigurationsList({
 }) {
   const classes = useStyles()
   const { pagination, orderBy, setPagination } = useListFilters({
+    pagination: { rowsPerPage: 10 },
+    orderBy: [{ id: 'asc' }],
+  })
+
+  const {
+    pagination: e2ePagination,
+    orderBy: e2eOrderBy,
+    setPagination: e2eSetPagination,
+  } = useListFilters({
     pagination: { rowsPerPage: 10 },
     orderBy: [{ id: 'asc' }],
   })
@@ -85,12 +95,22 @@ export function TestConfigurationsList({
   } = useSubscription(SUBSCRIBE_TO_EXTERNAL_TEST_SCENARIOS_LIST_ITEM, {
     variables: {
       projectId,
-      limit: pagination.rowsPerPage,
-      offset: pagination.offset,
-      order_by: orderBy,
+      limit: e2ePagination.rowsPerPage,
+      offset: e2ePagination.offset,
+      order_by: e2eOrderBy,
     },
     fetchPolicy: 'cache-and-network',
   })
+
+  const { data: { externalTestScenariosAgregate = [] } = {} } = useSubscription(
+    SUBSCRIBE_TO_EXTERNAL_TEST_SCENARIOS_COUNT,
+    {
+      variables: {
+        projectId,
+      },
+      fetchPolicy: 'cache-and-network',
+    }
+  )
 
   const {
     data: { configurationsAggregate } = {},
@@ -302,9 +322,13 @@ export function TestConfigurationsList({
           >
             {!loading && (
               <Pagination
-                {...pagination}
-                onChange={setPagination}
-                totalCount={externalTestScenarios.length}
+                {...e2ePagination}
+                onChange={e2eSetPagination}
+                totalCount={
+                  externalTestScenariosAgregate
+                    ? externalTestScenariosAgregate.aggregate.count
+                    : 0
+                }
               />
             )}
           </SectionHeader>
