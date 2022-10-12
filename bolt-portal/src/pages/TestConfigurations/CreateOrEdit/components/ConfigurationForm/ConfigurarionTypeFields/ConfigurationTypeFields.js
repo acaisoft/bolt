@@ -26,7 +26,7 @@ import { ExpandablePanel } from 'components'
 import { testsPerformedMessage } from '../ConfigurationForm.utils'
 import EnvVariablesFields from "../EnvVariablesFields";
 function ConfigurationTypeFields({ fields, configuration }) {
-  let isConfigurable = (configurationType) => {
+  const isConfigurable = (configurationType) => {
     return Object.entries(fields.parameters.fields)
       .filter(
         ([ ,option]) => option.group === configurationType

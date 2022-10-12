@@ -56,10 +56,6 @@ export function ConfigurationForm({ onCancel = () => {}, onSubmit = () => {} }, 
 
   const [ isExternalScenario, setIsExternalScenario ] = useState(false)
 
-  // useEffect(() => {
-  //   setIsExternalScenario(values.configuration_type !== 'load_tests')
-  // })
-
   const { fields, loading: fieldsLoading } = useFormSchema({ projectId })
   const { fields: externalFields, loading: externalFieldsLoading } = useExternalFormSchema()
 
