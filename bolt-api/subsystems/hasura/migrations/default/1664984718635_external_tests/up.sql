@@ -19,7 +19,6 @@ CREATE EXTENSION IF NOT EXISTS pgcrypto;
 CREATE TABLE "public"."test_run" (
     "id" uuid NOT NULL DEFAULT gen_random_uuid(),
     "scenario_id" uuid NOT NULL,
-    "external_scenario_id" uuid NOT NULL,
     "timestamp" timestamptz NOT NULL,
     "duration" float4 NOT NULL,
     "successes" INTEGER NOT NULL DEFAULT '0',
