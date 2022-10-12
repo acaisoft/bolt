@@ -78,6 +78,8 @@ class CreateValidate(graphene.Mutation):
         assert type_slug in const.TESTTYPE_CHOICE, \
             f'invalid choice of type_slug (valid choices: {const.TESTTYPE_CHOICE})'
 
+        is_external = type_slug in const.TESTTYPE_EXTERNAL
+
         name = validators.validate_text(name)
 
         role, user_id = gql_util.get_request_role_userid(
@@ -85,86 +87,87 @@ class CreateValidate(graphene.Mutation):
             (const.ROLE_ADMIN, const.ROLE_TENANT_ADMIN, const.ROLE_MANAGER, const.ROLE_TESTER)
         )
 
-        assert any((has_pre_test, has_post_test, has_load_tests, has_monitoring)), \
-            f'At least one section is required'
+        if not is_external:
+            assert any((has_pre_test, has_post_test, has_load_tests, has_monitoring)), \
+                f'At least one section is required'
 
-        repo_query = {
-            'type_slug': type_slug,
-            'confName': name,
-            'projId': project_id,
-            'userId': user_id,
-            'sourceId': str(test_source_id) or "",
-            'fetchSource': bool(test_source_id),
-        }
-        repo = hce(current_app.config, '''query (
-                $confName:String, $sourceId:uuid!, $fetchSource:Boolean!, 
-                $projId:uuid!, $userId:String!, $type_slug:String!
-        ) {
-            test_source (where:{
-                    id:{_eq:$sourceId}, 
+            repo_query = {
+                'type_slug': type_slug,
+                'confName': name,
+                'projId': project_id,
+                'userId': user_id,
+                'sourceId': str(test_source_id) or "",
+                'fetchSource': bool(test_source_id),
+            }
+            repo = hce(current_app.config, '''query (
+                    $confName:String, $sourceId:uuid!, $fetchSource:Boolean!, 
+                    $projId:uuid!, $userId:String!, $type_slug:String!
+            ) {
+                test_source (where:{
+                        id:{_eq:$sourceId}, 
+                        project:{
+                            userProjects:{user_id:{_eq:$userId}}
+                            is_deleted: {_eq:false}
+                        }
+                }) @include(if:$fetchSource) {
+                    source_type
+                    project {
+                        userProjects { user_id }
+                    }
+                    repository {
+                        name
+                        url
+                        configuration_type { slug_name }
+                        project {
+                            userProjects { user_id }
+                        }
+                    }
+                    test_creator {
+                        name
+                        data
+                        min_wait
+                        max_wait
+                        project {
+                            userProjects { user_id }
+                        }
+                    }
+                }
+                
+                parameter (where:{configuration_type:{slug_name:{_eq:$type_slug}}}) {
+                    slug_name
+                    default_value
+                    param_name
+                    name
+                }
+                
+                user_project (where:{ user_id:{_eq:$userId}, project_id:{_eq:$projId} }) {
+                    id
+                }
+                
+                project_by_pk (id:$projId) {
+                    id
+                }
+                
+                configuration (where:{
+                    is_deleted: {_eq:false},
+                    name:{_eq:$confName}, 
+                    project_id:{_eq:$projId}, 
                     project:{
-                        userProjects:{user_id:{_eq:$userId}}
+                        userProjects:{user_id:{_eq:$userId}},
                         is_deleted: {_eq:false}
                     }
-            }) @include(if:$fetchSource) {
-                source_type
-                project {
-                    userProjects { user_id }
+                }) {
+                    id
                 }
-                repository {
-                    name
-                    url
-                    configuration_type { slug_name }
-                    project {
-                        userProjects { user_id }
-                    }
-                }
-                test_creator {
-                    name
-                    data
-                    min_wait
-                    max_wait
-                    project {
-                        userProjects { user_id }
-                    }
-                }
-            }
-            
-            parameter (where:{configuration_type:{slug_name:{_eq:$type_slug}}}) {
-                slug_name
-                default_value
-                param_name
-                name
-            }
-            
-            user_project (where:{ user_id:{_eq:$userId}, project_id:{_eq:$projId} }) {
-                id
-            }
-            
-            project_by_pk (id:$projId) {
-                id
-            }
-            
-            configuration (where:{
-                is_deleted: {_eq:false},
-                name:{_eq:$confName}, 
-                project_id:{_eq:$projId}, 
-                project:{
-                    userProjects:{user_id:{_eq:$userId}},
-                    is_deleted: {_eq:false}
-                }
-            }) {
-                id
-            }
-        }''', repo_query)
+            }''', repo_query)
 
-        if role not in (const.ROLE_ADMIN, const.ROLE_TENANT_ADMIN):
-            assert repo.get('user_project', None), \
-                f'non-admin ({role}) user {user_id} does not have access to project {project_id}'
+            if role not in (const.ROLE_ADMIN, const.ROLE_TENANT_ADMIN):
+                assert repo.get('user_project', None), \
+                    f'non-admin ({role}) user {user_id} does not have access to project {project_id}'
 
-        assert repo.get('project_by_pk', None), f'project "{project_id}" does not exist'
+            assert repo.get('project_by_pk', None), f'project "{project_id}" does not exist'
 
-        assert len(repo.get('configuration', [])) == 0, f'configuration named "{name}" already exists'
+            assert len(repo.get('configuration', [])) == 0, f'configuration named "{name}" already exists'
 
         query_data = {
             'name': name,

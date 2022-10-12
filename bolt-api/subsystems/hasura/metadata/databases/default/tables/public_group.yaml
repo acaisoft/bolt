@@ -12,18 +12,10 @@ array_relationships:
 insert_permissions:
   - role: tenantadmin
     permission:
-      check:
-        test_cases:
-          test_results:
-            test_run:
-              scenario:
-                project:
-                  userProjects:
-                    user_id:
-                      _eq: X-Hasura-User-Id
+      check: {}
       columns:
-        - name
         - id
+        - name
       backend_only: false
 select_permissions:
   - role: tenantadmin
@@ -31,40 +23,16 @@ select_permissions:
       columns:
         - name
         - id
-      filter:
-        test_cases:
-          test_results:
-            test_run:
-              scenario:
-                project:
-                  userProjects:
-                    user_id:
-                      _eq: X-Hasura-User-Id
+      filter: {}
 update_permissions:
   - role: tenantadmin
     permission:
       columns:
         - name
         - id
-      filter:
-        test_cases:
-          test_results:
-            test_run:
-              scenario:
-                project:
-                  userProjects:
-                    user_id:
-                      _eq: X-Hasura-User-Id
+      filter: {}
       check: null
 delete_permissions:
   - role: tenantadmin
     permission:
-      filter:
-        test_cases:
-          test_results:
-            test_run:
-              scenario:
-                project:
-                  userProjects:
-                    user_id:
-                      _eq: X-Hasura-User-Id
+      filter: {}

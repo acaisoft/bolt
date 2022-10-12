@@ -2,9 +2,9 @@ table:
   schema: public
   name: test_run
 object_relationships:
-  - name: scenario
+  - name: configuration
     using:
-      foreign_key_constraint_on: external_scenario_id
+      foreign_key_constraint_on: scenario_id
 array_relationships:
   - name: custom_fields
     using:
@@ -25,43 +25,43 @@ insert_permissions:
     permission:
       check: {}
       columns:
-        - duration
-        - errors
-        - external_scenario_id
-        - failures
         - id
-        - skipped
-        - successes
+        - scenario_id
         - timestamp
+        - duration
+        - successes
+        - failures
+        - skipped
         - total
+        - errors
       backend_only: false
 select_permissions:
   - role: tenantadmin
     permission:
       columns:
-        - duration
         - errors
-        - external_scenario_id
         - failures
-        - id
         - skipped
         - successes
-        - timestamp
         - total
+        - duration
+        - timestamp
+        - id
+        - scenario_id
       filter: {}
 update_permissions:
   - role: tenantadmin
     permission:
       columns:
-        - duration
         - errors
-        - external_scenario_id
         - failures
-        - id
         - skipped
         - successes
-        - timestamp
         - total
+        - duration
+        - timestamp
+        - id
+        - scenario_id
       filter: {}
       check: null
 delete_permissions:

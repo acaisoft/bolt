@@ -19,11 +19,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useParams } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
 import { Form } from 'react-final-form'
+import { FormValue } from 'containers'
 import arrayMutators from 'final-form-arrays'
 import { SectionHeader, Loader, Button } from 'components'
 import {
@@ -32,14 +33,14 @@ import {
   makeFlatValidationSchema,
 } from 'utils/forms'
 import { GET_CONFIGURATION } from './graphql'
-import { useFormSchema, prepareInitialValues } from './formSchema'
+import { useFormSchema, prepareInitialValues, preparePayload } from './formSchema'
+import { useExternalFormSchema, prepareExternalPayload } from './externalFormSchema'
 import ConfigurationTypeFields from './ConfigurarionTypeFields'
 import ScenarioFields from './ScenarioFields'
-import EnvVariablesFields from './EnvVariablesFields'
 import { useConfigurationSubmit } from './ConfigurationForm.utils'
 import useStyles from './ConfigurationForm.styles'
 
-export function ConfigurationForm({ onCancel = () => {}, onSubmit = () => {} }) {
+export function ConfigurationForm({ onCancel = () => {}, onSubmit = () => {} }, props) {
   const { configurationId, projectId } = useParams()
   const mode = configurationId ? 'edit' : 'create'
   const classes = useStyles()
@@ -53,17 +54,28 @@ export function ConfigurationForm({ onCancel = () => {}, onSubmit = () => {} }) 
     }
   )
 
+  const [ isExternalScenario, setIsExternalScenario ] = useState(false)
+
+  // useEffect(() => {
+  //   setIsExternalScenario(values.configuration_type !== 'load_tests')
+  // })
+
   const { fields, loading: fieldsLoading } = useFormSchema({ projectId })
+  const { fields: externalFields, loading: externalFieldsLoading } = useExternalFormSchema()
 
   const handleSubmit = useConfigurationSubmit({
     configurationId,
     projectId,
     mode,
+    preparePayload: isExternalScenario ? prepareExternalPayload : preparePayload,
     onSubmit,
   })
+
   const handleValidate = useCallback(
-    values => validateForm(values, makeFlatValidationSchema(fields)),
-    [fields]
+    values => validateForm(values, makeFlatValidationSchema(
+      isExternalScenario ? externalFields : fields
+    )),
+    [fields, externalFields, isExternalScenario]
   )
 
   const initialValues = useMemo(
@@ -71,7 +83,7 @@ export function ConfigurationForm({ onCancel = () => {}, onSubmit = () => {} }) 
     [fields, configuration]
   )
 
-  if (fieldsLoading || configurationLoading) {
+  if (fieldsLoading || configurationLoading || externalFieldsLoading) {
     return <Loader loading />
   }
   return (
@@ -111,12 +123,18 @@ export function ConfigurationForm({ onCancel = () => {}, onSubmit = () => {} }) 
               {mode === 'create' ? 'Create' : 'Update'}
             </Button>
           </SectionHeader>
-
-          <ScenarioFields fields={fields} />
+          <FormValue name="configuration_type">
+            {configurationType => (
+              <ScenarioFields
+                fields={fields}
+                configurationType={configurationType}
+                externalConfigurationHook={setIsExternalScenario}
+              />
+            )}
+          </FormValue>
           {/* TODO: uncomment when scenario parts section will be needed */}
           {/*<ScenarioPartsFields fields={fields} />*/}
           <ConfigurationTypeFields fields={fields} configuration={configuration} />
-          <EnvVariablesFields />
         </form>
       )}
     </Form>
