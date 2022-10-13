@@ -11,14 +11,14 @@ class ExternalTestsLoader:
         query = """
             query ($project_id: uuid) {
               group(
-                where:{test_cases:{test_results:{test_run:{scenario:{project_id:{_eq: $project_id}}}}}}
+                where:{test_cases:{test_results:{test_run:{configuration:{project_id:{_eq: $project_id}}}}}}
                 )
               {
                 id
                 name
               }
               test_case(
-                where:{test_results:{test_run:{scenario:{project_id:{_eq: $project_id}}}}}
+                where:{test_results:{test_run:{configuration:{project_id:{_eq: $project_id}}}}}
               )
               {
                 id

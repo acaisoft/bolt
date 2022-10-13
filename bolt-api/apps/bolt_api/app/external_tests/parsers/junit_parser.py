@@ -74,7 +74,7 @@ class JunitParser(BaseXMLParser):
             test_run_object = {
                 "id": test_run_id,
                 "duration": attrib.get("time"),
-                "external_scenario_id": self.scenario_id,
+                "scenario_id": self.scenario_id,
                 "timestamp": attrib.get("timestamp"),
                 "successes": int(attrib.get("successes", 0)),
                 "failures": int(attrib.get("failures", 0)),
