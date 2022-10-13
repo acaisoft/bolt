@@ -63,11 +63,11 @@ class Argo:
                             {
                                 "matchExpressions": [
                                     {
-                                        "key": "node_pool",
+                                        "key": "group",
                                         "operator": "In",
                                         "values": [
-                                            "load-tests-workers-slaves",
-                                            "load-tests-workers-masters",
+                                            "load-tests-workers-slave",
+                                            "load-tests-workers-master",
                                         ]
                                     }
                                 ]
