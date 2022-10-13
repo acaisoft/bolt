@@ -23,7 +23,7 @@ import { gql } from '@apollo/client'
 
 export const GET_SCENARIO = gql`
   query getTestConfiguration($scenarioId: uuid!) {
-    externalTestScenario: external_test_scenario_by_pk(id: $scenarioId) {
+    externalTestScenario: configuration_by_pk(id: $scenarioId) {
       id
       name
       description

@@ -75,7 +75,11 @@ const TEST_CONFIGURATION_LIST_ITEM = gql`
 export const SUBSCRIBE_TO_TEST_CONFIGURATION_AGGREGATE_LIST_ITEM = gql`
   subscription subscribeConfigurationListItem($projectId: uuid) {
     configurationsAggregate: configuration_aggregate(
-      where: { project_id: { _eq: $projectId }, is_deleted: { _eq: false } }
+      where: {
+        project_id: { _eq: $projectId }
+        is_deleted: { _eq: false }
+        type_slug: { _eq: load_tests }
+      }
     ) {
       aggregate {
         count
@@ -92,7 +96,11 @@ export const SUBSCRIBE_TO_TEST_CONFIGURATION_LIST_ITEM = gql`
     $order_by: [configuration_order_by!]
   ) {
     configurations: configuration(
-      where: { project_id: { _eq: $projectId }, is_deleted: { _eq: false } }
+      where: {
+        project_id: { _eq: $projectId }
+        is_deleted: { _eq: false }
+        type_slug: { _eq: load_tests }
+      }
       limit: $limit
       offset: $offset
       order_by: $order_by
@@ -109,10 +117,14 @@ export const SUBSCRIBE_TO_EXTERNAL_TEST_SCENARIOS_LIST_ITEM = gql`
     $projectId: uuid
     $limit: Int
     $offset: Int
-    $order_by: [external_test_scenario_order_by!]
+    $order_by: [configuration_order_by!]
   ) {
-    externalTestScenarios: external_test_scenario(
-      where: { project_id: { _eq: $projectId } }
+    externalTestScenarios: configuration(
+      where: {
+        project_id: { _eq: $projectId }
+        is_deleted: { _eq: false }
+        type_slug: { _eq: e2e }
+      }
       limit: $limit
       offset: $offset
       order_by: $order_by
@@ -133,8 +145,12 @@ export const SUBSCRIBE_TO_EXTERNAL_TEST_SCENARIOS_LIST_ITEM = gql`
 
 export const SUBSCRIBE_TO_EXTERNAL_TEST_SCENARIOS_COUNT = gql`
   subscription subscribeConfigurationListItem($projectId: uuid) {
-    externalTestScenariosAgregate: external_test_scenario_aggregate(
-      where: { project_id: { _eq: $projectId } }
+    externalTestScenariosAgregate: configuration_aggregate(
+      where: {
+        project_id: { _eq: $projectId }
+        is_deleted: { _eq: false }
+        type_slug: { _eq: e2e }
+      }
     ) {
       aggregate {
         count

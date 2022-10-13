@@ -325,7 +325,7 @@ export function TestConfigurationsList({
                 {...e2ePagination}
                 onChange={e2eSetPagination}
                 totalCount={
-                  externalTestScenariosAgregate
+                  externalTestScenariosAgregate.aggregate
                     ? externalTestScenariosAgregate.aggregate.count
                     : 0
                 }
