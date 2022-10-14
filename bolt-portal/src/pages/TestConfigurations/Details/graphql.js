@@ -26,6 +26,7 @@ export const GET_CONFIGURATION = gql`
     configuration: configuration_by_pk(id: $configurationId) {
       id
       name
+      description
       performed
       has_monitoring
       has_post_test

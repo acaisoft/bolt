@@ -85,6 +85,10 @@ class ConfigurationInterface(graphene.Interface):
         required=False,
         description='List of monitoring chart configurations'
     )
+    description = graphene.String(
+        required=False,
+        description='A few words summarizing the configuration'
+    )
 
 
 class ConfigurationType(graphene.ObjectType):

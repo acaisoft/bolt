@@ -48,6 +48,7 @@ class Clone(graphene.Mutation):
                 name
                 project_id
                 type_slug
+                description
                 test_source_id
                 has_pre_test
                 has_post_test
@@ -74,6 +75,7 @@ class Clone(graphene.Mutation):
             mutation (
                 $name: String!, 
                 $type_slug: String!, 
+                $description: String!,
                 $project_id: UUID!, 
                 $test_source_id: UUID, 
                 $has_pre_test: Boolean, 
@@ -85,6 +87,7 @@ class Clone(graphene.Mutation):
                     testrun_configuration_create(
                         name: $name, 
                         type_slug: $type_slug, 
+                        description: $description
                         project_id: $project_id, 
                         test_source_id: $test_source_id, 
                         has_pre_test: $has_pre_test, 

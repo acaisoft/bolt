@@ -68,6 +68,10 @@ class UpdateValidate(graphene.Mutation):
             required=False,
             description='Monitoring charts definition'
         )
+        description = graphene.String(
+            required=False,
+            description='A few words summarizing the configuration'
+        )
 
     Output = gql_util.ValidationInterface
 
@@ -75,7 +79,7 @@ class UpdateValidate(graphene.Mutation):
     def validate(
             info, id, name=None, type_slug=None, test_source_id=None, configuration_parameters=None,
             configuration_envvars=None, has_pre_test=None, has_post_test=None, has_load_tests=None,
-            has_monitoring=None, monitoring_chart_configuration=None):
+            has_monitoring=None, monitoring_chart_configuration=None, description=None):
 
         role, user_id = gql_util.get_request_role_userid(
             info, (const.ROLE_ADMIN, const.ROLE_TENANT_ADMIN, const.ROLE_MANAGER, const.ROLE_TESTER))
@@ -95,6 +99,7 @@ class UpdateValidate(graphene.Mutation):
                 performed
                 name
                 type_slug
+                description
                 project_id
                 test_source_id
                 configuration_parameters { parameter_slug value configuration_id }
@@ -273,15 +278,19 @@ class UpdateValidate(graphene.Mutation):
             assert validators.validate_monitoring_chart_configuration(monitoring_chart_configuration), \
                 f"monitoring chart configuration doesn't have required format"
 
+        # Verbose check is deliberate, since empty string (not None) evaluates as False.
+        # This allows description to be deleted.
+        if description is not None:
+            query_data['description'] = str(description) if len(str(description)) > 0 else None
 
         return query_data
 
     def mutate(self, info, id, name=None, type_slug=None, test_source_id=None, configuration_parameters=None,
                configuration_envvars=None, has_pre_test=None, has_post_test=None, has_load_tests=None,
-               has_monitoring=None):
+               has_monitoring=None, description=None):
         UpdateValidate.validate(
             info, id, name, type_slug, test_source_id, configuration_parameters, configuration_envvars,
-            has_pre_test, has_post_test, has_load_tests, has_monitoring
+            has_pre_test, has_post_test, has_load_tests, has_monitoring, description
         )
         return gql_util.ValidationResponse(ok=True)
 
@@ -294,10 +303,10 @@ class Update(UpdateValidate):
     def mutate(
             self, info, id, name=None, type_slug=None, test_source_id=None, configuration_parameters=None,
             configuration_envvars=None, has_pre_test=None, has_post_test=None, has_load_tests=None,
-            has_monitoring=None, monitoring_chart_configuration=None):
+            has_monitoring=None, monitoring_chart_configuration=None, description=None):
         query_params = UpdateValidate.validate(
             info, id, name, type_slug, test_source_id, configuration_parameters, configuration_envvars,
-            has_pre_test, has_post_test, has_load_tests, has_monitoring, monitoring_chart_configuration
+            has_pre_test, has_post_test, has_load_tests, has_monitoring, monitoring_chart_configuration, description
         )
 
         params = query_params.pop('configuration_parameters', {'data': []})['data']
@@ -350,6 +359,7 @@ class Update(UpdateValidate):
                     id 
                     name 
                     type_slug 
+                    description 
                     project_id 
                     test_source_id 
                     has_pre_test

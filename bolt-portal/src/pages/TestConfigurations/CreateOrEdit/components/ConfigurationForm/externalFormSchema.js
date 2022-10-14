@@ -67,7 +67,12 @@ function generateFields({
         select: true,
         label: 'Test Type',
       },
-    }
+    },
+    scenario_description: {
+      inputProps: {
+        label: 'Description',
+      },
+    },
   }
 }
 
@@ -78,12 +83,14 @@ function prepareExternalPayload(formValues, { mode, configurationId, projectId }
 
   const {
     scenario_name,
-    configuration_type
+    configuration_type,
+    scenario_description
   } = formValues
 
   const variables = {
     name: scenario_name,
-    type_slug: configuration_type
+    type_slug: configuration_type,
+    description: scenario_description
   }
 
   if (mode === 'create') {

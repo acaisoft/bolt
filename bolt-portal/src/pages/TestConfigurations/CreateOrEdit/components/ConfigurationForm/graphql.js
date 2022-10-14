@@ -26,6 +26,7 @@ export const GET_CONFIGURATION = gql`
     configuration: configuration_by_pk(id: $configurationId) {
       id
       name
+      description
       performed
       configuration_parameters {
         parameter_slug
@@ -52,6 +53,7 @@ export const ADD_CONFIGURATION_MUTATION = gql`
   mutation addTestConfiguration(
     $name: String!
     $type_slug: String!
+    $description: String!
     $configuration_parameters: [ConfigurationParameterInput]
     $test_source_id: UUID
     $project_id: UUID!
@@ -66,6 +68,7 @@ export const ADD_CONFIGURATION_MUTATION = gql`
       name: $name
       project_id: $project_id
       type_slug: $type_slug
+      description: $description
       test_source_id: $test_source_id
       has_pre_test: $has_pre_test
       has_post_test: $has_post_test
@@ -84,6 +87,7 @@ export const EDIT_CONFIGURATION_MUTATION = gql`
     $id: UUID!
     $name: String!
     $type_slug: String!
+    $description: String!
     $configuration_parameters: [ConfigurationParameterInput]
     $test_source_id: UUID
     $has_pre_test: Boolean
@@ -97,6 +101,7 @@ export const EDIT_CONFIGURATION_MUTATION = gql`
       configuration_parameters: $configuration_parameters
       name: $name
       type_slug: $type_slug
+      description: $description
       test_source_id: $test_source_id
       has_pre_test: $has_pre_test
       has_post_test: $has_post_test
