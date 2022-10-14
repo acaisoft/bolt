@@ -19,46 +19,14 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export const TestSourceType = {
-  REPOSITORY: 'repository',
-  TEST_CREATOR: 'test_creator',
-}
+import { makeStyles } from '@material-ui/core'
 
-export const Chart = {
-  HEIGHT: 400,
-}
-
-export const TestRunStatus = {
-  PENDING: 'PENDING',
-  RUNNING: 'RUNNING',
-  FINISHED: 'FINISHED',
-  SUCCEEDED: 'SUCCEEDED',
-  TERMINATED: 'TERMINATED',
-  ERROR: 'ERROR',
-  MONITORING: 'MONITORING',
-  UNKNOWN: 'UNKNOWN',
-  FAILED: 'FAILED',
-  SKIPPED: 'SKIPPED',
-}
-
-export const TestRunStageStatus = {
-  NOT_STARTED: 'NOT_STARTED',
-  FAILED: 'FAILED',
-  PENDING: 'PENDING',
-  RUNNING: 'RUNNING',
-  SUCCEEDED: 'SUCCEEDED',
-  TERMINATED: 'TERMINATED',
-  ERROR: 'ERROR',
-  FINISHED: 'FINISHED',
-}
-
-export const AUTH_TOKEN_NAME = 'AUTH_TOKEN'
-
-export const AuthServiceName = {
-  KEYCLOAK: 'keycloak',
-  BOLT: 'bolt',
-  AUTH0: 'auth0',
-}
-
-export const isAuth0AuthService =
-  process.env.REACT_APP_AUTH_SERVICE === AuthServiceName.AUTH0
+export default makeStyles(({ spacing, palette }) => ({
+  paper: {
+    padding: spacing(4),
+    width: '100%',
+  },
+  tableWrapper: {
+    width: '100%',
+  },
+}))

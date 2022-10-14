@@ -23,15 +23,18 @@ import React from 'react'
 import moment from 'moment'
 import { SectionHeader, DataTable, Button } from 'components'
 import { useQuery } from '@apollo/client'
+import routes from 'config/routes'
 import { Typography } from '@material-ui/core'
 import { useParams } from 'react-router-dom'
 import { GET_SCENARIO } from './graphql'
+import { getUrl } from 'utils/router'
 import useStyles from './ScenarioDetails.styles'
 
 const TestScenarioDetails = () => {
   const params = useParams()
-  const { scenarioId } = params
+  const { scenarioId, projectId } = params
   const classes = useStyles()
+
   const { loading, data: { externalTestScenario = [] } = {} } = useQuery(
     GET_SCENARIO,
     {
@@ -85,14 +88,16 @@ const TestScenarioDetails = () => {
           <DataTable.Column render={test_run => test_run.total} title="Total" />
           <DataTable.Column
             key="actions"
-            render={scenario => {
+            render={test_run => {
               return (
                 <div className={classes.actionsContainer}>
                   <Button
-                    data-testid={`scenario-${scenario.id}-details`}
-                    // href={getE2ETestRunsListUrl({
-                    //   id: scenario.id,
-                    // })}
+                    data-testid={`scenario-${test_run.id}-details`}
+                    href={getUrl(routes.projects.E2EScenarios.details, {
+                      projectId: projectId,
+                      testRunId: test_run.id,
+                      scenarioId: scenarioId,
+                    })}
                     title="Show scenario details"
                     variant="link"
                   >
