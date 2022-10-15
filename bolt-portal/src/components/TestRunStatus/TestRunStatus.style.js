@@ -49,6 +49,9 @@ export default makeStyles(({ palette, spacing }) => ({
   [Status.PENDING]: {
     background: palette.info.main,
   },
+  [Status.SKIPPED]: {
+    background: palette.info.main,
+  },
   [Status.MONITORING]: {
     background: palette.warning.main,
   },
