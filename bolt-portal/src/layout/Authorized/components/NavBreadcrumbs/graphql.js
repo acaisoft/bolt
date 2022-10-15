@@ -40,6 +40,7 @@ export const SUBSCRIBE_TO_SCENARIOS = gql`
     ) {
       id
       name
+      type_slug
     }
   }
 `
