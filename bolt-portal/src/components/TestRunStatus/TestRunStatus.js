@@ -23,7 +23,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
 import { Typography, CircularProgress } from '@material-ui/core'
-import { Close, Done, ArrowRightAlt, ErrorOutline } from '@material-ui/icons'
+import { Close, Done, ArrowRightAlt, ErrorOutline, Block } from '@material-ui/icons'
 
 import { TestRunStatus as Status } from 'config/constants'
 import { Monitor, Terminate } from 'assets/icons'
@@ -70,6 +70,11 @@ export const configurations = {
     icon: props => <Monitor {...props} />,
     name: Status.MONITORING,
     title: 'Monitoring',
+  },
+  [Status.SKIPPED]: {
+    icon: props => <Block {...props} />,
+    name: Status.SKIPPED,
+    title: 'Skipped',
   },
   [Status.UNKNOWN]: {
     icon: props => <ErrorOutline {...props} />,

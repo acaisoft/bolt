@@ -19,4 +19,5 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export { default } from './ScenarioDetails/ScenarioDetails'
+export { default as TestRunDetails } from './TestRun/TestRun'
+export { default as ScenarioDetails } from './ScenarioDetails/ScenarioDetails'

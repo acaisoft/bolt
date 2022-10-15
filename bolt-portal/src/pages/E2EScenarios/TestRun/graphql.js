@@ -19,46 +19,37 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export const TestSourceType = {
-  REPOSITORY: 'repository',
-  TEST_CREATOR: 'test_creator',
-}
+import { gql } from '@apollo/client'
 
-export const Chart = {
-  HEIGHT: 400,
-}
+export const GET_GROUPS_WITH_RESULTS = gql`
+  query ($testRunId: uuid) {
+    group(
+      where: { test_cases: { test_results: { test_run_id: { _eq: $testRunId } } } }
+    ) {
+      test_cases {
+        name_from_file
+        test_results(where: { test_run_id: { _eq: $testRunId } }) {
+          result
+          message
+          duration
+        }
+      }
+      id
+      name
+    }
+  }
+`
 
-export const TestRunStatus = {
-  PENDING: 'PENDING',
-  RUNNING: 'RUNNING',
-  FINISHED: 'FINISHED',
-  SUCCEEDED: 'SUCCEEDED',
-  TERMINATED: 'TERMINATED',
-  ERROR: 'ERROR',
-  MONITORING: 'MONITORING',
-  UNKNOWN: 'UNKNOWN',
-  FAILED: 'FAILED',
-  SKIPPED: 'SKIPPED',
-}
-
-export const TestRunStageStatus = {
-  NOT_STARTED: 'NOT_STARTED',
-  FAILED: 'FAILED',
-  PENDING: 'PENDING',
-  RUNNING: 'RUNNING',
-  SUCCEEDED: 'SUCCEEDED',
-  TERMINATED: 'TERMINATED',
-  ERROR: 'ERROR',
-  FINISHED: 'FINISHED',
-}
-
-export const AUTH_TOKEN_NAME = 'AUTH_TOKEN'
-
-export const AuthServiceName = {
-  KEYCLOAK: 'keycloak',
-  BOLT: 'bolt',
-  AUTH0: 'auth0',
-}
-
-export const isAuth0AuthService =
-  process.env.REACT_APP_AUTH_SERVICE === AuthServiceName.AUTH0
+export const GET_DESCRIPTION_AND_CUSTOM_FIELDS = gql`
+  query ($scenarioId: uuid, $testRunId: uuid) {
+    configuration(where: { id: { _eq: $scenarioId } }) {
+      description
+      test_runs(where: { id: { _eq: $testRunId } }) {
+        custom_fields {
+          name
+          value
+        }
+      }
+    }
+  }
+`
