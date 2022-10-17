@@ -257,6 +257,11 @@ function generateFields({
         { ...additionalTestSourceParams }
       ),
     },
+    scenario_description: {
+      inputProps: {
+        label: 'Description',
+      },
+    },
   }
 
   return fields
@@ -281,6 +286,7 @@ function prepareInitialValues(data) {
   const {
     name,
     type_slug,
+    description,
     configuration_parameters,
     performed,
     test_source,
@@ -307,6 +313,7 @@ function prepareInitialValues(data) {
   return {
     scenario_name: name,
     configuration_type: type_slug,
+    scenario_description: description,
     performed,
     scenario_parts: {
       has_pre_test,
@@ -340,6 +347,7 @@ function preparePayload(formValues, { mode, configurationId, projectId }) {
   const {
     scenario_name,
     configuration_type,
+    scenario_description,
     scenario_parts: { has_pre_test, has_post_test, has_load_tests, has_monitoring },
     parameters,
     test_source_type,
@@ -362,6 +370,7 @@ function preparePayload(formValues, { mode, configurationId, projectId }) {
     configuration_envvars: configuration_envvars.filter(
       ce => ce?.name !== '' && typeof ce?.name !== 'undefined'
     ),
+    description: scenario_description || ''
   }
 
   if (mode === 'create') {

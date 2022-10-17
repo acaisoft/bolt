@@ -66,6 +66,10 @@ class CreateValidate(graphene.Mutation):
         has_monitoring = graphene.Boolean(
             required=False,
             description='Test has monitoring hooks.')
+        description = graphene.String(
+            required=False,
+            description='A few words summarizing the configuration'
+        )
 
     Output = gql_util.ValidationInterface
 
@@ -73,7 +77,7 @@ class CreateValidate(graphene.Mutation):
     def validate(
             info, name, type_slug, project_id,
             test_source_id=None, configuration_parameters=None, configuration_envvars=None,
-            has_pre_test=False, has_post_test=False, has_load_tests=False, has_monitoring=False):
+            has_pre_test=False, has_post_test=False, has_load_tests=False, has_monitoring=False, description=None):
         project_id = str(project_id)
         assert type_slug in const.TESTTYPE_CHOICE, \
             f'invalid choice of type_slug (valid choices: {const.TESTTYPE_CHOICE})'
@@ -242,15 +246,18 @@ class CreateValidate(graphene.Mutation):
             else:
                 raise AssertionError(f'test source {str(test_source_id)} is invalid: {test_source["source_type"]}')
 
+        if description:
+            query_data['description'] = str(description)
+
         return query_data
 
     def mutate(
             self, info, name, type_slug, project_id, test_source_id=None, configuration_parameters=None,
             configuration_envvars=None, has_pre_test=False, has_post_test=False, has_load_tests=False,
-            has_monitoring=False):
+            has_monitoring=False, description=None):
         CreateValidate.validate(
             info, name, type_slug, project_id, test_source_id, configuration_parameters,
-            configuration_envvars, has_pre_test, has_post_test, has_load_tests, has_monitoring
+            configuration_envvars, has_pre_test, has_post_test, has_load_tests, has_monitoring, description
         )
         return gql_util.ValidationResponse(ok=True)
 
@@ -262,10 +269,11 @@ class Create(CreateValidate):
 
     def mutate(
             self, info, name, type_slug, project_id, test_source_id=None, configuration_parameters=None,
-            configuration_envvars=None, has_pre_test=False, has_post_test=False, has_load_tests=False, has_monitoring=False):
+            configuration_envvars=None, has_pre_test=False, has_post_test=False, has_load_tests=False,
+            has_monitoring=False, description=None):
         query_params = CreateValidate.validate(
             info, name, type_slug, project_id, test_source_id, configuration_parameters, configuration_envvars,
-            has_pre_test, has_post_test, has_load_tests, has_monitoring
+            has_pre_test, has_post_test, has_load_tests, has_monitoring, description
         )
 
         query = '''mutation ($data:[configuration_insert_input!]!) {
@@ -276,6 +284,7 @@ class Create(CreateValidate):
                     id 
                     name 
                     type_slug 
+                    description 
                     project_id 
                     test_source_id
                     has_pre_test

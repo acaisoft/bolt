@@ -42,13 +42,14 @@ import { getUrl } from 'utils/router'
 
 function NavBreadcrumbs() {
   const location = useLocation()
-  const { projectId, configurationId, executionId } = getRouteParams(
+  const { projectId, configurationId, executionId, scenarioId } = getRouteParams(
     location.pathname
   )
 
-  const { getConfigurationUrl, getExecutionUrl, getProjectUrl } = useUrlGetters({
+  const { getConfigurationUrl, getExecutionUrl, getProjectUrl, getE2EUrl } = useUrlGetters({
     projectId,
     configurationId,
+    scenarioId,
     executionId,
   })
 
@@ -58,6 +59,7 @@ function NavBreadcrumbs() {
   } = useSelectorsData({
     projectId,
     configurationId,
+    scenarioId,
     executionId,
   })
 
@@ -90,7 +92,7 @@ function NavBreadcrumbs() {
       render: () => (
         <Selector
           label="Scenario"
-          options={configurations.map(item => ({
+          options={configurations.filter(item => item.type_slug === 'load_tests').map(item => ({
             value: item.id,
             label: item.name,
           }))}
@@ -100,6 +102,24 @@ function NavBreadcrumbs() {
       ),
     })
   }
+
+  if (scenarioId && configurations.find(item => item.id === scenarioId)) {
+    breadcrumbs.push({
+      key: 'configurations',
+      render: () => (
+        <Selector
+          label="E2E Scenario"
+          options={configurations.filter(item => item.type_slug === 'e2e').map(item => ({
+            value: item.id,
+            label: item.name,
+          }))}
+          generateUrl={getE2EUrl}
+          value={scenarioId || ''}
+        />
+      ),
+    })
+  }
+
   if (executionId && executions.find(item => item.id === executionId)) {
     breadcrumbs.push({
       key: 'executions',
@@ -170,6 +190,7 @@ function getRouteParams(url) {
     // Match more detailed routes first to prevent reading route parts as IDs
     // E.g. /configurations/create, where 'create' is treated as ID
     routes.projects.configurations.create,
+    routes.projects.E2EScenarios.list,
 
     routes.projects.configurations.executions.details,
     routes.projects.configurations.details,
@@ -193,7 +214,7 @@ function getRouteParams(url) {
   return {}
 }
 
-function useSelectorsData({ projectId, configurationId, executionId }) {
+function useSelectorsData({ projectId, configurationId, scenarioId, executionId }) {
   const { data: { projects = [] } = {}, projectsLoading } = useSubscription(
     SUBSCRIBE_TO_PROJECTS,
     {
@@ -204,7 +225,7 @@ function useSelectorsData({ projectId, configurationId, executionId }) {
     useSubscription(SUBSCRIBE_TO_SCENARIOS, {
       fetchPolicy: 'cache-first',
       variables: { projectId },
-      skip: !configurationId,
+      skip: configurationId && scenarioId,
     })
   const { data: { executions = [] } = {}, executionsLoading } = useSubscription(
     SUBSCRIBE_TO_EXECUTIONS,
@@ -247,8 +268,16 @@ function useUrlGetters({ projectId, configurationId, executionId }) {
       }),
     [projectId, configurationId]
   )
+  const getE2EUrl = useCallback(
+    id =>
+      getUrl(routes.projects.E2EScenarios.list, {
+        projectId,
+        scenarioId: id
+      }),
+    [projectId]
+  )
 
-  return { getProjectUrl, getConfigurationUrl, getExecutionUrl }
+  return { getProjectUrl, getConfigurationUrl, getExecutionUrl, getE2EUrl }
 }
 
 export default NavBreadcrumbs

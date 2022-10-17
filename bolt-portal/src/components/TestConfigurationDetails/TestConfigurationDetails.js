@@ -44,7 +44,7 @@ function TestConfigurationDetails({ children, configuration, gridProps = {} }) {
     )
   }
 
-  const { test_source, configuration_envvars = [] } = configuration
+  const { test_source, description, configuration_envvars = [] } = configuration
   const { source_type } = test_source || {}
   const isRepository = source_type === TestSourceType.REPOSITORY
 
@@ -72,6 +72,14 @@ function TestConfigurationDetails({ children, configuration, gridProps = {} }) {
             <Grid item xs={12}>
               <SectionHeader size="medium" title="General" />
             </Grid>
+            {description && (
+              <Grid item xs={12} md={3} {...generalSectionItemProps}>
+              <LabeledValue
+                label="Description"
+                value={description}
+              />
+            </Grid>
+            )}
             <Grid item xs={12} md={3} {...generalSectionItemProps}>
               <LabeledValue
                 label="Test Source Type"

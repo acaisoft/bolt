@@ -51,20 +51,21 @@ select_permissions:
   - role: manager
     permission:
       columns:
-        - id
-        - name
-        - project_id
-        - performed
         - created_by_id
-        - type_slug
-        - test_source_id
-        - instances
-        - is_deleted
-        - has_pre_test
-        - has_post_test
+        - description
         - has_load_tests
         - has_monitoring
+        - has_post_test
+        - has_pre_test
+        - id
+        - instances
+        - is_deleted
         - monitoring_chart_configuration
+        - name
+        - performed
+        - project_id
+        - test_source_id
+        - type_slug
       filter:
         _and:
           - project:
@@ -80,20 +81,21 @@ select_permissions:
   - role: reader
     permission:
       columns:
-        - id
-        - name
-        - project_id
-        - performed
         - created_by_id
-        - type_slug
-        - test_source_id
-        - instances
-        - is_deleted
-        - has_pre_test
-        - has_post_test
+        - description
         - has_load_tests
         - has_monitoring
+        - has_post_test
+        - has_pre_test
+        - id
+        - instances
+        - is_deleted
         - monitoring_chart_configuration
+        - name
+        - performed
+        - project_id
+        - test_source_id
+        - type_slug
       filter:
         _and:
           - project:
@@ -109,20 +111,21 @@ select_permissions:
   - role: tenantadmin
     permission:
       columns:
-        - id
-        - name
-        - project_id
-        - performed
         - created_by_id
-        - type_slug
-        - test_source_id
-        - instances
-        - is_deleted
-        - has_pre_test
-        - has_post_test
+        - description
         - has_load_tests
         - has_monitoring
+        - has_post_test
+        - has_pre_test
+        - id
+        - instances
+        - is_deleted
         - monitoring_chart_configuration
+        - name
+        - performed
+        - project_id
+        - test_source_id
+        - type_slug
       filter:
         _and:
           - project:
@@ -138,20 +141,21 @@ select_permissions:
   - role: tester
     permission:
       columns:
-        - id
-        - name
-        - project_id
-        - performed
         - created_by_id
-        - type_slug
-        - test_source_id
-        - instances
-        - is_deleted
-        - has_pre_test
-        - has_post_test
+        - description
         - has_load_tests
         - has_monitoring
+        - has_post_test
+        - has_pre_test
+        - id
+        - instances
+        - is_deleted
         - monitoring_chart_configuration
+        - name
+        - performed
+        - project_id
+        - test_source_id
+        - type_slug
       filter:
         _and:
           - project:
@@ -168,6 +172,7 @@ select_permissions:
     permission:
       columns:
         - created_by_id
+        - description
         - has_load_tests
         - has_monitoring
         - has_post_test

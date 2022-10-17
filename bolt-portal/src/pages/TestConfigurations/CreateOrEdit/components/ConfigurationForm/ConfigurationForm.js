@@ -122,7 +122,7 @@ export function ConfigurationForm({ onCancel = () => {}, onSubmit = () => {} }, 
           <FormValue name="configuration_type">
             {configurationType => (
               <ScenarioFields
-                fields={fields}
+                fields={isExternalScenario ? externalFields : fields}
                 configurationType={configurationType}
                 externalConfigurationHook={setIsExternalScenario}
               />

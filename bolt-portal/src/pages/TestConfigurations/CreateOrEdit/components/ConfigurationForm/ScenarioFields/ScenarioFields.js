@@ -59,6 +59,17 @@ function ScenarioFields({ fields, configurationType, externalConfigurationHook }
             ))}
           </FormField>
         </Grid>
+        <Grid item xs={6}>
+          <FormField
+            data-testid="scenario_description"
+            id="scenario_description"
+            name="scenario_description"
+            field={fields.scenario_description}
+            fullWidth
+            variant="filled"
+            multiline
+          />
+        </Grid>
       </Grid>
     </ExpandablePanel>
   )

@@ -124,7 +124,7 @@ export function TestConfigurationsList({
 
   const loading = loadingConfigurations || loadingConfigurationsAggregate
 
-  if (loading || error || configurations.length === 0) {
+  if (loading || error || configurations.length + externalTestScenarios.length === 0) {
     return (
       <Box p={3}>
         {loading ? (
@@ -179,140 +179,143 @@ export function TestConfigurationsList({
           New
         </Button>
       </div>
-
-      <SectionHeader
-        title="Performance Scenarios"
-        subtitle={`(${totalCount})`}
-        marginBottom
-      >
-        {!loading && (
-          <Pagination
-            {...pagination}
-            onChange={setPagination}
-            totalCount={totalCount}
-          />
-        )}
-      </SectionHeader>
-      <DataTable
-        data={configurations}
-        isLoading={loading}
-        rowKey={configuration => configuration.id}
-      >
-        <DataTable.Column
-          key="name"
-          render={configuration => configuration.name}
-          title="Name"
-        />
-        <DataTable.Column
-          key="host"
-          render={configuration =>
-            getValueFromSlug(
-              configuration.configuration_parameters,
-              'load_tests_host'
-            )
-          }
-          title="Host"
-        />
-        <DataTable.Column
-          key="users"
-          render={configuration =>
-            getValueFromSlug(
-              configuration.configuration_parameters,
-              'load_tests_users'
-            )
-          }
-          title="Users"
-        />
-        <DataTable.Column
-          key="duration"
-          render={configuration =>
-            getValueFromSlug(
-              configuration.configuration_parameters,
-              'load_tests_duration'
-            ) + 's'
-          }
-          title="Duration"
-        />
-        <DataTable.Column
-          key="lastRun"
-          render={({ executions }) => (
-            <NoWrap className={classes.dateContainer}>
-              {(executions[0] || {}).start && (
-                <React.Fragment>
-                  <IconButton className={classes.icon} disabled>
-                    <History />
-                  </IconButton>
-                  <span>
-                    {moment(executions[0].start).format('YYYY-MM-DD HH:mm:ss')}
-                  </span>
-                </React.Fragment>
-              )}
-            </NoWrap>
-          )}
-          title="Last Run"
-        />
-        <DataTable.Column
-          key="success_rate"
-          render={({ executions }) => {
-            if (executions.length === 0) {
-              return null
-            }
-
-            const totals = executions[0].execution_request_totals_aggregate.aggregate
-            const successRate =
-              totals.sum.num_requests === 0
-                ? 0
-                : (totals.sum.num_requests - totals.sum.num_failures) /
-                  totals.sum.num_requests
-
-            return (
-              <div className={classes.rateContainer}>
-                <SuccessRatePieChart
-                  value={successRate * 100}
-                  size={20}
-                  variant="multicolor"
-                />
-
-                <span className={classes.rateMeter}>
-                  {formatPercent(successRate)}
-                </span>
-              </div>
-            )
-          }}
-          title="Success Rate"
-        />
-
-        <DataTable.Column
-          key="actions"
-          render={configuration => {
-            return (
-              <div className={classes.actionsContainer}>
-                <Button
-                  data-testid={`scenario-${configuration.id}-details`}
-                  href={getTestConfigurationDetailsUrl(configuration)}
-                  title="Show scenario details"
-                  variant="link"
-                >
-                  Details
-                </Button>
-              </div>
-            )
-          }}
-          title="Actions"
-        />
-        <DataTable.Column
-          key="actionsMenu"
-          render={configuration => {
-            return (
-              <ConfigurationActionsMenu
-                configuration={configuration}
-                editUrl={getTestConfigurationEditUrl(configuration)}
-                onClone={onClone}
+      {configurations.length > 0 && (
+        <div>
+          <SectionHeader
+            title="Performance Scenarios"
+            subtitle={`(${totalCount})`}
+            marginBottom
+          >
+            {!loading && (
+              <Pagination
+                {...pagination}
+                onChange={setPagination}
+                totalCount={totalCount}
               />
-            )
-          }}
-        />
-      </DataTable>
+            )}
+          </SectionHeader>
+          <DataTable
+            data={configurations}
+            isLoading={loading}
+            rowKey={configuration => configuration.id}
+          >
+            <DataTable.Column
+              key="name"
+              render={configuration => configuration.name}
+              title="Name"
+            />
+            <DataTable.Column
+              key="host"
+              render={configuration =>
+                getValueFromSlug(
+                  configuration.configuration_parameters,
+                  'load_tests_host'
+                )
+              }
+              title="Host"
+            />
+            <DataTable.Column
+              key="users"
+              render={configuration =>
+                getValueFromSlug(
+                  configuration.configuration_parameters,
+                  'load_tests_users'
+                )
+              }
+              title="Users"
+            />
+            <DataTable.Column
+              key="duration"
+              render={configuration =>
+                getValueFromSlug(
+                  configuration.configuration_parameters,
+                  'load_tests_duration'
+                ) + 's'
+              }
+              title="Duration"
+            />
+            <DataTable.Column
+              key="lastRun"
+              render={({ executions }) => (
+                <NoWrap className={classes.dateContainer}>
+                  {(executions[0] || {}).start && (
+                    <React.Fragment>
+                      <IconButton className={classes.icon} disabled>
+                        <History />
+                      </IconButton>
+                      <span>
+                        {moment(executions[0].start).format('YYYY-MM-DD HH:mm:ss')}
+                      </span>
+                    </React.Fragment>
+                  )}
+                </NoWrap>
+              )}
+              title="Last Run"
+            />
+            <DataTable.Column
+              key="success_rate"
+              render={({ executions }) => {
+                if (executions.length === 0) {
+                  return null
+                }
+
+                const totals = executions[0].execution_request_totals_aggregate.aggregate
+                const successRate =
+                  totals.sum.num_requests === 0
+                    ? 0
+                    : (totals.sum.num_requests - totals.sum.num_failures) /
+                      totals.sum.num_requests
+
+                return (
+                  <div className={classes.rateContainer}>
+                    <SuccessRatePieChart
+                      value={successRate * 100}
+                      size={20}
+                      variant="multicolor"
+                    />
+
+                    <span className={classes.rateMeter}>
+                      {formatPercent(successRate)}
+                    </span>
+                  </div>
+                )
+              }}
+              title="Success Rate"
+            />
+
+            <DataTable.Column
+              key="actions"
+              render={configuration => {
+                return (
+                  <div className={classes.actionsContainer}>
+                    <Button
+                      data-testid={`scenario-${configuration.id}-details`}
+                      href={getTestConfigurationDetailsUrl(configuration)}
+                      title="Show scenario details"
+                      variant="link"
+                    >
+                      Details
+                    </Button>
+                  </div>
+                )
+              }}
+              title="Actions"
+            />
+            <DataTable.Column
+              key="actionsMenu"
+              render={configuration => {
+                return (
+                  <ConfigurationActionsMenu
+                    configuration={configuration}
+                    editUrl={getTestConfigurationEditUrl(configuration)}
+                    onClone={onClone}
+                  />
+                )
+              }}
+            />
+          </DataTable>
+        </div>
+      )}
       {externalTestScenarios.length > 0 && (
         <div>
           <SectionHeader
