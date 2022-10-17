@@ -53,7 +53,9 @@ const TestRunDetails = () => {
       fetchPolicy: 'cache-and-network',
     })
 
-  const customFields = configuration[0].test_runs[0].custom_fields
+  const customFields = configuration[0]
+    ? configuration[0].test_runs[0].custom_fields
+    : []
 
   return (
     <React.Fragment>
