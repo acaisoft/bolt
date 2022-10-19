@@ -48,3 +48,24 @@ def send_stage_log(message, stage, level='info'):
     response = requests.post(GRAPHQL_URL, json=body, headers=headers)
     assert response.json().get('data') == {'insert_execution_stage_log': {'affected_rows': 1}}
     response.raise_for_status()
+
+
+def set_execution_status(status):
+    query = '''
+        mutation ($id: uuid, $status: String) {
+            update_execution (where: {id: {_eq: $id}}, _set: {status: $status}) {
+                affected_rows
+            }
+        }
+    '''
+    body = {
+        'query': query,
+        'variables': {
+            'id': EXECUTION_ID,
+            'status': status.upper()
+        }
+    }
+    headers = {'Authorization': f'Bearer {HASURA_TOKEN}'}
+    response = requests.post(GRAPHQL_URL, json=body, headers=headers)
+    assert response.json().get('data') == {'update_execution': {'affected_rows': 1}}
+    response.raise_for_status()

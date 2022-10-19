@@ -25,7 +25,7 @@ import tempfile
 
 import git
 
-from execution_stage_log import send_stage_log
+from execution_stage_log import send_stage_log, set_execution_status
 from google_cloud_build import GoogleCloudBuild
 from locust_wrapper_packer import LocustWrapper
 
@@ -58,46 +58,55 @@ def write_output(docker_image):
         file.write(docker_image)
 
 
-send_stage_log('SUCCEEDED', 'start')
+def build():
+    send_stage_log('SUCCEEDED', 'start')
 
-repo_url = os.environ.get('REPOSITORY_URL')
-branch = os.environ.get('BRANCH')
-repo_path = tempfile.mkdtemp()
+    repo_url = os.environ.get('REPOSITORY_URL')
+    branch = os.environ.get('BRANCH')
+    repo_path = tempfile.mkdtemp()
 
-send_stage_log('PENDING', stage='downloading_source')
-logger.info(f'Cloning repository {repo_url}, branch {branch}...')
-repo = git.Repo.clone_from(repo_url, repo_path, branch=branch, depth=1)
-send_stage_log('SUCCEEDED', 'downloading_source')
-logger.info(f'Repository cloned to {repo_path}')
-tests_head_sha = repo.head.object.hexsha
-short_test_sha = repo.git.rev_parse(tests_head_sha, short=7)
+    send_stage_log('PENDING', stage='downloading_source')
+    logger.info(f'Cloning repository {repo_url}, branch {branch}...')
+    repo = git.Repo.clone_from(repo_url, repo_path, branch=branch, depth=1)
+    send_stage_log('SUCCEEDED', 'downloading_source')
+    logger.info(f'Repository cloned to {repo_path}')
+    tests_head_sha = repo.head.object.hexsha
+    short_test_sha = repo.git.rev_parse(tests_head_sha, short=7)
 
-wrapper = LocustWrapper()
-wrapper_head_sha = wrapper.commit_hash
-short_wrapper_sha = repo.git.rev_parse(wrapper_head_sha, short=7)
+    wrapper = LocustWrapper()
+    wrapper_head_sha = wrapper.commit_hash
+    short_wrapper_sha = repo.git.rev_parse(wrapper_head_sha, short=7)
 
-send_stage_log('PENDING', 'image_preparation')
-google_cloud_build = GoogleCloudBuild()
-google_cloud_build.activate_service_account()
-image_tag = get_image_tag(repo_url, f'{short_test_sha}-{short_wrapper_sha}')
-image_address = get_docker_image_destination(image_tag)
+    send_stage_log('PENDING', 'image_preparation')
+    google_cloud_build = GoogleCloudBuild()
+    google_cloud_build.activate_service_account()
+    image_tag = get_image_tag(repo_url, f'{short_test_sha}-{short_wrapper_sha}')
+    image_address = get_docker_image_destination(image_tag)
 
-if not NO_CACHE:
-    is_image_exists = google_cloud_build.check_if_image_exist(IMAGE_REGISTRY_ADDRESS, image_tag)
-    if is_image_exists:
-        logger.info(f'Found image the registry: {image_address}')
-        write_output(image_address)
-        send_stage_log('SUCCEEDED', 'image_preparation')
-        exit(0)
+    if not NO_CACHE:
+        is_image_exists = google_cloud_build.check_if_image_exist(IMAGE_REGISTRY_ADDRESS, image_tag)
+        if is_image_exists:
+            logger.info(f'Found image the registry: {image_address}')
+            write_output(image_address)
+            send_stage_log('SUCCEEDED', 'image_preparation')
+            exit(0)
 
-logger.info('Wrapping repository')
-wrapper.wrap(repo_path)
-logger.info('Repository wrapped')
+    logger.info('Wrapping repository')
+    wrapper.wrap(repo_path)
+    logger.info('Repository wrapped')
 
-logger.info(f'Starting to build image {image_address}')
+    logger.info(f'Starting to build image {image_address}')
 
-google_cloud_build.build(repo_path, image_address)
-logger.info('Image built')
+    google_cloud_build.build(repo_path, image_address)
+    logger.info('Image built')
 
-write_output(image_address)
-send_stage_log('SUCCEEDED', 'image_preparation')
+    write_output(image_address)
+    send_stage_log('SUCCEEDED', 'image_preparation')
+
+
+if __name__ == '__main__':
+    try:
+        build()
+    except Exception as ex:
+        set_execution_status('ERROR')
+        raise ex
