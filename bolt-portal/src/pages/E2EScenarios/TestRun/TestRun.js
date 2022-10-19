@@ -28,7 +28,7 @@ import {
   SectionHeader,
 } from 'components'
 import { useQuery } from '@apollo/client'
-import { Paper, Grid } from '@material-ui/core'
+import { Paper, Grid, Tooltip } from '@material-ui/core'
 import { useParams } from 'react-router-dom'
 import { Details } from 'assets/icons'
 import {
@@ -60,7 +60,11 @@ const TestRunDetails = () => {
   return (
     <React.Fragment>
       {!customfieldLoading && (
-        <ExpandablePanel defaultExpanded={true} title="Scenario Details">
+        <ExpandablePanel
+          defaultExpanded={true}
+          title="Scenario Details"
+          variant="h5"
+        >
           <Paper square className={classes.paper} data-testid="TestConfigDetails">
             <Grid container spacing={5} alignItems="center">
               <Grid item hidden="sm" md={1} container justifyContent="center">
@@ -83,7 +87,7 @@ const TestRunDetails = () => {
                       <SectionHeader size="medium" title="Additional Info" />
                     </Grid>
                     {customFields.map(custom_field => (
-                      <Grid item xs={12} md={3}>
+                      <Grid key={custom_field.name} item xs={12} md={3}>
                         <LabeledValue
                           label={custom_field.name}
                           value={custom_field.value}
@@ -103,7 +107,15 @@ const TestRunDetails = () => {
           <div className={classes.tableWrapper}>
             <DataTable data={gr.test_cases} isLoading={loading}>
               <DataTable.Column
-                render={testCase => testCase.name_from_file}
+                render={testCase => (
+                  <Tooltip title={testCase.name_from_file} placement="bottom-end">
+                    <div>
+                      {testCase.name_from_file.length > 50
+                        ? `${testCase.name_from_file.slice(0, 50)}...`
+                        : testCase.name_from_file}
+                    </div>
+                  </Tooltip>
+                )}
                 title="Name"
               />
               <DataTable.Column

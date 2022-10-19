@@ -32,7 +32,12 @@ import { ExpandMore } from '@material-ui/icons'
 
 import useStyles from './ExpandablePanel.styles'
 
-export function ExpandablePanel({ children, title, ...panelProps }) {
+export function ExpandablePanel({
+  children,
+  title,
+  variant = 'subtitle1',
+  ...panelProps
+}) {
   const classes = useStyles()
 
   return (
@@ -52,7 +57,7 @@ export function ExpandablePanel({ children, title, ...panelProps }) {
           expandIcon: classes.expandIcon,
         }}
       >
-        <Typography variant="subtitle1" className={classes.title}>
+        <Typography variant={variant} className={classes.title}>
           {title}
         </Typography>
       </AccordionSummary>
