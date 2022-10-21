@@ -80,7 +80,6 @@ export function TestConfigurationsList({
     : 0
   return (
     <React.Fragment>
-      {console.log('>>>>>>>>', allScenariosCount)}
       <div className={classes.newScenarioButtonContainer}>
         <Button
           data-testid="new-scenario-button"
