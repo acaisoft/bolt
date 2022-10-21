@@ -38,6 +38,7 @@ import {
   GET_DESCRIPTION_AND_CUSTOM_FIELDS,
 } from './graphql'
 import useStyles from './TestRun.styles'
+import ResultColumn from './ResultColumn'
 
 const TestRunDetails = () => {
   const params = useParams()
@@ -171,7 +172,9 @@ const TestRunDetails = () => {
                 title="Status"
               />
               <DataTable.Column
-                render={testCase => testCase.test_results[0].message || '-'}
+                render={testCase => (
+                  <ResultColumn message={testCase.test_results[0].message} />
+                )}
                 title="Message"
               />
               <DataTable.Column
