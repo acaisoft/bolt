@@ -27,7 +27,8 @@ export const GET_SCENARIO = gql`
       id
       name
       description
-      test_runs {
+      test_runs (order_by: {timestamp: desc}) {
+        successes
         total
         failures
         errors

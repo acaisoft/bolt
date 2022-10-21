@@ -36,6 +36,7 @@ export function ExpandablePanel({
   children,
   title,
   variant = 'subtitle1',
+  advancedTitle,
   ...panelProps
 }) {
   const classes = useStyles()
@@ -58,7 +59,7 @@ export function ExpandablePanel({
         }}
       >
         <Typography variant={variant} className={classes.title}>
-          {title}
+          {advancedTitle ? advancedTitle : title}
         </Typography>
       </AccordionSummary>
       <AccordionDetails className={classes.details}>{children}</AccordionDetails>
@@ -68,6 +69,7 @@ export function ExpandablePanel({
 
 ExpandablePanel.propTypes = {
   title: PropTypes.string,
+  advancedTitle: PropTypes.object
 }
 
 export default ExpandablePanel

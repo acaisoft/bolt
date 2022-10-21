@@ -31,4 +31,12 @@ export default makeStyles(({ spacing, palette }) => ({
   failure: {
     color: palette.text.error,
   },
+  paper: {
+    padding: spacing(4),
+    width: '100%',
+  },
+  tileTitle: {
+    fontWeight: 'bold',
+    marginBottom: spacing(2),
+  },
 }))
