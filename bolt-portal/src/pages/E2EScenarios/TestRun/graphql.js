@@ -40,7 +40,7 @@ export const GET_GROUPS_WITH_RESULTS = gql`
   }
 `
 
-export const GET_DESCRIPTION_AND_CUSTOM_FIELDS = gql`
+export const GET_DESCRIPTION_AND_CUSTOM_FIELDS_AND_TOTALS = gql`
   query ($scenarioId: uuid, $testRunId: uuid) {
     configuration(where: { id: { _eq: $scenarioId } }) {
       description
@@ -49,6 +49,13 @@ export const GET_DESCRIPTION_AND_CUSTOM_FIELDS = gql`
           name
           value
         }
+      }
+      total_results: test_runs(where: { id: { _eq: $testRunId } }) {
+        total
+        successes
+        errors
+        skipped
+        failures
       }
     }
   }

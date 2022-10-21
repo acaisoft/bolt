@@ -43,4 +43,8 @@ export default makeStyles(({ spacing, palette }) => ({
   rateMeter: {
     marginLeft: spacing(0.5),
   },
+  tileTitle: {
+    fontWeight: 'bold',
+    marginBottom: spacing(2),
+  },
 }))
