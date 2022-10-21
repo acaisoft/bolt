@@ -21,26 +21,28 @@
 
 import { makeStyles } from '@material-ui/core'
 
-export default makeStyles(({ spacing, palette }) => ({
-  paper: {
-    padding: spacing(4),
-    width: '100%',
-  },
-  tableWrapper: {
-    width: '100%',
-  },
-  tooltip: {
-    fontSize: '1rem',
-    maxWidth: '100%',
-  },
-  rateContainer: {
+export default makeStyles(() => ({
+  container: {
+    wordBreak: 'break-word',
     display: 'flex',
-    alignItems: 'center',
+    position: 'relative',
+    transition: '1s',
   },
-  marginRight: {
-    marginRight: '0.5rem',
+  expandButton: {
+    position: 'absolute',
+    top: '50%',
+    msTransform: 'translateY(-50%)',
+    transform: 'translateY(-50%)',
+    float: 'right',
   },
-  rateMeter: {
-    marginLeft: spacing(0.5),
+  notOpen: {
+    overflow: 'hidden',
+    height: '1.2rem',
+    transition: 'height 0.75s',
+  },
+  open: {
+    transition: 'height 0.75s',
+    overflow: 'scroll',
+    height: '20rem',
   },
 }))

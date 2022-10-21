@@ -21,65 +21,14 @@
 
 import { gql } from '@apollo/client'
 
-const TEST_CONFIGURATION_LIST_ITEM = gql`
-  fragment testConfigurationListItem on configuration {
-    id
-    name
-    performed
+export const GET_SLUG_NAMES = gql`
+  query configurationTypeSlugs($projectId: uuid) {
     configuration_type {
-      id
+      slug_name
       name
     }
-    configuration_parameters {
-      id
-      value
-      parameter_slug
-    }
-    executions(order_by: { start: desc }, limit: 1) {
-      id
-      start
-      execution_request_totals_aggregate {
-        aggregate {
-          sum {
-            num_failures
-            num_requests
-          }
-          min {
-            min_response_time
-          }
-          avg {
-            average_response_time
-          }
-          max {
-            max_response_time
-          }
-        }
-      }
-    }
-    test_source {
-      id
-      source_type
-      repository {
-        id
-        name
-        url
-      }
-      test_creator {
-        id
-        name
-      }
-    }
-  }
-`
-
-export const SUBSCRIBE_TO_TEST_CONFIGURATION_AGGREGATE_LIST_ITEM = gql`
-  subscription subscribeConfigurationListItem($projectId: uuid) {
-    configurationsAggregate: configuration_aggregate(
-      where: {
-        project_id: { _eq: $projectId }
-        is_deleted: { _eq: false }
-        type_slug: { _eq: load_tests }
-      }
+    configurationsTotal: configuration_aggregate(
+      where: { project_id: { _eq: $projectId }, is_deleted: { _eq: false } }
     ) {
       aggregate {
         count
@@ -88,42 +37,30 @@ export const SUBSCRIBE_TO_TEST_CONFIGURATION_AGGREGATE_LIST_ITEM = gql`
   }
 `
 
-export const SUBSCRIBE_TO_TEST_CONFIGURATION_LIST_ITEM = gql`
-  subscription subscribeConfigurationListItem(
+export const SUBSCRIBE_CONFIGURATION_LIST_ITEM = gql`
+  query configurationListItem(
     $projectId: uuid
+    $type: String
     $limit: Int
     $offset: Int
     $order_by: [configuration_order_by!]
   ) {
-    configurations: configuration(
+    configurationsTotal: configuration_aggregate(
       where: {
         project_id: { _eq: $projectId }
         is_deleted: { _eq: false }
-        type_slug: { _eq: load_tests }
+        type_slug: { _eq: $type }
       }
-      limit: $limit
-      offset: $offset
-      order_by: $order_by
     ) {
-      ...testConfigurationListItem
+      aggregate {
+        count
+      }
     }
-  }
-
-  ${TEST_CONFIGURATION_LIST_ITEM}
-`
-
-export const SUBSCRIBE_TO_EXTERNAL_TEST_SCENARIOS_LIST_ITEM = gql`
-  subscription subscribeExternalTestScenarioListItem(
-    $projectId: uuid
-    $limit: Int
-    $offset: Int
-    $order_by: [configuration_order_by!]
-  ) {
-    externalTestScenarios: configuration(
+    configuration(
       where: {
         project_id: { _eq: $projectId }
         is_deleted: { _eq: false }
-        type_slug: { _eq: e2e }
+        type_slug: { _eq: $type }
       }
       limit: $limit
       offset: $offset
@@ -139,21 +76,31 @@ export const SUBSCRIBE_TO_EXTERNAL_TEST_SCENARIOS_LIST_ITEM = gql`
         skipped
         timestamp
       }
-    }
-  }
-`
-
-export const SUBSCRIBE_TO_EXTERNAL_TEST_SCENARIOS_COUNT = gql`
-  subscription subscribeConfigurationListItem($projectId: uuid) {
-    externalTestScenariosAgregate: configuration_aggregate(
-      where: {
-        project_id: { _eq: $projectId }
-        is_deleted: { _eq: false }
-        type_slug: { _eq: e2e }
+      configuration_parameters {
+        id
+        value
+        parameter_slug
       }
-    ) {
-      aggregate {
-        count
+      executions(order_by: { start: desc }, limit: 1) {
+        id
+        start
+        execution_request_totals_aggregate {
+          aggregate {
+            sum {
+              num_failures
+              num_requests
+            }
+            min {
+              min_response_time
+            }
+            avg {
+              average_response_time
+            }
+            max {
+              max_response_time
+            }
+          }
+        }
       }
     }
   }

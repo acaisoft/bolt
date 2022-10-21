@@ -19,28 +19,33 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { makeStyles } from '@material-ui/core'
+import React, { useState } from 'react'
+import useStyles from './ResultColumn.styles'
+import { Button } from 'components'
+import { ExpandMore, ExpandLess } from '@material-ui/icons'
 
-export default makeStyles(({ spacing, palette }) => ({
-  paper: {
-    padding: spacing(4),
-    width: '100%',
-  },
-  tableWrapper: {
-    width: '100%',
-  },
-  tooltip: {
-    fontSize: '1rem',
-    maxWidth: '100%',
-  },
-  rateContainer: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  marginRight: {
-    marginRight: '0.5rem',
-  },
-  rateMeter: {
-    marginLeft: spacing(0.5),
-  },
-}))
+const ResultColumn = ({ message }) => {
+  const [isOpen, setIsOpen] = useState(false)
+  const classes = useStyles()
+
+  return (
+    <div className={classes.container}>
+      <div className={`${isOpen ? classes.open : classes.notOpen}`}>
+        {message || '-'}
+      </div>
+      {message && message.length > 59 && (
+        <div
+          style={{ position: 'relative', marginLeft: '2rem', marginRight: '1rem' }}
+        >
+          <Button
+            icon={isOpen ? ExpandLess : ExpandMore}
+            className={classes.expandButton}
+            onClick={() => setIsOpen(!isOpen)}
+          />
+        </div>
+      )}
+    </div>
+  )
+}
+
+export default ResultColumn
