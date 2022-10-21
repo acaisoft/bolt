@@ -29,4 +29,18 @@ export default makeStyles(({ spacing, palette }) => ({
   tableWrapper: {
     width: '100%',
   },
+  tooltip: {
+    fontSize: '1rem',
+    maxWidth: '100%',
+  },
+  rateContainer: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  marginRight: {
+    marginRight: '0.5rem',
+  },
+  rateMeter: {
+    marginLeft: spacing(0.5),
+  },
 }))

@@ -31,6 +31,8 @@ import { useQuery } from '@apollo/client'
 import { Paper, Grid, Tooltip } from '@material-ui/core'
 import { useParams } from 'react-router-dom'
 import { Details } from 'assets/icons'
+import { SuccessRatePieChart } from 'components'
+import { formatPercent } from 'utils/numbers'
 import {
   GET_GROUPS_WITH_RESULTS,
   GET_DESCRIPTION_AND_CUSTOM_FIELDS,
@@ -56,6 +58,47 @@ const TestRunDetails = () => {
   const customFields = configuration[0]
     ? configuration[0].test_runs[0].custom_fields
     : []
+
+  const getStatus = testCase => {
+    let status
+    switch (testCase.test_results[0].result) {
+      case 'success':
+        status = 'SUCCEEDED'
+        break
+      case 'failure':
+        status = 'FAILED'
+        break
+      case 'skipped':
+        status = 'SKIPPED'
+        break
+      default:
+        status = 'OTHER'
+    }
+    return status
+  }
+
+  const getSuccessRate = test_cases => {
+    return (
+      test_cases.filter(test_case => test_case.test_results[0].result === 'success')
+        .length / test_cases.length
+    )
+  }
+
+  const getNameColumnTitle = group => {
+    const success_rate = getSuccessRate(group.test_cases)
+    return (
+      <div className={classes.rateContainer}>
+        <div className={classes.marginRight}>{group.name}</div>
+        <SuccessRatePieChart
+          value={success_rate * 100}
+          size={20}
+          variant="multicolor"
+        />
+
+        <span className={classes.rateMeter}>{formatPercent(success_rate)}</span>
+      </div>
+    )
+  }
 
   return (
     <React.Fragment>
@@ -103,12 +146,17 @@ const TestRunDetails = () => {
       )}
 
       {group.map(gr => (
-        <ExpandablePanel defaultExpanded={false} title={gr.name}>
+        <ExpandablePanel defaultExpanded={false} title={getNameColumnTitle(gr)}>
           <div className={classes.tableWrapper}>
             <DataTable data={gr.test_cases} isLoading={loading}>
               <DataTable.Column
+                style={{ width: '300px' }}
                 render={testCase => (
-                  <Tooltip title={testCase.name_from_file} placement="bottom-end">
+                  <Tooltip
+                    title={testCase.name_from_file}
+                    placement="bottom-start"
+                    classes={{ tooltip: classes.tooltip }}
+                  >
                     <div>
                       {testCase.name_from_file.length > 50
                         ? `${testCase.name_from_file.slice(0, 50)}...`
@@ -119,24 +167,7 @@ const TestRunDetails = () => {
                 title="Name"
               />
               <DataTable.Column
-                render={testCase => {
-                  let status
-                  switch (testCase.test_results[0].result) {
-                    case 'success':
-                      status = 'SUCCEEDED'
-                      break
-                    case 'failure':
-                      status = 'FAILED'
-                      break
-                    case 'skipped':
-                      status = 'SKIPPED'
-                      break
-                    default:
-                      status = 'OTHER'
-                  }
-
-                  return <TestRunStatus status={status} />
-                }}
+                render={testCase => <TestRunStatus status={getStatus(testCase)} />}
                 title="Status"
               />
               <DataTable.Column
