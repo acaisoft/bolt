@@ -21,20 +21,28 @@
 
 import { makeStyles } from '@material-ui/core'
 
-export default makeStyles(({ spacing }) => ({
-  link: {
-    textDecoration: 'underline',
-    fontWeight: 'normal',
-    fontSize: 'inherit',
+export default makeStyles(() => ({
+  container: {
+    wordBreak: 'break-word',
+    display: 'flex',
+    position: 'relative',
+    transition: '1s',
   },
-  label: {
-    marginRight: spacing(0.5),
+  expandButton: {
+    position: 'absolute',
+    top: '50%',
+    msTransform: 'translateY(-50%)',
+    transform: 'translateY(-50%)',
+    float: 'right',
   },
-  icon: {
-    margin: spacing(0, 0, 0, -0.5),
-    fontSize: '1.1rem',
+  notOpen: {
+    overflow: 'hidden',
+    height: '1.2rem',
+    transition: 'height 0.75s',
   },
-  iconOnly: {
-    minWidth: 0,
+  open: {
+    transition: 'height 0.75s',
+    overflow: 'scroll',
+    height: '20rem',
   },
 }))
