@@ -21,15 +21,15 @@
 
 import React from 'react'
 import moment from 'moment'
-import {SectionHeader, DataTable, Button, LoadingPlaceholder} from 'components'
+import { SectionHeader, DataTable, Button, LoadingPlaceholder } from 'components'
 import { useQuery } from '@apollo/client'
 import routes from 'config/routes'
-import {Grid, Paper, Typography} from '@material-ui/core'
+import { Grid, Paper, Typography } from '@material-ui/core'
 import { useParams } from 'react-router-dom'
 import { GET_SCENARIO } from './graphql'
 import { getUrl } from 'utils/router'
 import useStyles from './ScenarioDetails.styles'
-import ScenarioEvolutionGraph from "./ScenarioEvolutionGraph";
+import ScenarioEvolutionGraph from './ScenarioEvolutionGraph'
 
 const TestScenarioDetails = () => {
   const params = useParams()
@@ -61,20 +61,26 @@ const TestScenarioDetails = () => {
             {externalTestScenario.description || ''}
           </Typography>
         </Grid>
-        <Grid item xs={12}>
-          <Paper square className={classes.paper} data-testid="ScenarioExecutions">
-            {!loading ?
-              <React.Fragment>
-                <SectionHeader
-                  size="small"
-                  className={classes.tileTitle}
-                  title="Scenario Executions"
-                />
-                <ScenarioEvolutionGraph dataset={externalTestScenario.test_runs.slice(-20).reverse()}/>
-              </React.Fragment>
-              : <LoadingPlaceholder title="Loading test run results..." />}
-          </Paper>
-        </Grid>
+        {externalTestScenario.test_runs.length > 0 && (
+          <Grid item xs={12}>
+            <Paper square className={classes.paper} data-testid="ScenarioExecutions">
+              {!loading ? (
+                <React.Fragment>
+                  <SectionHeader
+                    size="small"
+                    className={classes.tileTitle}
+                    title="Scenario Executions"
+                  />
+                  <ScenarioEvolutionGraph
+                    dataset={externalTestScenario.test_runs.slice(-20).reverse()}
+                  />
+                </React.Fragment>
+              ) : (
+                <LoadingPlaceholder title="Loading test run results..." />
+              )}
+            </Paper>
+          </Grid>
+        )}
       </Grid>
       <div className={classes.marginTop}>
         <DataTable
