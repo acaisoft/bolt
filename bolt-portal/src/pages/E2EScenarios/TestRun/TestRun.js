@@ -25,7 +25,8 @@ import {
   ExpandablePanel,
   TestRunStatus,
   LabeledValue,
-  SectionHeader, LoadingPlaceholder,
+  SectionHeader,
+  LoadingPlaceholder,
 } from 'components'
 import { useQuery } from '@apollo/client'
 import { Paper, Grid, Tooltip } from '@material-ui/core'
@@ -40,7 +41,7 @@ import {
 import useStyles from './TestRun.styles'
 import ResultColumn from './ResultColumn'
 import TestRunChart from './TestRunChart'
-import TestGroupChart from "./TestGroupChart";
+import TestGroupChart from './TestGroupChart'
 
 const TestRunDetails = () => {
   const params = useParams()
@@ -64,7 +65,7 @@ const TestRunDetails = () => {
 
   const results = configuration[0]
     ? configuration[0].total_results[0]
-    : [{name: '', value: 0}]
+    : [{ name: '', value: 0 }]
 
   const getStatus = testCase => {
     let status
@@ -109,13 +110,9 @@ const TestRunDetails = () => {
 
   return (
     <React.Fragment>
-      <ExpandablePanel
-        defaultExpanded={true}
-        title="Scenario Details"
-        variant="h5"
-      >
+      <ExpandablePanel defaultExpanded={true} title="Scenario Details" variant="h5">
         <Paper square className={classes.paper} data-testid="TestConfigDetails">
-          {!customfieldLoading ?
+          {!customfieldLoading ? (
             <Grid container spacing={5} alignItems="center">
               <Grid item hidden="sm" md={1} container justifyContent="center">
                 <Grid item>
@@ -148,41 +145,49 @@ const TestRunDetails = () => {
                 )}
               </Grid>
             </Grid>
-            : <LoadingPlaceholder title="Loading test run results..." />}
+          ) : (
+            <LoadingPlaceholder title="Loading test run results..." />
+          )}
         </Paper>
       </ExpandablePanel>
-      {!customfieldLoading ?
+      {!customfieldLoading ? (
         <React.Fragment>
           <Grid container spacing={5} alignItems="center">
-            <Grid item xs={5}>
-              <Paper square className={classes.paper} data-testid="TestRunRatios">
-                <SectionHeader
-                  size="small"
-                  className={classes.tileTitle}
-                  title="Results distribution"
-                />
-                <TestRunChart data={results}/>
-              </Paper>
-            </Grid>
-            <Grid item xs={7}>
-              <Paper square className={classes.paper} data-testid="TestRunRatios">
-                <SectionHeader
-                  size="small"
-                  className={classes.tileTitle}
-                  title="Group results"
-                />
-                <TestGroupChart dataset={group}/>
-              </Paper>
-            </Grid>
+            {results.length > 0 && (
+              <Grid item xs={5}>
+                <Paper square className={classes.paper} data-testid="TestRunRatios">
+                  <SectionHeader
+                    size="small"
+                    className={classes.tileTitle}
+                    title="Results distribution"
+                  />
+                  <TestRunChart data={results} />
+                </Paper>
+              </Grid>
+            )}
+            {group.length > 0 && (
+              <Grid item xs={7}>
+                <Paper square className={classes.paper} data-testid="TestRunRatios">
+                  <SectionHeader
+                    size="small"
+                    className={classes.tileTitle}
+                    title="Group results"
+                  />
+                  <TestGroupChart dataset={group} />
+                </Paper>
+              </Grid>
+            )}
           </Grid>
         </React.Fragment>
-        : <LoadingPlaceholder title="Loading test run results..." />}
+      ) : (
+        <LoadingPlaceholder title="Loading test run results..." />
+      )}
 
-      {!customfieldLoading ?
+      {!customfieldLoading ? (
         <React.Fragment>
           {group.map(gr => (
             <ExpandablePanel
-              key={"group_" + gr.name}
+              key={'group_' + gr.name}
               defaultExpanded={false}
               advancedTitle={getNameColumnTitle(gr)}
               title={gr.name}
@@ -207,13 +212,15 @@ const TestRunDetails = () => {
                     title="Name"
                   />
                   <DataTable.Column
-                    render={testCase => <TestRunStatus status={getStatus(testCase)} />}
+                    render={testCase => (
+                      <TestRunStatus status={getStatus(testCase)} />
+                    )}
                     title="Status"
                   />
                   <DataTable.Column
                     render={testCase => (
-                  <ResultColumn message={testCase.test_results[0].message} />
-                )}
+                      <ResultColumn message={testCase.test_results[0].message} />
+                    )}
                     title="Message"
                   />
                   <DataTable.Column
@@ -225,7 +232,9 @@ const TestRunDetails = () => {
             </ExpandablePanel>
           ))}
         </React.Fragment>
-        : "" }
+      ) : (
+        ''
+      )}
     </React.Fragment>
   )
 }
