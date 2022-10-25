@@ -19,30 +19,29 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {useMemo} from "react";
-import {useQuery} from "@apollo/client";
-import {GET_CONFIGURATION_TYPES} from "./graphql";
+import { useMemo } from 'react'
+import { useQuery } from '@apollo/client'
+import { GET_CONFIGURATION_TYPES } from './graphql'
 
-function useExternalFormSchema () {
+function useExternalFormSchema() {
   const { data: { configurationTypes } = {}, loading: configurationTypesLoading } =
     useQuery(GET_CONFIGURATION_TYPES, {
       fetchPolicy: 'cache-and-network',
     })
-  const fields =  useMemo(
+  const fields = useMemo(
     () =>
       generateFields({
-        configurationTypes: configurationTypes || []
-      }), [configurationTypes]
+        configurationTypes: configurationTypes || [],
+      }),
+    [configurationTypes]
   )
   return {
     loading: configurationTypesLoading,
-    fields
+    fields,
   }
 }
 
-function generateFields({
-  configurationTypes
-}) {
+function generateFields({ configurationTypes }) {
   const configurationTypeOptions = configurationTypes.map(ct => ({
     key: ct.id,
     label: ct.name,
@@ -52,7 +51,7 @@ function generateFields({
   return {
     scenario_name: {
       validator: {
-        presence: {allowEmpty: false},
+        presence: { allowEmpty: false },
       },
       inputProps: {
         label: 'Name',
@@ -80,17 +79,13 @@ function prepareExternalPayload(formValues, { mode, configurationId, projectId }
   if (!formValues) {
     return {}
   }
-
-  const {
-    scenario_name,
-    configuration_type,
-    scenario_description
-  } = formValues
+  console.log('!!!!!!!!!!!!!', formValues)
+  const { scenario_name, configuration_type, scenario_description } = formValues
 
   const variables = {
     name: scenario_name,
     type_slug: configuration_type,
-    description: scenario_description
+    description: scenario_description,
   }
 
   if (mode === 'create') {
@@ -101,6 +96,5 @@ function prepareExternalPayload(formValues, { mode, configurationId, projectId }
 
   return variables
 }
-
 
 export { useExternalFormSchema, prepareExternalPayload }

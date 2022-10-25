@@ -93,6 +93,7 @@ function useFormSchema({ projectId }) {
           { slug_name: TestSourceType.REPOSITORY, label: 'Repository' },
           // { slug_name: TestSourceType.TEST_CREATOR, label: 'Test Creator' }, // Disabled for now
         ],
+        chartTypes: [{ slug_name: 'default_chart', label: 'Default Chart' }],
       }),
     [parameters, configurationTypes, testSources]
   )
@@ -108,6 +109,7 @@ function generateFields({
   parameters,
   testSources,
   testSourceTypes,
+  chartTypes,
 }) {
   const filteredParameters = parameters.filter(
     ({ slug_name }) => !testSourceParameters.includes(slug_name)
@@ -131,6 +133,12 @@ function generateFields({
     )
 
   const configurationTypeOptions = configurationTypes.map(ct => ({
+    key: ct.id,
+    label: ct.name,
+    value: ct.slug_name,
+  }))
+
+  const chartTypeOptions = chartTypes.map(ct => ({
     key: ct.id,
     label: ct.name,
     value: ct.slug_name,
@@ -210,7 +218,7 @@ function generateFields({
             },
             inputProps: {
               label: parameter.name,
-              tooltip: parameter.tooltip
+              tooltip: parameter.tooltip,
             },
             defaultValue: parameter.default_value,
             group: parameter.type_slug,
@@ -250,12 +258,31 @@ function generateFields({
             inputProps: {
               select: true,
               label: `Select ${type.label}`,
-              tooltip: 'Repository of your test code, defined in the Test Sources section.',
+              tooltip:
+                'Repository of your test code, defined in the Test Sources section.',
             },
           },
         }),
         { ...additionalTestSourceParams }
       ),
+    },
+    query: {
+      validator: {
+        presence: { allowEmpty: false },
+      },
+      inputProps: {
+        label: 'Query',
+      },
+    },
+    chart_type: {
+      validator: {
+        inclusion: chartTypeOptions.map(cto => cto.value),
+      },
+      options: chartTypeOptions,
+      inputProps: {
+        select: true,
+        label: 'Chart Type',
+      },
     },
     scenario_description: {
       inputProps: {
@@ -295,6 +322,8 @@ function prepareInitialValues(data) {
     has_load_tests,
     has_monitoring,
     configuration_envvars,
+    query,
+    chart_type,
   } = data
 
   const filteredParams = configuration_parameters.filter(
@@ -312,6 +341,7 @@ function prepareInitialValues(data) {
 
   return {
     scenario_name: name,
+    query: query,
     configuration_type: type_slug,
     scenario_description: description,
     performed,
@@ -370,7 +400,7 @@ function preparePayload(formValues, { mode, configurationId, projectId }) {
     configuration_envvars: configuration_envvars.filter(
       ce => ce?.name !== '' && typeof ce?.name !== 'undefined'
     ),
-    description: scenario_description || ''
+    description: scenario_description || '',
   }
 
   if (mode === 'create') {

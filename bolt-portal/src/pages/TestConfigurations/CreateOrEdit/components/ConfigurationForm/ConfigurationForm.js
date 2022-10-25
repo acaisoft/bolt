@@ -38,9 +38,13 @@ import { useExternalFormSchema, prepareExternalPayload } from './externalFormSch
 import ConfigurationTypeFields from './ConfigurarionTypeFields'
 import ScenarioFields from './ScenarioFields'
 import { useConfigurationSubmit } from './ConfigurationForm.utils'
+import MonitoringFields from './MonitoringFields'
 import useStyles from './ConfigurationForm.styles'
 
-export function ConfigurationForm({ onCancel = () => {}, onSubmit = () => {} }, props) {
+export function ConfigurationForm(
+  { onCancel = () => {}, onSubmit = () => {} },
+  props
+) {
   const { configurationId, projectId } = useParams()
   const mode = configurationId ? 'edit' : 'create'
   const classes = useStyles()
@@ -54,10 +58,12 @@ export function ConfigurationForm({ onCancel = () => {}, onSubmit = () => {} }, 
     }
   )
 
-  const [ isExternalScenario, setIsExternalScenario ] = useState(false)
+  const [isExternalScenario, setIsExternalScenario] = useState(false)
+  const [isMonitoring, setIsMonitoring] = useState(false)
 
   const { fields, loading: fieldsLoading } = useFormSchema({ projectId })
-  const { fields: externalFields, loading: externalFieldsLoading } = useExternalFormSchema()
+  const { fields: externalFields, loading: externalFieldsLoading } =
+    useExternalFormSchema()
 
   const handleSubmit = useConfigurationSubmit({
     configurationId,
@@ -68,9 +74,11 @@ export function ConfigurationForm({ onCancel = () => {}, onSubmit = () => {} }, 
   })
 
   const handleValidate = useCallback(
-    values => validateForm(values, makeFlatValidationSchema(
-      isExternalScenario ? externalFields : fields
-    )),
+    values =>
+      validateForm(
+        values,
+        makeFlatValidationSchema(isExternalScenario ? externalFields : fields)
+      ),
     [fields, externalFields, isExternalScenario]
   )
 
@@ -131,6 +139,11 @@ export function ConfigurationForm({ onCancel = () => {}, onSubmit = () => {} }, 
           {/* TODO: uncomment when scenario parts section will be needed */}
           {/*<ScenarioPartsFields fields={fields} />*/}
           <ConfigurationTypeFields fields={fields} configuration={configuration} />
+          <MonitoringFields
+            setIsMonitoring={setIsMonitoring}
+            isMonitoring={isMonitoring}
+            fields={fields}
+          />
         </form>
       )}
     </Form>
