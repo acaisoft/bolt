@@ -159,7 +159,7 @@ const TestRunDetails = () => {
                   <SectionHeader
                     size="small"
                     className={classes.tileTitle}
-                    title="Results distribution"
+                    title="General results"
                   />
                   <TestRunChart data={results} />
                 </Paper>
