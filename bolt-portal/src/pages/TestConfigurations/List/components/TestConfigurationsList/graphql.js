@@ -69,7 +69,7 @@ export const SUBSCRIBE_CONFIGURATION_LIST_ITEM = gql`
       id
       name
       description
-      test_runs {
+      test_runs(order_by: { timestamp: asc }) {
         total
         failures
         errors
