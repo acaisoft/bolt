@@ -46,7 +46,7 @@ class LocustWrapper:
     commit_hash = ''
 
     _template_path: str
-    _wrapper_template_url = 'git@github.com:acaisoft/bolt-wrapper.git'
+    _wrapper_template_url = 'https://github.com/acaisoft/bolt-wrapper.git'
     _wrapper_template_branch = 'revival'
     _wrapper_repo = git.Repo
 
