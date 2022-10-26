@@ -76,6 +76,9 @@ const TestRunDetails = () => {
       case 'failure':
         status = 'FAILED'
         break
+      case 'error':
+        status = 'ERROR'
+        break
       case 'skipped':
         status = 'SKIPPED'
         break
