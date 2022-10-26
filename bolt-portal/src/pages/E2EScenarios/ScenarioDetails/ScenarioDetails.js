@@ -50,7 +50,7 @@ const TestScenarioDetails = () => {
         <Grid item xs={12}>
           <SectionHeader
             title={externalTestScenario.name || ''}
-            description="E2E Scenario"
+            description={`${externalTestScenario?.configuration_type?.name} Scenario`}
           ></SectionHeader>
           <Typography
             color="textSecondary"
@@ -61,31 +61,26 @@ const TestScenarioDetails = () => {
             {externalTestScenario.description || ''}
           </Typography>
         </Grid>
-        {externalTestScenario.test_runs &&
-          externalTestScenario.test_runs.length > 0 && (
-            <Grid item xs={12}>
-              <Paper
-                square
-                className={classes.paper}
-                data-testid="ScenarioExecutions"
-              >
-                {!loading ? (
-                  <React.Fragment>
-                    <SectionHeader
-                      size="small"
-                      className={classes.tileTitle}
-                      title="Scenario Executions"
-                    />
-                    <ScenarioEvolutionGraph
-                      dataset={externalTestScenario.test_runs.slice(-20).reverse()}
-                    />
-                  </React.Fragment>
-                ) : (
-                  <LoadingPlaceholder title="Loading test run results..." />
-                )}
-              </Paper>
-            </Grid>
-          )}
+        {externalTestScenario?.test_runs?.length > 0 && (
+          <Grid item xs={12}>
+            <Paper square className={classes.paper} data-testid="ScenarioExecutions">
+              {!loading ? (
+                <React.Fragment>
+                  <SectionHeader
+                    size="small"
+                    className={classes.tileTitle}
+                    title="Scenario Executions"
+                  />
+                  <ScenarioEvolutionGraph
+                    dataset={externalTestScenario.test_runs.slice(-20).reverse()}
+                  />
+                </React.Fragment>
+              ) : (
+                <LoadingPlaceholder title="Loading test run results..." />
+              )}
+            </Paper>
+          </Grid>
+        )}
       </Grid>
       <div className={classes.marginTop}>
         <DataTable

@@ -153,18 +153,16 @@ const TestRunDetails = () => {
       {!customfieldLoading ? (
         <React.Fragment>
           <Grid container spacing={5} alignItems="center">
-            {results.length > 0 && (
-              <Grid item xs={5}>
-                <Paper square className={classes.paper} data-testid="TestRunRatios">
-                  <SectionHeader
-                    size="small"
-                    className={classes.tileTitle}
-                    title="Results distribution"
-                  />
-                  <TestRunChart data={results} />
-                </Paper>
-              </Grid>
-            )}
+            <Grid item xs={5}>
+              <Paper square className={classes.paper} data-testid="TestRunRatios">
+                <SectionHeader
+                  size="small"
+                  className={classes.tileTitle}
+                  title="Results distribution"
+                />
+                <TestRunChart data={results} />
+              </Paper>
+            </Grid>
             {group.length > 0 && (
               <Grid item xs={7}>
                 <Paper square className={classes.paper} data-testid="TestRunRatios">

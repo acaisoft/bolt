@@ -49,7 +49,6 @@ export function TestConfigurationsList({
   const {
     data: { configuration_type = [] } = {},
     data: { configurationsTotal = [] } = {},
-    data,
     loading,
     error,
   } = useQuery(GET_SLUG_NAMES, {
@@ -75,9 +74,6 @@ export function TestConfigurationsList({
       </Box>
     )
   }
-  const allScenariosCount = configurationsTotal
-    ? configurationsTotal.aggregate['count']
-    : 0
   return (
     <React.Fragment>
       <div className={classes.newScenarioButtonContainer}>

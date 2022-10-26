@@ -56,3 +56,14 @@ export const SUBSCRIBE_TO_EXECUTIONS = gql`
     }
   }
 `
+
+export const GET_SCENARIO_TYPE = gql`
+  query getScenarioTag($scenarioId: uuid!) {
+    scenario: configuration_by_pk(id: $scenarioId) {
+      type_slug
+      configuration_type {
+        name
+      }
+    }
+  }
+`
