@@ -50,7 +50,7 @@ const TestScenarioDetails = () => {
         <Grid item xs={12}>
           <SectionHeader
             title={externalTestScenario.name || ''}
-            description="E2E Scenario"
+            description={`${externalTestScenario?.configuration_type?.name} Scenario`}
           ></SectionHeader>
           <Typography
             color="textSecondary"
@@ -61,7 +61,7 @@ const TestScenarioDetails = () => {
             {externalTestScenario.description || ''}
           </Typography>
         </Grid>
-        {externalTestScenario.test_runs && externalTestScenario.test_runs.length > 0 && (
+        {externalTestScenario?.test_runs?.length > 0 && (
           <Grid item xs={12}>
             <Paper square className={classes.paper} data-testid="ScenarioExecutions">
               {!loading ? (

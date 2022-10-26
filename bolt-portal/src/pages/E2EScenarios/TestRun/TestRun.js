@@ -153,7 +153,7 @@ const TestRunDetails = () => {
       {!customfieldLoading ? (
         <React.Fragment>
           <Grid container spacing={5} alignItems="center">
-            {results.total && (
+            {results?.total && (
               <Grid item xs={5}>
                 <Paper square className={classes.paper} data-testid="TestRunRatios">
                   <SectionHeader

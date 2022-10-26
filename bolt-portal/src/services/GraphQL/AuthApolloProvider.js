@@ -27,7 +27,6 @@ import {
   InMemoryCache,
 } from '@apollo/client'
 import { LocalStorageWrapper, persistCache } from 'apollo3-cache-persist'
-import { useAuth } from 'contexts/AuthContext'
 import jwtDecode from 'jwt-decode'
 import {
   makeErrorHandlingLink,
@@ -49,7 +48,7 @@ function AuthApolloProvider({ children }) {
       })
     try {
       localStorage.setItem('AUTH_TOKEN', token)
-      const { exp: expires, given_name: firstName } = jwtDecode(token)
+      const { exp: expires } = jwtDecode(token)
       const isExpired = Date.now() >= expires * 1000
       if (isExpired) return logout()
 

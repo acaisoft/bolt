@@ -21,7 +21,7 @@
 
 import React, { useCallback } from 'react'
 import moment from 'moment'
-import { useSubscription } from '@apollo/client'
+import { useSubscription, useQuery } from '@apollo/client'
 import { Link, matchPath, useLocation } from 'react-router-dom'
 import { ExpandMore } from '@material-ui/icons'
 import { Loader, Breadcrumbs } from 'components'
@@ -36,6 +36,7 @@ import {
   SUBSCRIBE_TO_PROJECTS,
   SUBSCRIBE_TO_SCENARIOS,
   SUBSCRIBE_TO_EXECUTIONS,
+  GET_SCENARIO_TYPE,
 } from './graphql'
 import { TextField, MenuItem } from '@material-ui/core'
 import { getUrl } from 'utils/router'
@@ -46,15 +47,16 @@ function NavBreadcrumbs() {
     location.pathname
   )
 
-  const { getConfigurationUrl, getExecutionUrl, getProjectUrl, getE2EUrl } = useUrlGetters({
-    projectId,
-    configurationId,
-    scenarioId,
-    executionId,
-  })
+  const { getConfigurationUrl, getExecutionUrl, getProjectUrl, getE2EUrl } =
+    useUrlGetters({
+      projectId,
+      configurationId,
+      scenarioId,
+      executionId,
+    })
 
   const {
-    data: { projects, configurations, executions },
+    data: { projects, configurations, executions, scenario },
     loading,
   } = useSelectorsData({
     projectId,
@@ -69,7 +71,7 @@ function NavBreadcrumbs() {
 
   const options = projects.map(item => ({
     value: item.id,
-    label: _.truncate(item.name, { length: 45, omission: '...' })
+    label: _.truncate(item.name, { length: 45, omission: '...' }),
   }))
 
   const breadcrumbs = [
@@ -92,27 +94,30 @@ function NavBreadcrumbs() {
       render: () => (
         <Selector
           label="Scenario"
-          options={configurations.filter(item => item.type_slug === 'load_tests').map(item => ({
-            value: item.id,
-            label: item.name,
-          }))}
+          options={configurations
+            .filter(item => item.type_slug === 'load_tests')
+            .map(item => ({
+              value: item.id,
+              label: item.name,
+            }))}
           generateUrl={getConfigurationUrl}
           value={configurationId || ''}
         />
       ),
     })
   }
-
   if (scenarioId && configurations.find(item => item.id === scenarioId)) {
     breadcrumbs.push({
       key: 'configurations',
       render: () => (
         <Selector
-          label="E2E Scenario"
-          options={configurations.filter(item => item.type_slug === 'e2e').map(item => ({
-            value: item.id,
-            label: item.name,
-          }))}
+          label={`${scenario?.configuration_type?.name} Scenario`}
+          options={configurations
+            .filter(item => item.type_slug === scenario?.type_slug)
+            .map(item => ({
+              value: item.id,
+              label: item.name,
+            }))}
           generateUrl={getE2EUrl}
           value={scenarioId || ''}
         />
@@ -235,14 +240,27 @@ function useSelectorsData({ projectId, configurationId, scenarioId, executionId 
       skip: !executionId,
     }
   )
+  const { data: { scenario = [] } = {}, scenarioTypeLoading } = useQuery(
+    GET_SCENARIO_TYPE,
+    {
+      fetchPolicy: 'cache-first',
+      variables: { scenarioId },
+      skip: !scenarioId,
+    }
+  )
 
   return {
     data: {
       projects,
       configurations,
       executions,
+      scenario,
     },
-    loading: projectsLoading || configurationsLoading || executionsLoading,
+    loading:
+      projectsLoading ||
+      configurationsLoading ||
+      executionsLoading ||
+      scenarioTypeLoading,
   }
 }
 
@@ -272,7 +290,7 @@ function useUrlGetters({ projectId, configurationId, executionId }) {
     id =>
       getUrl(routes.projects.E2EScenarios.list, {
         projectId,
-        scenarioId: id
+        scenarioId: id,
       }),
     [projectId]
   )

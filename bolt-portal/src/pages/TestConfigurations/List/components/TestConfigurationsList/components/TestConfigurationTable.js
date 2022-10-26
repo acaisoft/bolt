@@ -265,13 +265,13 @@ export function TestConfigurationsTable({
                 key="lastRun"
                 render={({ test_runs }) => (
                   <NoWrap className={classes.dateContainer}>
-                    {(test_runs[0] || {}).timestamp && (
+                    {(test_runs.slice(-1)[0] || {}).timestamp && (
                       <React.Fragment>
                         <IconButton className={classes.icon} disabled>
                           <History />
                         </IconButton>
                         <span>
-                          {moment(test_runs[0].timestamp).format(
+                          {moment(test_runs.slice(-1)[0].timestamp).format(
                             'YYYY-MM-DD HH:mm:ss'
                           )}
                         </span>
@@ -287,7 +287,7 @@ export function TestConfigurationsTable({
                   if (test_runs.length === 0) {
                     return null
                   }
-                  const lastRun = test_runs[0]
+                  const lastRun = test_runs.slice(-1)[0]
                   const totals = lastRun.total
                   const successRate =
                     totals === 0
