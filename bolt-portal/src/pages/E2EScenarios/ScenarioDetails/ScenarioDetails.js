@@ -97,8 +97,7 @@ const TestScenarioDetails = () => {
           <DataTable.Column
             render={test_run => (
               <div className={classes.success}>
-                {test_run.total -
-                  (test_run.failures + test_run.errors + test_run.skipped)}
+                {test_run.successes}
               </div>
             )}
             title="Successes"
@@ -106,7 +105,9 @@ const TestScenarioDetails = () => {
           <DataTable.Column render={test_run => test_run.skipped} title="Skipped" />
           <DataTable.Column
             render={test_run => (
-              <div className={classes.failure}>{test_run.failures}</div>
+              <div className={classes.failure}>
+                {test_run.failures}
+              </div>
             )}
             title="Failures"
           />
