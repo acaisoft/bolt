@@ -35,14 +35,8 @@ export default makeStyles(() => ({
     transform: 'translateY(-50%)',
     float: 'right',
   },
-  notOpen: {
+  wrapper: {
     overflow: 'hidden',
-    height: '1.2rem',
-    transition: 'height 0.75s',
-  },
-  open: {
-    transition: 'height 0.75s',
-    overflow: 'scroll',
-    height: '20rem',
-  },
+    transition: 'max-height 600ms'
+  }
 }))
