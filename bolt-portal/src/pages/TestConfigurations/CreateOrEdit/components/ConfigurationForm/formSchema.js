@@ -267,17 +267,11 @@ function generateFields({
       ),
     },
     query: {
-      validator: {
-        presence: { allowEmpty: false },
-      },
       inputProps: {
         label: 'Query',
       },
     },
     chart_type: {
-      validator: {
-        inclusion: chartTypeOptions.map(cto => cto.value),
-      },
       options: chartTypeOptions,
       inputProps: {
         select: true,
@@ -431,7 +425,6 @@ function preparePayload(formValues, { mode, configurationId, projectId }) {
       ),
     test_source_id: test_source[test_source_type],
   })
-
   return variables
 }
 

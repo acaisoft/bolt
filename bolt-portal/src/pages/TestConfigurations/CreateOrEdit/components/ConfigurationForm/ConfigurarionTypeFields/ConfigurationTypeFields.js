@@ -19,22 +19,23 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import React  from 'react'
+import React from 'react'
 import { FormHelperText, Grid, MenuItem, Typography } from '@material-ui/core'
 import { FormField, FormValue } from 'containers'
 import { ExpandablePanel } from 'components'
 import { testsPerformedMessage } from '../ConfigurationForm.utils'
-import EnvVariablesFields from "../EnvVariablesFields";
+import EnvVariablesFields from '../EnvVariablesFields'
 function ConfigurationTypeFields({ fields, configuration }) {
-  const isConfigurable = (configurationType) => {
-    return Object.entries(fields.parameters.fields)
-      .filter(
-        ([ ,option]) => option.group === configurationType
+  const isConfigurable = configurationType => {
+    return (
+      Object.entries(fields.parameters.fields).filter(
+        ([, option]) => option.group === configurationType
       ).length !== 0
+    )
   }
   return (
     <FormValue name="configuration_type">
-      {configurationType => (
+      {configurationType =>
         isConfigurable(configurationType) ? (
           <React.Fragment>
             <FormValue name="scenario_parts">
@@ -160,7 +161,8 @@ function ConfigurationTypeFields({ fields, configuration }) {
                               id="test_source.load_tests_repository_branch"
                               name="test_source.load_tests_repository_branch"
                               field={
-                                fields.test_source.fields.load_tests_repository_branch
+                                fields.test_source.fields
+                                  .load_tests_repository_branch
                               }
                               fullWidth
                               variant="filled"
@@ -198,8 +200,10 @@ function ConfigurationTypeFields({ fields, configuration }) {
             </ExpandablePanel>
             <EnvVariablesFields />
           </React.Fragment>
-        ) : <></>
-      )}
+        ) : (
+          <></>
+        )
+      }
     </FormValue>
   )
 }

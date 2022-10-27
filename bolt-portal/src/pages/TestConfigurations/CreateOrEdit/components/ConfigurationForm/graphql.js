@@ -62,6 +62,7 @@ export const ADD_CONFIGURATION_MUTATION = gql`
     $has_load_tests: Boolean
     $has_monitoring: Boolean
     $configuration_envvars: [ConfigurationEnvVarInput]
+    $configuration_monitorings: [ConfigurationMonitoringInput]
   ) {
     testrun_configuration_create(
       configuration_parameters: $configuration_parameters
@@ -75,6 +76,7 @@ export const ADD_CONFIGURATION_MUTATION = gql`
       has_load_tests: $has_load_tests
       has_monitoring: $has_monitoring
       configuration_envvars: $configuration_envvars
+      configuration_monitorings: $configuration_monitorings
     ) {
       returning {
         id

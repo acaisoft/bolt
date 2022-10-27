@@ -30,6 +30,7 @@ export function useConfigurationSubmit({
   mode,
   configurationId,
   projectId,
+  isMonitoring,
   preparePayload,
   onSubmit,
 }) {
@@ -49,11 +50,20 @@ export function useConfigurationSubmit({
         mode,
         configurationId,
         projectId,
+        isMonitoring,
       })
       const { errorMessage } = await submitMutation({ variables })
       onSubmit({ values, errorMessage })
     },
-    [submitMutation, mode, configurationId, projectId, preparePayload, onSubmit]
+    [
+      submitMutation,
+      mode,
+      configurationId,
+      projectId,
+      preparePayload,
+      onSubmit,
+      isMonitoring,
+    ]
   )
 
   return handleSubmit

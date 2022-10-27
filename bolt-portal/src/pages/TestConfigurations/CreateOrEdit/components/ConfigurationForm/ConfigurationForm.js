@@ -69,6 +69,7 @@ export function ConfigurationForm(
     configurationId,
     projectId,
     mode,
+    isMonitoring,
     preparePayload: isExternalScenario ? prepareExternalPayload : preparePayload,
     onSubmit,
   })
@@ -140,6 +141,7 @@ export function ConfigurationForm(
           {/*<ScenarioPartsFields fields={fields} />*/}
           <ConfigurationTypeFields fields={fields} configuration={configuration} />
           <MonitoringFields
+            key="monitoringFields"
             setIsMonitoring={setIsMonitoring}
             isMonitoring={isMonitoring}
             fields={fields}
