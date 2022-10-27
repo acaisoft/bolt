@@ -49,6 +49,11 @@ const TestRunChart = ({ data }) => {
       value: data.skipped,
       color: color.area.secondary,
     })
+    data.total && total_data.push({
+      name: 'Unknown',
+      value: data.total - total_data.map(element => element.value).reduce((x, y) => x + y, 0),
+      color: color.area.blank
+    })
 
   const options = React.useMemo(() => {
     return {
@@ -67,6 +72,7 @@ const TestRunChart = ({ data }) => {
       series: [
         {
           center: ['50%', '40%'],
+          radius: '65%',
           data: total_data,
           name: 'Results Distribution',
           type: 'pie',

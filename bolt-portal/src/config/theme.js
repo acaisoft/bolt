@@ -68,6 +68,7 @@ const palette = {
         error: '#FF5EA1',
         primary: '#735DFC',
         secondary: '#EB8967',
+        blank: '#9090A3'
       },
       line: {
         success: '#1EB1B1',
