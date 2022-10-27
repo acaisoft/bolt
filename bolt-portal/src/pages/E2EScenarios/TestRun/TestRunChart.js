@@ -29,31 +29,34 @@ const TestRunChart = ({ data }) => {
   const { color } = theme.palette.chart
   const { font } = theme.palette.chart
   const total_data = []
-    data.successes && total_data.push({
-      name: 'Successes',
-      value: data.successes,
-      color: color.area.success,
-    })
-    data.failures && total_data.push({
-      name: 'Failures',
-      value: data.failures,
-      color: color.area.error,
-    })
-    data.errors && total_data.push({
-      name: 'Errors',
-      value: data.errors,
-      color: color.errors[0],
-    })
-    data.skipped && total_data.push({
-      name: 'Skipped',
-      value: data.skipped,
-      color: color.area.secondary,
-    })
-    data.total && total_data.push({
-      name: 'Unknown',
-      value: data.total - total_data.map(element => element.value).reduce((x, y) => x + y, 0),
-      color: color.area.blank
-    })
+  data.successes && total_data.push({
+    name: 'Successes',
+    value: data.successes,
+    color: color.area.success,
+  })
+  data.failures && total_data.push({
+    name: 'Failures',
+    value: data.failures,
+    color: color.area.error,
+  })
+  data.errors && total_data.push({
+    name: 'Errors',
+    value: data.errors,
+    color: color.errors[0],
+  })
+  data.skipped && total_data.push({
+    name: 'Skipped',
+    value: data.skipped,
+    color: color.area.secondary,
+  })
+  const unknown = data.total
+    ? data.total - total_data.map(element => element.value).reduce((x, y) => x + y, 0)
+    : 0
+  unknown && total_data.push({
+    name: 'Unknown',
+    value: unknown,
+    color: color.area.blank
+  })
 
   const options = React.useMemo(() => {
     return {
