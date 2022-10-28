@@ -31,7 +31,9 @@ import {TooltipBuilder} from "../../../utils/echartUtils";
 const countResults = (run_data, result_to_count) => {
   return run_data.map(
     x => x.test_cases.filter(
-      c => c.test_results[0].result === result_to_count
+      result_to_count
+      ? c => c.test_results[0]?.result === result_to_count
+        : c => c.test_results?.length === 0
     ).length
   )
 }
@@ -51,30 +53,37 @@ const TestGroupChart = ({ dataset }) => {
   let failures = countResults(dataset, 'failure')
   let errors = countResults(dataset, 'error')
   let skipped = countResults(dataset, 'skipped')
+  let unknown = countResults(dataset, null)
 
   const series = []
-  successes.reduce((x, y) => x + y) && series.push({
+  successes.reduce((x, y) => x + y, 0) && series.push({
       name: 'Successes',
       data: successes,
       color: color.area.success,
       ...common_params
     })
-  failures.reduce((x, y) => x + y) && series.push({
+  failures.reduce((x, y) => x + y, 0) && series.push({
       name: 'Failures',
       data: failures,
       color: color.area.error,
       ...common_params
     })
-  errors.reduce((x, y) => x + y) && series.push({
+  errors.reduce((x, y) => x + y, 0) && series.push({
       name: 'Errors',
       data: errors,
       color: color.errors[0],
       ...common_params
     })
-  skipped.reduce((x, y) => x + y) && series.push({
+  skipped.reduce((x, y) => x + y, 0) && series.push({
       name: 'Skipped',
       data: skipped,
       color: color.area.secondary,
+      ...common_params
+    })
+  unknown.reduce((x, y) => x + y, 0) && series.push({
+      name: 'Unknown',
+      data: unknown,
+      color: color.area.blank,
       ...common_params
     })
 
@@ -88,6 +97,7 @@ const TestGroupChart = ({ dataset }) => {
             .withNumericDataLine('Failures')
             .withNumericDataLine('Errors')
             .withNumericDataLine('Skipped')
+            .withNumericDataLine('Unknown')
             .getHtml()
         }
       },

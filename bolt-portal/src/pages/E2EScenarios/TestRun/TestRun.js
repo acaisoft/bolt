@@ -69,7 +69,7 @@ const TestRunDetails = () => {
 
   const getStatus = testCase => {
     let status
-    switch (testCase.test_results[0].result) {
+    switch (testCase.test_results[0]?.result) {
       case 'success':
         status = 'SUCCEEDED'
         break
@@ -90,7 +90,7 @@ const TestRunDetails = () => {
 
   const getSuccessRate = test_cases => {
     return (
-      test_cases.filter(test_case => test_case.test_results[0].result === 'success')
+      test_cases.filter(test_case => test_case.test_results[0]?.result === 'success')
         .length / test_cases.length
     )
   }
@@ -222,12 +222,16 @@ const TestRunDetails = () => {
                   />
                   <DataTable.Column
                     render={testCase => (
-                      <ResultColumn message={testCase.test_results[0].message} />
+                      <ResultColumn message={testCase.test_results[0]?.message} />
                     )}
                     title="Message"
                   />
                   <DataTable.Column
-                    render={testCase => testCase.test_results[0].duration + 's'}
+                    render={testCase =>
+                      testCase.test_results[0]?.duration
+                        ? testCase.test_results[0]?.duration + 's'
+                        : '-'
+                  }
                     title="Duration"
                   />
                 </DataTable>
