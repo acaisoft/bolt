@@ -30,10 +30,13 @@ const ResultColumn = ({ message }) => {
 
   return (
     <div className={classes.container}>
-      <div className={`${isOpen ? classes.open : classes.notOpen}`}>
+      <div
+        className={classes.wrapper}
+        style={{maxHeight: (isOpen ? message?.length / 60 : 1.2) + 'rem'}}
+      >
         {message || '-'}
       </div>
-      {message && message.length > 59 && (
+      {message && message.length > 65 && (
         <div
           style={{ position: 'relative', marginLeft: '2rem', marginRight: '1rem' }}
         >
