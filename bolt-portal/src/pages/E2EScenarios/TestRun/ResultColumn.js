@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import React, { useState } from 'react'
+import React, {useRef, useState} from 'react'
 import useStyles from './ResultColumn.styles'
 import { Button } from 'components'
 import { ExpandMore, ExpandLess } from '@material-ui/icons'
@@ -27,14 +27,17 @@ import { ExpandMore, ExpandLess } from '@material-ui/icons'
 const ResultColumn = ({ message }) => {
   const [isOpen, setIsOpen] = useState(false)
   const classes = useStyles()
+  const ref = useRef(null)
 
   return (
     <div className={classes.container}>
       <div
         className={classes.wrapper}
-        style={{maxHeight: (isOpen ? message?.length / 125 : 1.2) + 'rem'}}
+        style={{maxHeight: (isOpen ? ref.current.offsetHeight + 'px' : '1.2rem')}}
       >
-        {message || '-'}
+        <div ref={ref}>
+          {message || '-'}
+        </div>
       </div>
       {message && message.length > 130 && (
         <div
