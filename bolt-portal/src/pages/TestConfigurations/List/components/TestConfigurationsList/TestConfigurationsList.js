@@ -91,6 +91,7 @@ export function TestConfigurationsList({
         configuration_type.map(type => (
           <TestConfigurationsTable
             type={type}
+            key={`${type['slug_name']}-configuration-table`}
             getTestConfigurationCreateUrl={getTestConfigurationCreateUrl}
             getTestConfigurationDetailsUrl={getTestConfigurationDetailsUrl}
             getTestConfigurationEditUrl={getTestConfigurationEditUrl}

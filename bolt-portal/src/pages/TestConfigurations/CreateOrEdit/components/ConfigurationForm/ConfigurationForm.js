@@ -82,11 +82,15 @@ export function ConfigurationForm(
       ),
     [fields, externalFields, isExternalScenario]
   )
-
   const initialValues = useMemo(
     () => makeEmptyInitialValues(fields, prepareInitialValues(configuration)),
     [fields, configuration]
   )
+  React.useEffect(() => {
+    if (configuration?.configuration_monitorings[0]) {
+      setIsMonitoring(true)
+    }
+  }, [configuration])
 
   if (fieldsLoading || configurationLoading || externalFieldsLoading) {
     return <Loader loading />
@@ -144,7 +148,6 @@ export function ConfigurationForm(
             key="monitoringFields"
             setIsMonitoring={setIsMonitoring}
             isMonitoring={isMonitoring}
-            fields={fields}
           />
         </form>
       )}

@@ -45,6 +45,10 @@ export const GET_CONFIGURATION = gql`
         name
         value
       }
+      configuration_monitorings {
+        query
+        chart_type
+      }
     }
   }
 `
@@ -97,6 +101,7 @@ export const EDIT_CONFIGURATION_MUTATION = gql`
     $has_load_tests: Boolean
     $has_monitoring: Boolean
     $configuration_envvars: [ConfigurationEnvVarInput]
+    $configuration_monitorings: [ConfigurationMonitoringInput]
   ) {
     testrun_configuration_update(
       id: $id
@@ -110,6 +115,7 @@ export const EDIT_CONFIGURATION_MUTATION = gql`
       has_load_tests: $has_load_tests
       has_monitoring: $has_monitoring
       configuration_envvars: $configuration_envvars
+      configuration_monitorings: $configuration_monitorings
     ) {
       returning {
         id

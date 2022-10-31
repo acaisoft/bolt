@@ -93,7 +93,6 @@ function useFormSchema({ projectId }) {
           { slug_name: TestSourceType.REPOSITORY, label: 'Repository' },
           // { slug_name: TestSourceType.TEST_CREATOR, label: 'Test Creator' }, // Disabled for now
         ],
-        chartTypes: [{ slug_name: 'default_chart', label: 'Default Chart' }],
       }),
     [parameters, configurationTypes, testSources]
   )
@@ -109,7 +108,6 @@ function generateFields({
   parameters,
   testSources,
   testSourceTypes,
-  chartTypes,
 }) {
   const filteredParameters = parameters.filter(
     ({ slug_name }) => !testSourceParameters.includes(slug_name)
@@ -133,12 +131,6 @@ function generateFields({
     )
 
   const configurationTypeOptions = configurationTypes.map(ct => ({
-    key: ct.id,
-    label: ct.name,
-    value: ct.slug_name,
-  }))
-
-  const chartTypeOptions = chartTypes.map(ct => ({
     key: ct.id,
     label: ct.name,
     value: ct.slug_name,
@@ -266,18 +258,6 @@ function generateFields({
         { ...additionalTestSourceParams }
       ),
     },
-    query: {
-      inputProps: {
-        label: 'Query',
-      },
-    },
-    chart_type: {
-      options: chartTypeOptions,
-      inputProps: {
-        select: true,
-        label: 'Chart Type',
-      },
-    },
     scenario_description: {
       inputProps: {
         label: 'Description',
@@ -316,8 +296,7 @@ function prepareInitialValues(data) {
     has_load_tests,
     has_monitoring,
     configuration_envvars,
-    query,
-    chart_type,
+    configuration_monitorings,
   } = data
 
   const filteredParams = configuration_parameters.filter(
@@ -332,10 +311,8 @@ function prepareInitialValues(data) {
       }),
       {}
     )
-
   return {
     scenario_name: name,
-    query: query,
     configuration_type: type_slug,
     scenario_description: description,
     performed,
@@ -360,10 +337,19 @@ function prepareInitialValues(data) {
       name,
       value,
     })) || [{ name: '', value: '' }],
+    configuration_monitorings: configuration_monitorings.map(
+      ({ query, chart_type }) => ({
+        query,
+        chart_type,
+      })
+    ) || [{ query: '', chart_type: '' }],
   }
 }
 
-function preparePayload(formValues, { mode, configurationId, projectId }) {
+function preparePayload(
+  formValues,
+  { mode, configurationId, projectId, isMonitoring }
+) {
   if (!formValues) {
     return {}
   }
@@ -388,7 +374,6 @@ function preparePayload(formValues, { mode, configurationId, projectId }) {
       }),
       {}
     )
-
   const variables = {
     name: scenario_name,
     configuration_envvars: configuration_envvars.filter(
@@ -425,7 +410,14 @@ function preparePayload(formValues, { mode, configurationId, projectId }) {
       ),
     test_source_id: test_source[test_source_type],
   })
-  return variables
+
+  const asd = {
+    ...variables,
+    ...(isMonitoring && {
+      configuration_monitorings: formValues.configuration_monitorings,
+    }),
+  }
+  return asd
 }
 
 export { useFormSchema, prepareInitialValues, preparePayload }

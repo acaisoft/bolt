@@ -90,21 +90,17 @@ function prepareExternalPayload(
     description: scenario_description,
   }
 
-  if (isMonitoring) {
-    variables['configuration_monitorings'] = [
-      {
-        query: formValues.query,
-        chart_type: formValues.chart_type,
-      },
-    ]
-  }
-
   if (mode === 'create') {
     variables.project_id = projectId
   } else {
     variables.id = configurationId
   }
-  return variables
+  return {
+    ...variables,
+    ...(isMonitoring && {
+      configuration_monitorings: formValues.configuration_monitorings,
+    }),
+  }
 }
 
 export { useExternalFormSchema, prepareExternalPayload }

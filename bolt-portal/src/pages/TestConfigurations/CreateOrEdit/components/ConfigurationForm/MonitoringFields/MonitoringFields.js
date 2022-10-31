@@ -20,47 +20,99 @@
  */
 
 import React from 'react'
-import { Grid, MenuItem, Checkbox, FormControlLabel } from '@material-ui/core'
+import {
+  Grid,
+  MenuItem,
+  Checkbox,
+  FormControlLabel,
+  IconButton,
+} from '@material-ui/core'
+import { FieldArray } from 'react-final-form-arrays'
+import { useForm } from 'react-final-form'
+import { Add, Delete } from '@material-ui/icons'
 import { FormField } from 'containers'
+import { Button } from 'components'
 
-function MonitoringFields({ fields, isMonitoring, setIsMonitoring }) {
+function MonitoringFields({ isMonitoring, setIsMonitoring }) {
+  const { mutators } = useForm()
+
+  const chartTypes = [
+    { value: 'default_chart', label: 'Default Chart' },
+    { value: 'second_chart', label: 'Second Chart' },
+  ]
   return (
     <>
       <FormControlLabel
         control={
-          <Checkbox onChange={event => setIsMonitoring(event.target.checked)} />
+          <Checkbox
+            onChange={event => setIsMonitoring(event.target.checked)}
+            checked={isMonitoring}
+          />
         }
         label="Monitoring"
       />
       {isMonitoring && (
-        <Grid container spacing={4}>
-          <Grid item xs={6}>
-            <FormField
-              data-testid="query"
-              id="query"
-              name="query"
-              field={fields.query}
-              fullWidth
-              variant="filled"
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <FormField
-              data-testid="chart_type"
-              id="chart_type"
-              name="chart_type"
-              field={fields.chart_type}
-              fullWidth
-              variant="filled"
-            >
-              {fields.chart_type.options.map(option => (
-                <MenuItem key={option.key} value={option.value}>
-                  {option.value}
-                </MenuItem>
+        <FieldArray name="configuration_monitorings">
+          {({ fields: arrayFields }) => (
+            <Grid container spacing={4}>
+              {arrayFields.map((name, index) => (
+                <>
+                  <Grid item xs={5}>
+                    <FormField
+                      data-testid="query"
+                      id="query"
+                      name={`${name}.query`}
+                      field={{ inputProps: { label: 'Query' } }}
+                      fullWidth
+                      variant="filled"
+                    />
+                  </Grid>
+                  <Grid item xs={5}>
+                    <FormField
+                      data-testid="chart_type"
+                      id="chart_type"
+                      name={`${name}.chart_type`}
+                      field={{ inputProps: { label: 'Chart Type', select: true } }}
+                      fullWidth
+                      variant="filled"
+                    >
+                      {chartTypes.map(option => (
+                        <MenuItem key={option.key} value={option.value}>
+                          {option.value}
+                        </MenuItem>
+                      ))}
+                    </FormField>
+                  </Grid>
+                  <Grid item xs={2} md={2}>
+                    <IconButton
+                      data-testid="remove-envvar-button"
+                      variant="outlined"
+                      color="default"
+                      onClick={() =>
+                        mutators.remove('configuration_monitorings', index)
+                      }
+                    >
+                      <Delete />
+                    </IconButton>
+                  </Grid>
+                </>
               ))}
-            </FormField>
-          </Grid>
-        </Grid>
+              <Grid item xs={12}>
+                <Button
+                  data-testid="add-envvar-button"
+                  onClick={() =>
+                    mutators.push('configuration_monitorings', undefined)
+                  }
+                  variant="contained"
+                  color="default"
+                  icon={Add}
+                >
+                  Add a query
+                </Button>
+              </Grid>
+            </Grid>
+          )}
+        </FieldArray>
       )}
     </>
   )
