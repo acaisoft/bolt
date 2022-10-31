@@ -1,0 +1,92 @@
+table:
+  schema: public
+  name: configuration_monitoring
+object_relationships:
+  - name: configuration
+    using:
+      foreign_key_constraint_on: configuration_id
+insert_permissions:
+  - role: tenantadmin
+    permission:
+      check:
+        _and:
+          - configuration:
+              is_deleted:
+                _eq: false
+          - configuration:
+              project:
+                is_deleted:
+                  _eq: false
+          - configuration:
+              project:
+                userProjects:
+                  user_id:
+                    _eq: X-Hasura-User-Id
+      columns:
+        - chart_type
+        - query
+        - configuration_id
+        - id
+      backend_only: false
+select_permissions:
+  - role: tenantadmin
+    permission:
+      columns:
+        - chart_type
+        - query
+        - configuration_id
+        - id
+      filter:
+        _and:
+          - configuration:
+              is_deleted:
+                _eq: false
+          - configuration:
+              project:
+                is_deleted:
+                  _eq: false
+          - configuration:
+              project:
+                userProjects:
+                  user_id:
+                    _eq: X-Hasura-User-Id
+update_permissions:
+  - role: tenantadmin
+    permission:
+      columns:
+        - chart_type
+        - query
+        - configuration_id
+        - id
+      filter:
+        _and:
+          - configuration:
+              is_deleted:
+                _eq: false
+          - configuration:
+              project:
+                is_deleted:
+                  _eq: false
+          - configuration:
+              project:
+                userProjects:
+                  user_id:
+                    _eq: X-Hasura-User-Id
+      check: null
+delete_permissions:
+  - role: tenantadmin
+    permission:
+      filter:
+        _and:
+          - configuration:
+              is_deleted:
+                _eq: false
+          - configuration:
+              project:
+                is_deleted:
+                  _eq: false
+          - configuration:
+              project:
+                userProjects:
+                  user_id:
+                    _eq: X-Hasura-User-Id

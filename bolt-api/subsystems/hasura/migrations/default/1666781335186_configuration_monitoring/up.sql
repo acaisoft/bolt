@@ -1,0 +1,1 @@
+CREATE TABLE "public"."configuration_monitoring" ("id" uuid NOT NULL DEFAULT gen_random_uuid(), "query" text, "chart_type" text, "configuration_id" uuid NOT NULL, PRIMARY KEY ("id") , FOREIGN KEY ("configuration_id") REFERENCES "public"."configuration"("id") ON UPDATE cascade ON DELETE cascade);

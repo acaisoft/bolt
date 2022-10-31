@@ -54,6 +54,10 @@ class CreateValidate(graphene.Mutation):
             types.ConfigurationEnvVarInput,
             required=False,
             description='Parameters passed as environment variables to testrunner.')
+        configuration_monitorings = graphene.List(
+            types.ConfigurationMonitoringInput,
+            required=False,
+            description='-.')
         has_pre_test = graphene.Boolean(
             required=False,
             description='Test has pre_test hooks.')
@@ -77,7 +81,9 @@ class CreateValidate(graphene.Mutation):
     def validate(
             info, name, type_slug, project_id,
             test_source_id=None, configuration_parameters=None, configuration_envvars=None,
-            has_pre_test=False, has_post_test=False, has_load_tests=False, has_monitoring=False, description=None):
+            has_pre_test=False, has_post_test=False, has_load_tests=False, has_monitoring=False, description=None,
+            configuration_monitorings=None
+    ):
         project_id = str(project_id)
         assert type_slug in const.TESTTYPE_CHOICE, \
             f'invalid choice of type_slug (valid choices: {const.TESTTYPE_CHOICE})'
@@ -220,10 +226,17 @@ class CreateValidate(graphene.Mutation):
                 if 'configuration_parameters' not in query_data:
                     query_data['configuration_parameters'] = {'data': []}
                 for slug, value in monitoring_parameters.items():
-                    query_data['configuration_parameters']['data'].append({
+                    query_data['q']['data'].append({
                         'parameter_slug': slug,
                         'value': value,
                     })
+        if configuration_monitorings:
+            query_data['configuration_monitorings'] = {'data': []}
+            for item in configuration_monitorings:
+                query_data['configuration_monitorings']['data'].append({
+                    'query': item['query'],
+                    'chart_type': item['chart_type'],
+                })
 
         if test_source_id:
             test_source = repo.get('test_source')
@@ -254,10 +267,11 @@ class CreateValidate(graphene.Mutation):
     def mutate(
             self, info, name, type_slug, project_id, test_source_id=None, configuration_parameters=None,
             configuration_envvars=None, has_pre_test=False, has_post_test=False, has_load_tests=False,
-            has_monitoring=False, description=None):
+            has_monitoring=False, description=None, configuration_monitorings=None):
         CreateValidate.validate(
             info, name, type_slug, project_id, test_source_id, configuration_parameters,
-            configuration_envvars, has_pre_test, has_post_test, has_load_tests, has_monitoring, description
+            configuration_envvars, has_pre_test, has_post_test, has_load_tests, has_monitoring, description,
+            configuration_monitorings
         )
         return gql_util.ValidationResponse(ok=True)
 
@@ -270,10 +284,10 @@ class Create(CreateValidate):
     def mutate(
             self, info, name, type_slug, project_id, test_source_id=None, configuration_parameters=None,
             configuration_envvars=None, has_pre_test=False, has_post_test=False, has_load_tests=False,
-            has_monitoring=False, description=None):
+            has_monitoring=False, description=None, configuration_monitorings=None):
         query_params = CreateValidate.validate(
             info, name, type_slug, project_id, test_source_id, configuration_parameters, configuration_envvars,
-            has_pre_test, has_post_test, has_load_tests, has_monitoring, description
+            has_pre_test, has_post_test, has_load_tests, has_monitoring, description, configuration_monitorings
         )
 
         query = '''mutation ($data:[configuration_insert_input!]!) {
@@ -298,6 +312,10 @@ class Create(CreateValidate):
                     configuration_envvars {
                         name
                         value
+                    }
+                    configuration_monitorings {
+                        query
+                        chart_type
                     }
                 } 
             }

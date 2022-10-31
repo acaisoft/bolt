@@ -57,6 +57,24 @@ class ConfigurationEnvVarType(graphene.ObjectType):
         interfaces = (ConfigurationEnvVarInterface,)
 
 
+class ConfigurationMonitoringAbstractType(graphene.AbstractType):
+    query = graphene.String()
+    chart_type = graphene.String()
+
+
+class ConfigurationMonitoringInput(ConfigurationMonitoringAbstractType, graphene.InputObjectType):
+    pass
+
+
+class ConfigurationMonitoringInterface(ConfigurationMonitoringAbstractType, graphene.Interface):
+    pass
+
+
+class ConfigurationMonitoringType(graphene.ObjectType):
+    class Meta:
+        interfaces = (ConfigurationMonitoringInterface,)
+
+
 class ConfigurationInterface(graphene.Interface):
     id = graphene.UUID()
     name = graphene.String()
@@ -100,3 +118,6 @@ class ConfigurationType(graphene.ObjectType):
     configuration_envvars = graphene.List(
         ConfigurationEnvVarType,
         description='Testrunner environment variables.')
+    configuration_monitorings = graphene.List(
+        ConfigurationMonitoringType,
+        description='.')

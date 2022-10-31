@@ -2,6 +2,7 @@
 - "!include public_configuration.yaml"
 - "!include public_configuration_envvars.yaml"
 - "!include public_configuration_extension.yaml"
+- "!include public_configuration_monitoring.yaml"
 - "!include public_configuration_parameter.yaml"
 - "!include public_configuration_type.yaml"
 - "!include public_custom_field.yaml"

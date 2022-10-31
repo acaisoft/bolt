@@ -22,7 +22,7 @@ class JunitParser(BaseXMLParser):
     def get_test_result(self, test_case, test_case_id, test_run_id):
         if (reason := test_case.find('failure')) is not None:
             result = reason.tag
-            message = reason.attrib.get("message")
+            message = reason.attrib.get("text")
         elif (reason := test_case.find('error')) is not None:
             result = reason.tag
             message = reason.attrib.get("message")

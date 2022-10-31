@@ -26,6 +26,13 @@ array_relationships:
         table:
           schema: public
           name: configuration_extension
+  - name: configuration_monitorings
+    using:
+      foreign_key_constraint_on:
+        column: configuration_id
+        table:
+          schema: public
+          name: configuration_monitoring
   - name: configuration_parameters
     using:
       foreign_key_constraint_on:

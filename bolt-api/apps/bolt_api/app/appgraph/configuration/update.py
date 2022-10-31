@@ -72,6 +72,10 @@ class UpdateValidate(graphene.Mutation):
             required=False,
             description='A few words summarizing the configuration'
         )
+        configuration_monitorings = graphene.List(
+            types.ConfigurationMonitoringInput,
+            required=False,
+            description='-.')
 
     Output = gql_util.ValidationInterface
 
@@ -79,7 +83,7 @@ class UpdateValidate(graphene.Mutation):
     def validate(
             info, id, name=None, type_slug=None, test_source_id=None, configuration_parameters=None,
             configuration_envvars=None, has_pre_test=None, has_post_test=None, has_load_tests=None,
-            has_monitoring=None, monitoring_chart_configuration=None, description=None):
+            has_monitoring=None, monitoring_chart_configuration=None, description=None, configuration_monitorings=None):
 
         role, user_id = gql_util.get_request_role_userid(
             info, (const.ROLE_ADMIN, const.ROLE_TENANT_ADMIN, const.ROLE_MANAGER, const.ROLE_TESTER))
@@ -216,6 +220,14 @@ class UpdateValidate(graphene.Mutation):
         if type_slug:
             query_data['type_slug'] = type_slug
 
+        if configuration_monitorings:
+            query_data['configuration_monitorings'] = {'data': []}
+            for item in configuration_monitorings:
+                query_data['configuration_monitorings']['data'].append({
+                    'query': item['query'],
+                    'chart_type': item['chart_type'],
+                })
+
         if test_source_id:
             test_source = repo.get('test_source')
             assert len(test_source), f'test_source {str(test_source_id)} does not exist'
@@ -287,10 +299,10 @@ class UpdateValidate(graphene.Mutation):
 
     def mutate(self, info, id, name=None, type_slug=None, test_source_id=None, configuration_parameters=None,
                configuration_envvars=None, has_pre_test=None, has_post_test=None, has_load_tests=None,
-               has_monitoring=None, description=None):
+               has_monitoring=None, description=None, configuration_monitorings=None):
         UpdateValidate.validate(
             info, id, name, type_slug, test_source_id, configuration_parameters, configuration_envvars,
-            has_pre_test, has_post_test, has_load_tests, has_monitoring, description
+            has_pre_test, has_post_test, has_load_tests, has_monitoring, description, configuration_monitorings
         )
         return gql_util.ValidationResponse(ok=True)
 
@@ -303,20 +315,24 @@ class Update(UpdateValidate):
     def mutate(
             self, info, id, name=None, type_slug=None, test_source_id=None, configuration_parameters=None,
             configuration_envvars=None, has_pre_test=None, has_post_test=None, has_load_tests=None,
-            has_monitoring=None, monitoring_chart_configuration=None, description=None):
+            has_monitoring=None, monitoring_chart_configuration=None, description=None, configuration_monitorings=None):
         query_params = UpdateValidate.validate(
             info, id, name, type_slug, test_source_id, configuration_parameters, configuration_envvars,
-            has_pre_test, has_post_test, has_load_tests, has_monitoring, monitoring_chart_configuration, description
+            has_pre_test, has_post_test, has_load_tests, has_monitoring, monitoring_chart_configuration, description,
+            configuration_monitorings
         )
 
         params = query_params.pop('configuration_parameters', {'data': []})['data']
         envs = query_params.pop('configuration_envvars', {'data': []})['data']
-
+        monitorings = query_params.pop('configuration_monitorings', {'data': []})['data']
+        for item in monitorings:
+            item['configuration_id'] = str(id)
         query = '''mutation (
             $id:uuid!, 
             $data:configuration_set_input!
             $params:[configuration_parameter_insert_input!]!
             $envs:[configuration_envvars_insert_input!]!
+            $monitorings:[configuration_monitoring_insert_input!]!
         ) {
             
             delete_configuration_parameter (
@@ -351,6 +367,22 @@ class Update(UpdateValidate):
                 affected_rows
             }
             
+            delete_configuration_monitoring (
+                where: {configuration_id:{_eq:$id}}
+            ) {
+                affected_rows
+            }
+            
+            insert_configuration_monitoring (
+                objects: $monitorings
+                on_conflict: {
+                    constraint: configuration_monitoring_pkey
+                    update_columns: [ query ]
+                }
+            ) {
+                affected_rows
+            }
+            
             update_configuration(
                 where:{id:{_eq:$id}},
                 _set: $data
@@ -378,6 +410,7 @@ class Update(UpdateValidate):
             'data': query_params,
             'params': params,
             'envs': envs,
+            'monitorings': monitorings
         })
         assert conf_response['update_configuration'], f'cannot update configuration ({str(conf_response)})'
         return gql_util.OutputValueFromFactory(Update, conf_response['update_configuration'])

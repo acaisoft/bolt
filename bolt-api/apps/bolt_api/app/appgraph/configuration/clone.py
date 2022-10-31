@@ -83,6 +83,7 @@ class Clone(graphene.Mutation):
                 $has_load_tests: Boolean, 
                 $has_monitoring: Boolean
                 $configuration_envvars: [ConfigurationEnvVarInput], 
+                $configuration_monitorings: [ConfigurationMonitoringInput],
                 $configuration_parameters: [ConfigurationParameterInput]) {    
                     testrun_configuration_create(
                         name: $name, 
@@ -95,6 +96,7 @@ class Clone(graphene.Mutation):
                         has_load_tests: $has_load_tests, 
                         has_monitoring: $has_monitoring,
                         configuration_envvars: $configuration_envvars,
+                        configuration_monitorings: $configuration_monitorings
                         configuration_parameters: $configuration_parameters) {
                             affected_rows
                             returning {
