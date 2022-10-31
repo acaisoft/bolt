@@ -32,11 +32,11 @@ const ResultColumn = ({ message }) => {
     <div className={classes.container}>
       <div
         className={classes.wrapper}
-        style={{maxHeight: (isOpen ? message?.length / 60 : 1.2) + 'rem'}}
+        style={{maxHeight: (isOpen ? message?.length / 125 : 1.2) + 'rem'}}
       >
         {message || '-'}
       </div>
-      {message && message.length > 65 && (
+      {message && message.length > 130 && (
         <div
           style={{ position: 'relative', marginLeft: '2rem', marginRight: '1rem' }}
         >
