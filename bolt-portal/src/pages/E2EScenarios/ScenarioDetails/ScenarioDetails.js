@@ -107,6 +107,12 @@ const TestScenarioDetails = () => {
             )}
             title="Failures"
           />
+          <DataTable.Column
+            render={test_run => (
+              <div className={classes.error}>{test_run.errors}</div>
+            )}
+            title="Errors"
+          />
           <DataTable.Column render={test_run => test_run.total} title="Total" />
           <DataTable.Column
             key="actions"
