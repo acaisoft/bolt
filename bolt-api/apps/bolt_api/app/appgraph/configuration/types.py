@@ -21,7 +21,7 @@ import graphene
 from services import const
 
 
-class ConfigurationParameterAbstractType(graphene.AbstractType):
+class ConfigurationParameterAbstractType(object):
     value = graphene.String()
     parameter_slug = graphene.String()
 
@@ -39,7 +39,7 @@ class ConfigurationParameterType(graphene.ObjectType):
         interfaces = (ConfigurationParameterInterface,)
 
 
-class ConfigurationEnvVarAbstractType(graphene.AbstractType):
+class ConfigurationEnvVarAbstractType(object):
     name = graphene.String()
     value = graphene.String()
 
@@ -57,7 +57,7 @@ class ConfigurationEnvVarType(graphene.ObjectType):
         interfaces = (ConfigurationEnvVarInterface,)
 
 
-class ConfigurationMonitoringAbstractType(graphene.AbstractType):
+class ConfigurationMonitoringAbstractType(object):
     query = graphene.String()
     chart_type = graphene.String()
 

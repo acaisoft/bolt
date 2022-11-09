@@ -51,8 +51,7 @@ def generate_hasura_token(
         match role:
             case const.ROLE_REPORTGENERATOR:
                 runner_id = {"x-hasura-reportgenerator-id": execution_id}
-            case _:
-                runner_id = {"x-hasura-testruner-id": execution_id}
+            case _: runner_id = {"x-hasura-testruner-id": execution_id}
         payload = {
             "https://hasura.io/jwt/claims": {
                 "x-hasura-allowed-roles": [role],

@@ -21,7 +21,7 @@ import graphene
 from services import const
 
 
-class ExtensionParamType(graphene.AbstractType):
+class ExtensionParamType(object):
     name = graphene.String()
     value = graphene.String()
 
