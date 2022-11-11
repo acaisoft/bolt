@@ -197,10 +197,6 @@ def start(app_config, conf_id, user_id, no_cache):
         except Exception as ex:
             logger.error(ex)
             raise TestrunStartException("Error while spinning Argo workflow")
-    elif code_source == const.CONF_SOURCE_JSON:
-        # TODO: DEPRECATED. NEED TO FIX (merge to argo)
-        deployer_response, execution_id, hasura_token = None, None, None
-        initial_state['status'] = const.TESTRUN_PREPARING
     else:
         raise Exception(f'invalid code source value {code_source}')
 

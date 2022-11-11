@@ -29,7 +29,6 @@ from werkzeug.test import Client
 from werkzeug.wrappers import Response
 
 from apps.bolt_api.app import create_app
-from apps.bolt_api.wsgi import application
 from services import const
 
 logging.basicConfig()
@@ -63,21 +62,24 @@ class BoltCase(unittest.TestCase):
     To record responses Hasura must be up and running in development mode.
     """
 
-    recorded_project_id = '04ce4055-5278-4fd5-aab9-2148faa58cdd'
-    recorded_repo_id = '04ce4055-5278-4fd5-aab9-2148faa58cdd'
-    recorded_config_id = '7262d765-4d18-48a9-9d08-dd142ce8dab5'
-    recorded_execution_id = '7262d765-4d18-48a9-9d08-dd142ce8dab5'
+    recorded_project_id = 'daf50e01-4037-4587-8305-2523dad5ebfd'
+    recorded_repo_id = 'daf50e01-4037-4587-8305-2523dad5ebfd'
+    recorded_config_id = '6535ab77-78cf-4953-bad7-5e11cea8fbf1'
+    recorded_execution_id = '0765dd5e-61b1-11ed-811c-000c299af887'
     user_role = const.ROLE_ADMIN
 
     def setUp(self) -> None:
         super().setUp()
         # setup flask client
-        application.config.from_mapping(BOLT_API_SELFTEST_FLAG=const.SELFTEST_FLAG)
+        os.environ["SECRETS_FILE_PATH"] = "../unittests/fixtures/data/test_secrets.py"
+        application = create_app(test=True)
+        application.secret_key = 'secret'
+        application.config['SESSION_TYPE'] = 'filesystem'
         self.client = Client(application=application, response_wrapper=BoltResponse)
         # setup vcr context manager
         self.vcr_cassette_name = f'{self.__class__.__name__}.{self._testMethodName}.yaml'
         _vcr = vcr.VCR(
-            serializer='json',
+            serializer='yaml',
             cassette_library_dir=self.cassette_path(),
             record_mode='once',
             match_on=['uri', 'method', 'raw_body'],
