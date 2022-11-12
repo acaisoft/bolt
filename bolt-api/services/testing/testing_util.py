@@ -65,6 +65,7 @@ class BoltCase(unittest.TestCase):
     recorded_project_id = 'daf50e01-4037-4587-8305-2523dad5ebfd'
     recorded_repo_id = 'daf50e01-4037-4587-8305-2523dad5ebfd'
     recorded_config_id = '6535ab77-78cf-4953-bad7-5e11cea8fbf1'
+    recorded_cloned_config_id = 'bb56e2c4-e1d9-4bcb-aeb1-8ff915f7cb18'
     recorded_execution_id = '0765dd5e-61b1-11ed-811c-000c299af887'
     user_role = const.ROLE_ADMIN
 
@@ -72,10 +73,10 @@ class BoltCase(unittest.TestCase):
         super().setUp()
         # setup flask client
         os.environ["SECRETS_FILE_PATH"] = "../unittests/fixtures/data/test_secrets.py"
-        application = create_app(test=True)
-        application.secret_key = 'secret'
-        application.config['SESSION_TYPE'] = 'filesystem'
-        self.client = Client(application=application, response_wrapper=BoltResponse)
+        self.application = create_app(test=True)
+        self.application.secret_key = 'secret'
+        self.application.config['SESSION_TYPE'] = 'filesystem'
+        self.client = Client(application=self.application, response_wrapper=BoltResponse)
         # setup vcr context manager
         self.vcr_cassette_name = f'{self.__class__.__name__}.{self._testMethodName}.yaml'
         _vcr = vcr.VCR(
@@ -115,3 +116,7 @@ class BoltCase(unittest.TestCase):
     def cassette_path(self):
         parent_here = os.path.dirname(os.path.abspath(sys.modules[self.__class__.__module__].__file__))
         return os.path.join(parent_here, 'fixtures')
+
+    @staticmethod
+    def get_current_datetime():
+        return '00/00/0000 - 00:00:00'

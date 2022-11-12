@@ -18,7 +18,9 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import json
+from unittest import mock
 
+from services.hasura import hce
 from services.projects.demo_project import SMOKE_TEST_TARGET
 from services.testing.testing_util import BoltCase
 
@@ -124,6 +126,59 @@ class TestConfigurationMutations(BoltCase):
             {"value": "1000", "parameter_slug": "load_tests_users_per_worker"}
         ], out['configuration_parameters'], 'expected configuration parameters do not match')
         print(json.dumps(out, indent=4))
+
+    def test_clone_conf(self):
+        name = 'updated test config name 12345'
+        with (
+            mock.patch('apps.bolt_api.app.appgraph.configuration.clone.get_current_datetime',
+                       self.get_current_datetime)
+        ):
+            resp = self.gql_client('''mutation ($configuration_id:UUID!) {
+                testrun_configuration_clone(
+                    configuration_id:$configuration_id
+                ) { returning { 
+                    name
+                    cloned_configuration_id
+                    new_configuration_id
+                }}
+            }''', {
+                'configuration_id': self.recorded_config_id
+            })
+            self.assertIsNone(resp.errors(), 'expected no errors')
+            out = resp.one('testrun_configuration_clone')
+
+            self.assertIsNotNone(out['name'], 'expected config to have been created')
+            hce_resp = hce(self.application.config, '''query ($id:uuid!) {
+                configuration_by_pk(id:$id) {
+                    name
+                    configuration_envvars {name, value}
+                    configuration_parameters {parameter_slug, value}
+                }
+            }''', {
+                'id': self.recorded_cloned_config_id
+            })
+            hce_out = hce_resp['configuration_by_pk']
+            # name has been decorated with datetime
+            self.assertEqual(
+                hce_out['name'],
+                f'{name} (Cloned at 00/00/0000 - 00:00:00)',
+                'name was not decorated with date and time'
+            )
+            # envvar was cloned correctly
+            self.assertCountEqual([{
+                "name": "testvar_2",
+                "value": "testvarvalue 2"
+            }], hce_out['configuration_envvars'], 'expected environment var does not match')
+            # parameters cloned correctly
+            self.assertCountEqual([
+                {"value": SMOKE_TEST_TARGET, "parameter_slug": "load_tests_host"},
+                {"value": "10", "parameter_slug": "load_tests_duration"},
+                {"value": "500", "parameter_slug": "load_tests_rampup"},
+                {"value": "1000", "parameter_slug": "load_tests_users"},
+                {"value": "load_tests.py", "parameter_slug": "load_tests_file_name"},
+                {"value": "master", "parameter_slug": "load_tests_repository_branch"},
+                {"value": "1000", "parameter_slug": "load_tests_users_per_worker"}
+            ], hce_out['configuration_parameters'], 'expected configuration parameters do not match')
 
     def test_delete_conf(self):
         resp = self.gql_client('''mutation ($id:UUID!) {

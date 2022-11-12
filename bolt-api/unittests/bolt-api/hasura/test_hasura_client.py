@@ -12,7 +12,6 @@ def test_missing_query(app, fake_hasura):
 
 def test_common_query(app, fake_hasura):
     with app.app_context():
-        print(app.config.get('HASURA_GQL'))
         resp = hce(app.config, 'query {configuration{id}}')
 
     assert resp == {'configuration': [{'id': 'test'}]}
