@@ -26,7 +26,7 @@ export const GET_GROUPS_WITH_RESULTS = gql`
     group(
       where: { test_cases: { test_results: { test_run_id: { _eq: $testRunId } } } }
     ) {
-      test_cases {
+      test_cases(where: { test_results: { test_run_id: { _eq: $testRunId } } }) {
         name_from_file
         test_results(where: { test_run_id: { _eq: $testRunId } }) {
           result
