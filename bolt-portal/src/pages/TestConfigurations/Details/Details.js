@@ -43,8 +43,12 @@ function Details() {
   const { configurationId } = params
   const classes = useStyles()
 
-  const { getMonitoringDetailsUrl, getTestDetailsUrl, getDebugUrl } =
-    useUrlGetters(params)
+  const {
+    getMonitoringDetailsUrl,
+    getTestDetailsUrl,
+    getDebugUrl,
+    getMonitoringMetricsDetailsUrl,
+  } = useUrlGetters(params)
   const { handleEdit, handleDelete, handleRun, handleTerminate, handleClone } =
     useHandlers(navigate, params)
 
@@ -82,6 +86,7 @@ function Details() {
           configuration={configuration}
           getTestDetailsUrl={getTestDetailsUrl}
           getMonitoringDetailsUrl={getMonitoringDetailsUrl}
+          getMonitoringMetricsDetailsUrl={getMonitoringMetricsDetailsUrl}
           getDebugUrl={getDebugUrl}
           onTerminate={handleTerminate}
           hasMonitoring={configuration.has_monitoring}
@@ -110,6 +115,15 @@ function useUrlGetters(params) {
     },
     [params]
   )
+  const getMonitoringMetricsDetailsUrl = useCallback(
+    execution => {
+      return getUrl(routes.projects.configurations.executions.monitoringMetrics, {
+        ...params,
+        executionId: execution.id,
+      })
+    },
+    [params]
+  )
   const getDebugUrl = useCallback(execution => {
     return getUrl(routes.argo.workflows.details, {
       argo_name: execution.argo_name,
@@ -120,6 +134,7 @@ function useUrlGetters(params) {
     getTestDetailsUrl,
     getMonitoringDetailsUrl,
     getDebugUrl,
+    getMonitoringMetricsDetailsUrl,
   }
 }
 

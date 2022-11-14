@@ -273,6 +273,7 @@ function prepareInitialValues(data) {
     return {
       configuration_type: 'load_tests',
       configuration_envvars: [{ name: '', value: '' }],
+      configuration_monitorings: [{ query: '', chart_type: 'line_chart' }],
       test_source_type: 'repository',
       scenario_parts: {
         has_load_tests: true,
@@ -411,13 +412,12 @@ function preparePayload(
     test_source_id: test_source[test_source_type],
   })
 
-  const asd = {
+  return {
     ...variables,
     ...(isMonitoring && {
       configuration_monitorings: formValues.configuration_monitorings,
     }),
   }
-  return asd
 }
 
 export { useFormSchema, prepareInitialValues, preparePayload }

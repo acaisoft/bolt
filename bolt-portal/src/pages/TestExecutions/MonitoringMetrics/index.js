@@ -19,32 +19,4 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import React from 'react'
-import { Navigate, Route, Routes } from 'react-router-dom'
-
-import ListPage from './List'
-import DetailsPage from './Details'
-import EndpointDetailsPage from './EndpointDetails'
-import MonitoringPage from './Monitoring'
-import MonitoringMetricsPage from './MonitoringMetrics'
-
-export function TestExecutions() {
-  return (
-    <Routes>
-      <Route index element={<ListPage />} />
-      <Route path=":executionId" element={<DetailsPage />} />
-      <Route
-        path=":executionId/endpoint/:endpointId"
-        element={<EndpointDetailsPage />}
-      />
-      <Route path=":executionId/monitoring" element={<MonitoringPage />} />
-      <Route
-        path=":executionId/monitoringMetrics"
-        element={<MonitoringMetricsPage />}
-      />
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
-  )
-}
-
-export default TestExecutions
+export { default } from './MonitoringMetrics'

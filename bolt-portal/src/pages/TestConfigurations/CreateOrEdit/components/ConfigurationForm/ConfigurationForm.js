@@ -144,11 +144,13 @@ export function ConfigurationForm(
           {/* TODO: uncomment when scenario parts section will be needed */}
           {/*<ScenarioPartsFields fields={fields} />*/}
           <ConfigurationTypeFields fields={fields} configuration={configuration} />
-          <MonitoringFields
-            key="monitoringFields"
-            setIsMonitoring={setIsMonitoring}
-            isMonitoring={isMonitoring}
-          />
+          {!isExternalScenario && (
+            <MonitoringFields
+              key="monitoringFields"
+              setIsMonitoring={setIsMonitoring}
+              isMonitoring={isMonitoring}
+            />
+          )}
         </form>
       )}
     </Form>

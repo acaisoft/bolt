@@ -21,10 +21,12 @@
 
 import { makeStyles } from '@material-ui/core'
 
-export default makeStyles(() => ({
+export default makeStyles(({ spacing }) => ({
   wrapper: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'flex-end',
+    marginTop: spacing(3),
+    marginRight: spacing(2),
   },
 }))

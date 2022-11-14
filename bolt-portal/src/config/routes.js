@@ -45,6 +45,8 @@ const routes = {
         details: '/projects/:projectId/configs/:configurationId/runs/:executionId',
         monitoring:
           '/projects/:projectId/configs/:configurationId/runs/:executionId/monitoring',
+        monitoringMetrics:
+          '/projects/:projectId/configs/:configurationId/runs/:executionId/monitoringMetrics',
         endpoints: {
           details:
             '/projects/:projectId/configs/:configurationId/runs/:executionId/endpoint/:endpointId',

@@ -51,6 +51,7 @@ function TestExecutionsList({
   getMonitoringDetailsUrl,
   getTestDetailsUrl,
   getDebugUrl,
+  getMonitoringMetricsDetailsUrl,
   onTerminate,
   hasMonitoring,
 }) {
@@ -213,6 +214,25 @@ function TestExecutionsList({
                   variant="link"
                 >
                   Monitoring
+                </Button>
+              )}
+            </NoWrap>
+          )}
+        />
+        <DataTable.Column
+          key="monitoring"
+          title="Monitoring"
+          width={150}
+          render={execution => (
+            <NoWrap>
+              {has_load_tests && (
+                <Button
+                  data-testid="testrun-details-button"
+                  href={getMonitoringMetricsDetailsUrl(execution)}
+                  title="Show test run details"
+                  variant="link"
+                >
+                  Metrics
                 </Button>
               )}
             </NoWrap>

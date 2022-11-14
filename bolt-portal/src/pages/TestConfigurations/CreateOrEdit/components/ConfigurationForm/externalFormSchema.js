@@ -75,10 +75,7 @@ function generateFields({ configurationTypes }) {
   }
 }
 
-function prepareExternalPayload(
-  formValues,
-  { mode, configurationId, projectId, isMonitoring }
-) {
+function prepareExternalPayload(formValues, { mode, configurationId, projectId }) {
   if (!formValues) {
     return {}
   }
@@ -95,12 +92,7 @@ function prepareExternalPayload(
   } else {
     variables.id = configurationId
   }
-  return {
-    ...variables,
-    ...(isMonitoring && {
-      configuration_monitorings: formValues.configuration_monitorings,
-    }),
-  }
+  return variables
 }
 
 export { useExternalFormSchema, prepareExternalPayload }

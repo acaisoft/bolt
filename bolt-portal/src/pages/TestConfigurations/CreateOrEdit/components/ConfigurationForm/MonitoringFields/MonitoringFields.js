@@ -32,6 +32,7 @@ import { useForm } from 'react-final-form'
 import { Add, Delete } from '@material-ui/icons'
 import { FormField } from 'containers'
 import { Button } from 'components'
+import { composeValidators, requireWhenOtherIsSet, uniqueInArray } from 'utils/forms'
 
 function MonitoringFields({ isMonitoring, setIsMonitoring }) {
   const { mutators } = useForm()
@@ -54,7 +55,7 @@ function MonitoringFields({ isMonitoring, setIsMonitoring }) {
             <Grid container spacing={4}>
               {arrayFields.map((name, index) => (
                 <>
-                  <Grid item xs={5}>
+                  <Grid item xs={5} key={name}>
                     <FormField
                       data-testid="query"
                       id="query"
@@ -62,6 +63,10 @@ function MonitoringFields({ isMonitoring, setIsMonitoring }) {
                       field={{ inputProps: { label: 'Query' } }}
                       fullWidth
                       variant="filled"
+                      validate={composeValidators(
+                        requireWhenOtherIsSet(`${name}.chart_type`),
+                        uniqueInArray('configuration_monitorings', 'query')
+                      )}
                     />
                   </Grid>
                   <Grid item xs={5}>
@@ -75,7 +80,7 @@ function MonitoringFields({ isMonitoring, setIsMonitoring }) {
                     >
                       {chartTypes.map(option => (
                         <MenuItem key={option.key} value={option.value}>
-                          {option.value}
+                          {option.label}
                         </MenuItem>
                       ))}
                     </FormField>

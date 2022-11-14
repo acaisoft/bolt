@@ -19,32 +19,26 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import React from 'react'
-import { Navigate, Route, Routes } from 'react-router-dom'
+import { gql } from '@apollo/client'
 
-import ListPage from './List'
-import DetailsPage from './Details'
-import EndpointDetailsPage from './EndpointDetails'
-import MonitoringPage from './Monitoring'
-import MonitoringMetricsPage from './MonitoringMetrics'
-
-export function TestExecutions() {
-  return (
-    <Routes>
-      <Route index element={<ListPage />} />
-      <Route path=":executionId" element={<DetailsPage />} />
-      <Route
-        path=":executionId/endpoint/:endpointId"
-        element={<EndpointDetailsPage />}
-      />
-      <Route path=":executionId/monitoring" element={<MonitoringPage />} />
-      <Route
-        path=":executionId/monitoringMetrics"
-        element={<MonitoringMetricsPage />}
-      />
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
-  )
-}
-
-export default TestExecutions
+export const SUBSCRIBE_TO_EXECUTION_METRICS = gql`
+  subscription subscribeToExecutionMetrics(
+    $executionId: uuid!
+    $configurationId: uuid!
+  ) {
+    configuration_monitoring(
+      where: { configuration_id: { _eq: $configurationId } }
+    ) {
+      query
+      id
+      monitoring_metrics(
+        where: { execution_id: { _eq: $executionId } }
+        order_by: { timestamp: asc }
+      ) {
+        monitoring_id
+        timestamp
+        metric_value
+      }
+    }
+  }
+`
