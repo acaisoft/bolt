@@ -38,6 +38,11 @@ class JobMonitoring:
 
 
 @dataclass
+class JobMetricWatcher:
+    env_vars: Optional[Dict[str, str]] = None
+
+
+@dataclass
 class JobLoadTests:
     workers: int
     users: int
@@ -69,6 +74,7 @@ class Workflow:
     job_post_stop: Optional[JobPostStop]
     job_monitoring: Optional[JobMonitoring]
     job_load_tests: Optional[JobLoadTests]
+    job_metric_watcher: Optional[JobMetricWatcher]
     job_report: Optional[JobReport]
 
     no_cache: bool

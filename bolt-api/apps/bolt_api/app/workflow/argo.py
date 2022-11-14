@@ -348,7 +348,7 @@ class Argo:
                     "image": "{{workflow.outputs.parameters.image}}",
                     "command": ["python", "-m", "monitoring"],
                     "env": [
-                        *self._map_envs(workflow.job_load_tests.env_vars),
+                        *self._map_envs(workflow.job_metric_watcher.env_vars),
                         {"name": "EXECUTION_ID", "value": workflow.execution_id},
                         {"name": "BOLT_GRAPHQL_URL", "value": self.HASURA_GQL},
                         {"name": "BOLT_HASURA_TOKEN", "value": workflow.auth_token},

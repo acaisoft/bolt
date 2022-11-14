@@ -1,15 +1,8 @@
-FROM python:3.9-slim
+FROM python:3.10.4-slim
 
 RUN apt update &&\
     apt upgrade -y &&\
-    apt-get install -y curl gcc libgirepository1.0-dev
-
-
-RUN apt update &&\
-    apt upgrade -y &&\
-    apt-get install -y libpango-1.0.0 libglib2.0-dev libfreetype6-dev gir1.2-harfbuzz-0.0 libpangoft2-1.0-0\
-     libpangocairo-1.0-0 &&\
-    rm -rf /var/lib/apt/lists/*
+    apt-get install -y curl
 
 WORKDIR /monitoring
 
