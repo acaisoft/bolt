@@ -1,0 +1,269 @@
+interactions:
+- request:
+    body: '{"query": "query ($conf_id: uuid!) {\n  parameter {\n    id\n    default_value\n    param_name\n    name\n    slug_name\n  }\n  configuration_by_pk(id:
+      $conf_id) {\n    id\n    name\n    has_load_tests\n    has_monitoring\n    test_source
+      {\n      source_type\n      project {\n        userProjects {\n          user_id\n        }\n      }\n      repository
+      {\n        name\n        url\n        configuration_type {\n          slug_name\n        }\n        project
+      {\n          userProjects {\n            user_id\n          }\n        }\n      }\n      test_creator
+      {\n        name\n        data\n        min_wait\n        max_wait\n        project
+      {\n          userProjects {\n            user_id\n          }\n        }\n      }\n    }\n    configuration_parameters
+      {\n      value\n      parameter_slug\n    }\n    configuration_extensions {\n      type\n      extension_params
+      {\n        name\n        value\n      }\n    }\n  }\n}\n", "variables": {"conf_id":
+      "6535ab77-78cf-4953-bad7-5e11cea8fbf1"}}'
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate, br
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '1006'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.27.1
+      X-Hasura-Access-Key:
+      - devaccess
+      X-Hasura-Role:
+      - admin
+      X-Hasura-User-Id:
+      - 7f1aab7a-e941-46a2-b63a-5b28b80ad384
+    method: POST
+    uri: http://localhost:8080/v1alpha1/graphql
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAEA62WTY+zNhCA/0rEqZXWiQHbmJx67LH3aoXG2M7SJYDAvG9Xq/z3jiGsSRaqHppL
+        iD0zPPOdz0iDg+j8GXXQw9U400fnPz+jSkfnSMSWGZvGhOZgCUtBEAAdk8zEkFiQIKSJXiJtLIy1
+        K35APRpUiykeTuaKBk3iCXF4cn/WYw+uapvDL8OveDrU42URq1vQhTODG4pFKrq9HO40KWQKSgaE
+        5VYiTR4TqXVKMq5koiSU6fTiZxpOv+P0AWccTD+cBlO2jd7HwdB0Y7eCYSBZAowTmsmEMGtTkqdc
+        E6pSnkuldJIBmnuGiekGzfhEs48xwa4oqJE8t4kmVmeMsIzHJGcKoVTCRZobEXOxSYGHjwm6eufv
+        Gbq2TeXavmouh680PCYqSGwlyqSm1EwIklOpCePcEikUJSLJMqvx0qgtKv4dqtqEqhqsUiw2vFxX
+        zwrqSyJUT665thyAWGUpYTrDhCWYP6OVNmVKY5bnaPA5Yd+Yfg9Ib+3g63rNsKrg6Ta8P2U0p7a0
+        RFiBqSqFIZCwBHHwQ1Mp8nyrYILBY/fxDcYGGFvV5jAlcJfIi8ytFrAYi6mwcYk9LTNsqrQkwAGf
+        tEzxWxiRb+XqCoOfFM9VpAJPb7p28GX0cVA9NOUbXu1EKogWd9HAl9DEljKxvs8EYUmcEUmx6RMs
+        +5xllNpsi2+rz5qTD/C9xue2/9n275MbO2STVNGZvrhL3l5fIpwUtrrcp1ihPoru3c/PeWJyjJrK
+        MpJJTDXLeUoU6IxwE8elAYnFF68gOhy+Rh/8yDvMZqcUHuIkZb4d3mAoQgVEZ9ePZj4NxR6dLdQD
+        HnsrxdCOfYkj9zOanwr30fkJHGKMZru+/cuUzkt5D/+Yfw7T4PcHxeRLZmNAX4CYnMWECUiIEikQ
+        rhKpJAWdShbdXm8va+Noconw3bmHN499jTCXyv12bct3VTk1lu/GHdv+cvaCJ/ezPeI1Qj6GeXYD
+        vdpcFzgS/2en0OAUz7I3gEUcnZuxrvHwkeprZ86xWxbgm3PdcD6dvAXioL+gh9r8OKq2dkcooRpa
+        645V61OxbN3Ce4axCekuwgRZDIfN6hf1hsrXvJ46aFFbrcAdvfV+W7TWPbSjNvXHvI8WrcC/Glg7
+        6k8DaTHxOFx2dENZPQyNxcZ/hf/35jZ/O9MM+GfF5/f1drv9AwV8Ns8vCQAA
+    headers:
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Fri, 11 Nov 2022 13:17:21 GMT
+      Server:
+      - Warp/3.3.19
+      Transfer-Encoding:
+      - chunked
+      x-request-id:
+      - 16ee12ac-bf32-42c4-a96b-5e698dbaa2f7
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"query": "query ($confId: uuid!, $userId: String!) {\n  parameter {\n    id\n    default_value\n    param_name\n    name\n    slug_name\n  }\n  configuration(where:
+      {id: {_eq: $confId}, project: {userProjects: {user_id: {_eq: $userId}}, is_deleted:
+      {_eq: false}}}) {\n    name\n    project_id\n    instances\n    has_pre_test\n    has_post_test\n    has_load_tests\n    has_monitoring\n    monitoring_chart_configuration\n    configuration_parameters
+      {\n      parameter_slug\n      value\n      parameter {\n        name\n      }\n    }\n    configuration_extensions
+      {\n      type\n      extension_params {\n        name\n        value\n      }\n    }\n    configuration_envvars
+      {\n      name\n      value\n    }\n    test_source {\n      source_type\n      project
+      {\n        userProjects {\n          user_id\n        }\n      }\n      repository
+      {\n        name\n        url\n        configuration_type {\n          slug_name\n        }\n        project
+      {\n          userProjects {\n            user_id\n          }\n        }\n      }\n      test_creator
+      {\n        name\n        data\n        min_wait\n        max_wait\n        project
+      {\n          userProjects {\n            user_id\n          }\n        }\n      }\n    }\n  }\n}\n",
+      "variables": {"confId": "6535ab77-78cf-4953-bad7-5e11cea8fbf1", "userId": "7f1aab7a-e941-46a2-b63a-5b28b80ad384"}}'
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate, br
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '1358'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.27.1
+      X-Hasura-Access-Key:
+      - devaccess
+      X-Hasura-Role:
+      - admin
+      X-Hasura-User-Id:
+      - 7f1aab7a-e941-46a2-b63a-5b28b80ad384
+    method: POST
+    uri: http://localhost:8080/v1alpha1/graphql
+  response:
+    body:
+      string: !!binary |
+        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
+        AAA=
+    headers:
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Fri, 11 Nov 2022 13:17:21 GMT
+      Server:
+      - Warp/3.3.19
+      Transfer-Encoding:
+      - chunked
+      x-request-id:
+      - bf857a29-b41d-4b75-a368-cfc21c9d5de0
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"query": "mutation ($data: [execution_insert_input!]!) {\n  insert_execution(objects:
+      $data) {\n    returning {\n      id\n    }\n  }\n}\n", "variables": {"data":
+      {"configuration_id": "6535ab77-78cf-4953-bad7-5e11cea8fbf1", "status": "PENDING",
+      "execution_metrics_metadata": {"data": {"chart_configuration": {"charts": [{"x_format":
+      "number", "node_name": "global_throughput", "x_data_key": "timestamp", "y_format":
+      "number", "y_label": "name", "title": "Global throughput (events/s)", "type":
+      "line", "y_data_key": "value"}, {"x_format": "number", "node_name": "nodes",
+      "x_data_key": "timestamp", "y_format": "number", "y_label": "name", "title":
+      "Nodes messages/second", "type": "line", "y_data_key": "value"}, {"x_format":
+      "number", "node_name": "lag", "x_data_key": "timestamp", "y_format": "number",
+      "y_label": "name", "title": "Kafka consumer lag", "type": "line", "y_data_key":
+      "value"}, {"x_format": "number", "node_name": "kafka_messages", "x_data_key":
+      "timestamp", "y_format": "number", "y_label": "name", "title": "Kafka messages
+      count", "type": "line", "y_data_key": "value"}, {"x_format": "number", "node_name":
+      "global_cpu", "x_data_key": "timestamp", "y_format": "percent", "y_label": "name",
+      "title": "CPU usage (Apps + Server) (Striim)", "type": "line", "y_data_key":
+      "value"}, {"x_format": "number", "node_name": "vm_cpu", "x_data_key": "timestamp",
+      "y_format": "percent", "y_label": "name", "title": "CPU Usage (Prometheus)",
+      "type": "line", "y_data_key": "value"}, {"x_format": "number", "node_name":
+      "vm_ram", "x_data_key": "timestamp", "y_format": "percent", "y_label": "name",
+      "title": "Memory usage (Prometheus)", "type": "line", "y_data_key": "value"},
+      {"x_format": "number", "node_name": "global_memory", "x_data_key": "timestamp",
+      "y_format": "bytes", "y_label": "name", "title": "Memory usage (Striim)", "type":
+      "line", "y_data_key": "value"}, {"x_format": "number", "node_name": "global_disc_data",
+      "x_data_key": "timestamp", "y_format": "bytes", "y_label": "name", "title":
+      "Disc space (Striim)", "type": "line", "y_data_key": "value"}, {"x_format":
+      "number", "node_name": "vm_disc_usage", "x_data_key": "timestamp", "y_format":
+      "percent", "y_label": "name", "title": "Disc usage (Prometheus)", "type": "line",
+      "y_data_key": "value"}, {"x_format": "number", "node_name": "vm_disc", "x_data_key":
+      "timestamp", "y_format": "bytes", "y_label": "name", "title": "Disc space (Prometheus)",
+      "type": "line", "y_data_key": "value"}, {"x_format": "number", "node_name":
+      "vm_io", "x_data_key": "timestamp", "y_format": "bytes", "y_label": "name",
+      "title": "I/O (Prometheus)", "type": "line", "y_data_key": "value"}, {"x_format":
+      "number", "node_name": "apps_source_input", "x_data_key": "timestamp", "y_format":
+      "number", "y_label": "app_name", "title": "Source input per App", "type": "line",
+      "y_data_key": "source_input"}, {"x_format": "number", "node_name": "apps_threads",
+      "x_data_key": "timestamp", "y_format": "number", "y_label": "app_name", "title":
+      "CPU thread per app", "type": "line", "y_data_key": "threads_num"}, {"x_format":
+      "number", "node_name": "apps_cpu", "x_data_key": "timestamp", "y_format": "percent",
+      "y_label": "app_name", "title": "CPU usage per App (Striim)", "type": "line",
+      "y_data_key": "cpu"}, {"x_format": "number", "node_name": "apps_wactions", "x_data_key":
+      "timestamp", "y_format": "number", "y_label": "app_name", "title": "WebActions
+      per App (Striim)", "type": "line", "y_data_key": "wactions_created"}, {"x_format":
+      "number", "node_name": "number_of_apps", "x_data_key": "timestamp", "y_format":
+      "number", "y_label": "name", "title": "Number of running apps", "type": "line",
+      "y_data_key": "value"}, {"x_format": "number", "node_name": "apps_latency",
+      "x_data_key": "timestamp", "y_format": "number", "y_label": "app_component",
+      "title": "Latency per App (ms)", "type": "line", "y_data_key": "latency"}, {"x_format":
+      "number", "node_name": "apps_backpressed", "x_data_key": "timestamp", "y_format":
+      "bool", "y_label": "app_name", "title": "Backpressured per App", "type": "heatmap",
+      "y_data_key": "backpressured"}, {"x_format": "number", "node_name": "elastic_search_docs",
+      "x_data_key": "timestamp", "y_format": "number", "y_label": "name", "title":
+      "Number of Elastic Search Docs", "type": "line", "y_data_key": "value"}, {"x_format":
+      "bytes", "node_name": "elastic_search_size", "x_data_key": "timestamp", "y_format":
+      "number", "y_label": "name", "title": "Elastic Search Size", "type": "line",
+      "y_data_key": "value"}]}}}, "argo_name": "bolt-0000", "argo_namespace": "argo_ns",
+      "id": "0765dd5e-61b1-11ed-811c-000c299af887", "configuration_snapshot": {"name":
+      "updated test config name 12345", "project_id": "daf50e01-4037-4587-8305-2523dad5ebfd",
+      "instances": 1, "has_pre_test": false, "has_post_test": false, "has_load_tests":
+      true, "has_monitoring": false, "configuration_parameters": [{"parameter_slug":
+      "load_tests_host", "value": "https://test-target.dev.bolt.acaisoft.io", "parameter":
+      {"name": "host"}}, {"parameter_slug": "load_tests_duration", "value": "10",
+      "parameter": {"name": "duration (s)"}}, {"parameter_slug": "load_tests_rampup",
+      "value": "500", "parameter": {"name": "users/second"}}, {"parameter_slug": "load_tests_users",
+      "value": "1000", "parameter": {"name": "users"}}, {"parameter_slug": "load_tests_file_name",
+      "value": "load_tests.py", "parameter": {"name": "file name"}}, {"parameter_slug":
+      "load_tests_repository_branch", "value": "master", "parameter": {"name": "repository
+      branch"}}, {"parameter_slug": "load_tests_users_per_worker", "value": "1000",
+      "parameter": {"name": "users/worker"}}], "configuration_extensions": [], "configuration_envvars":
+      [{"name": "testvar_2", "value": "testvarvalue 2"}], "test_source": {"source_type":
+      "repository", "project": {"userProjects": [{"user_id": "7f1aab7a-e941-46a2-b63a-5b28b80ad384"}]},
+      "repository": {"name": "updated repository", "url": "git@mockbitbucket.org:repo/two.git",
+      "configuration_type": {"slug_name": "load_tests"}, "project": {"userProjects":
+      [{"user_id": "7f1aab7a-e941-46a2-b63a-5b28b80ad384"}]}}, "test_creator": null}}}}}'
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate, br
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '6073'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.27.1
+      X-Hasura-Access-Key:
+      - devaccess
+      X-Hasura-Role:
+      - admin
+      X-Hasura-User-Id:
+      - 7f1aab7a-e941-46a2-b63a-5b28b80ad384
+    method: POST
+    uri: http://localhost:8080/v1alpha1/graphql
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAEAxXKSwqAIBAA0KvI7AUn8HuViDBnCjcGZhCId6+2j9eBYosQOuRycW0rP5zuls/y
+        W+V215LLASKI+TsEAZQ1mkizNLihRGSSDjFJpVSavI+7cxbGMsZ4AT4npkpdAAAA
+    headers:
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Fri, 11 Nov 2022 13:17:21 GMT
+      Server:
+      - Warp/3.3.19
+      Transfer-Encoding:
+      - chunked
+      x-request-id:
+      - 648dbbff-80d4-4733-a1a9-f70ff0650b39
+    status:
+      code: 200
+      message: OK
+version: 1

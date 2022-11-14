@@ -20,16 +20,19 @@
 import json
 import logging
 import os
+from contextlib import contextmanager
+from unittest import mock
+
 import sys
 import unittest
 
-import requests
 import vcr
 from werkzeug.test import Client
 from werkzeug.wrappers import Response
 
 from apps.bolt_api.app import create_app
 from services import const
+from unittests.fixtures.data.test_storage_client import get_storage_client_prototype
 
 logging.basicConfig()
 vcr_log = logging.getLogger("vcr")
@@ -67,6 +70,7 @@ class BoltCase(unittest.TestCase):
     recorded_config_id = '6535ab77-78cf-4953-bad7-5e11cea8fbf1'
     recorded_cloned_config_id = 'bb56e2c4-e1d9-4bcb-aeb1-8ff915f7cb18'
     recorded_execution_id = '0765dd5e-61b1-11ed-811c-000c299af887'
+    nonexistent_item = '96e1223c-8dc3-486a-881a-776952454cd4'
     user_role = const.ROLE_ADMIN
 
     def setUp(self) -> None:
@@ -117,6 +121,38 @@ class BoltCase(unittest.TestCase):
         parent_here = os.path.dirname(os.path.abspath(sys.modules[self.__class__.__module__].__file__))
         return os.path.join(parent_here, 'fixtures')
 
+    # Mocks, fakes and patches
     @staticmethod
     def get_current_datetime():
         return '00/00/0000 - 00:00:00'
+
+    @staticmethod
+    def create_namespaced_custom_object(*args, **kwargs):
+        return {
+            "metadata": {"name": "bolt-0000"}
+        }
+
+    def generate_hasura_token(self, *args, **kwargs):
+        return 'test_token', self.recorded_execution_id
+
+    @contextmanager
+    def patch(self, name: str):
+        """
+        Wraps mock method to clean up long, absolute package paths from tests
+        """
+        mocks = {
+            'workflows': (
+                'kubernetes.client.api.custom_objects_api.CustomObjectsApi.create_namespaced_custom_object',
+                self.create_namespaced_custom_object
+            ),
+            'token': (
+                'services.hasura.hasura.generate_hasura_token',
+                self.generate_hasura_token
+            ),
+            'storage_gcp': (
+                'cloudstorage.drivers.google.GoogleStorageDriver',
+                get_storage_client_prototype(f'reports/{self.recorded_execution_id}.pdf')
+            )
+        }
+        with mock.patch(*mocks.get(name, None)) as m:
+            yield m

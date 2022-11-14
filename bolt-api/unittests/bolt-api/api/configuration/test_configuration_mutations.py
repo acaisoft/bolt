@@ -20,6 +20,7 @@
 import json
 from unittest import mock
 
+from services import const
 from services.hasura import hce
 from services.projects.demo_project import SMOKE_TEST_TARGET
 from services.testing.testing_util import BoltCase
@@ -190,3 +191,38 @@ class TestConfigurationMutations(BoltCase):
         })
         self.assertIsNone(resp.errors(), 'expected no errors')
         self.assertEqual(self.recorded_config_id, resp.one('testrun_configuration_delete')['id'], 'expected config to have been deleted')
+
+    def test_create_wrong_role(self):
+        self.user_role = const.ROLE_TESTRUNNER
+        resp = self.gql_client('''mutation ($name:String!, $id:UUID!, $testsource_repo_id:UUID!, $test_target:String!) {
+                testrun_configuration_create(
+                    name:$name
+                    has_load_tests:true
+                    has_monitoring:false
+                    project_id:$id
+                    type_slug:"load_tests"
+                    test_source_id:$testsource_repo_id
+                    configuration_envvars:[{
+                        name:"testvar"
+                        value:"testvarvalue"
+                    }]
+                    configuration_parameters:[{
+                        parameter_slug:"load_tests_host"
+                        value:$test_target
+                    }, {
+                        parameter_slug:"load_tests_duration"
+                        value:"30"
+                    }]
+                ) { returning { 
+                    name 
+                    project_id
+                    configuration_parameters { value parameter_slug }
+                    configuration_envvars { name value }
+                }}
+            }''', {
+                'id': self.recorded_project_id,
+                'name': 'test',
+                'testsource_repo_id': self.recorded_repo_id,
+                'test_target': SMOKE_TEST_TARGET,
+            })
+        self.assertTrue('unauthorized role' in resp.json()['errors'][0]['message'])

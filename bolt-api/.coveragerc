@@ -1,0 +1,24 @@
+[report]
+# Regexes for lines to exclude from consideration
+exclude_lines =
+    # Don't complain if non-runnable code isn't run:
+    if 0:
+    if __name__ == .__main__.:
+
+    # Don't complain about abstract methods, they aren't run:
+    @(abc\.)?abstractmethod
+omit =
+    # no need to include these, code that is not used and waits for refactor or deletion
+    # upload processor is turned off
+    services/uploads/*
+    apps/bolt_api/app/appgraph/uploads.py
+    # healthcheck is turned off
+    apps/bolt_api/app/healthcheck.py
+    # legacy argo mutations, not used
+    apps/bolt_api/app/appgraph/argo/*
+    # test-related pieces
+    services/testing/*
+    # keycloak, not used
+    services/keycloak/*
+    # wsgi
+    *wsgi.py

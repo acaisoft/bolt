@@ -20,27 +20,15 @@
 import os
 from unittest import mock
 
-from services import const
 from services.testing.testing_util import BoltCase
 
 
 class TestTestRunsMutations(BoltCase):
 
-    @staticmethod
-    def create_namespaced_custom_object(*args, **kwargs):
-        return {
-            "metadata": {"name": "bolt-0000"}
-        }
-
-    def generate_hasura_token(self, *args, **kwargs):
-        return 'test_token', self.recorded_execution_id
-
     def test_start_test_run(self):
         with (
-            mock.patch('kubernetes.client.api.custom_objects_api.CustomObjectsApi.create_namespaced_custom_object',
-                       self.create_namespaced_custom_object),
-            mock.patch('services.hasura.hasura.generate_hasura_token',
-                       self.generate_hasura_token)
+            self.patch('workflows'),
+            self.patch('token')
         ):
             """Check that starting a run goes through all the motions."""
             resp = self.gql_client('''mutation ($conf_id:UUID!) {
