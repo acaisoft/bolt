@@ -132,6 +132,52 @@ class BoltCase(unittest.TestCase):
             "metadata": {"name": "bolt-0000"}
         }
 
+    @staticmethod
+    def delete_namespaced_pod(*args, **kwargs):
+        return {}
+
+    @staticmethod
+    def list_namespaced_pod(*args, **kwargs):
+        class Structure:
+            def __init__(self, entries):
+                self.__dict__.update(entries)
+        pods = {
+            "items": [
+                {
+                    "metadata": {
+                        "name": "worker",
+                        "labels": {}
+                    },
+                    "status": {
+                        "phase": "RUNNING"
+                    }
+                },
+                {
+                    "metadata": {
+                        "name": "worker",
+                        "labels": {}
+                    },
+                    "status": {
+                        "phase": "TEARING_DOWN"
+                    }
+                },
+                {
+                    "metadata": {
+                        "name": "master",
+                        "labels": {}
+                    },
+                    "status": {
+                        "phase": "RUNNING"
+                    }
+                }
+            ]
+        }
+        pods_obj = json.loads(json.dumps(pods), object_hook=Structure)
+        pods_obj.items[0].metadata.labels = {"prevent-bolt-termination": "true"}
+        pods_obj.items[1].metadata.labels = {"prevent-bolt-termination": "false"}
+        pods_obj.items[2].metadata.labels = {"prevent-bolt-termination": "false"}
+        return pods_obj
+
     def generate_hasura_token(self, *args, **kwargs):
         return 'test_token', self.recorded_execution_id
 
@@ -141,9 +187,17 @@ class BoltCase(unittest.TestCase):
         Wraps mock method to clean up long, absolute package paths from tests
         """
         mocks = {
-            'workflows': (
+            'workflows_create': (
                 'kubernetes.client.api.custom_objects_api.CustomObjectsApi.create_namespaced_custom_object',
                 self.create_namespaced_custom_object
+            ),
+            'workflows_list_pods': (
+                'kubernetes.client.api.core_v1_api.CoreV1Api.list_namespaced_pod',
+                self.list_namespaced_pod
+            ),
+            'workflows_terminate': (
+                'kubernetes.client.api.core_v1_api.CoreV1Api.delete_namespaced_pod',
+                self.delete_namespaced_pod
             ),
             'token': (
                 'services.hasura.hasura.generate_hasura_token',

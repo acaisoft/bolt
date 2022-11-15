@@ -27,7 +27,7 @@ class TestTestRunsMutations(BoltCase):
 
     def test_start_test_run(self):
         with (
-            self.patch('workflows'),
+            self.patch('workflows_create'),
             self.patch('token')
         ):
             """Check that starting a run goes through all the motions."""
@@ -48,3 +48,21 @@ class TestTestRunsMutations(BoltCase):
         }''', None)
         self.assertIsNone(resp.errors(), 'expected no errors')
         self.assertTrue(resp.json()['data']['testrun_repository_key'].startswith('ssh-rsa AAAA'), 'expected ssh key')
+
+    def test_testrun_terminate(self):
+        with (
+            self.patch('workflows_list_pods'),
+            self.patch('workflows_terminate'),
+            self.patch('token')
+        ):
+            resp = self.gql_client('''mutation ($argo_name: String!) {
+                testrun_terminate(argo_name: $argo_name) {
+                    ok
+                }
+            }''', {"argo_name": "bolt-0000"})
+            self.assertIsNone(resp.errors(), 'expected no errors')
+            self.assertTrue(resp.json()['data']['testrun_terminate']['ok'], 'testrun was not terminated')
+
+
+
+

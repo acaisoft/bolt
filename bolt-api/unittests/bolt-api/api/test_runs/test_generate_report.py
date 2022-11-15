@@ -8,7 +8,7 @@ from services.testing.testing_util import BoltCase
 class TestReportGenerator(BoltCase):
     def test_generate_report(self):
         with (
-            self.patch('workflows'),
+            self.patch('workflows_create'),
             self.patch('token'),
             self.patch('storage_gcp')
         ):

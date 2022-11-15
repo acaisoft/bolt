@@ -10,6 +10,9 @@ from .app import (
 )
 from .fake_apis import (
     fake_auth0,
-    fake_hasura
+    fake_hasura,
+    fake_broken_auth0_token,
+    fake_broken_auth0_list_email,
+    fake_broken_auth0_get_role
 )
 from .data.env import values as environment

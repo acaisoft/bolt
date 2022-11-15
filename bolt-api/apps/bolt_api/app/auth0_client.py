@@ -5,6 +5,7 @@ import requests
 import uuid
 
 from services import const
+from services.configure import ConfigurationError
 from services.hasura import hce
 from flask import current_app
 
@@ -12,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 ALLOWED_EMAILS_DOMAINS = ["acaisoft.com"]
 CONNECTION_TYPE = "google-oauth2"
-ROLE_TO_ASSIGN = 'tenantadmin'
+ROLE_TO_ASSIGN = const.ROLE_TENANT_ADMIN
 
 PROCESSED_BY_SCRIPT = False
 
@@ -160,7 +161,7 @@ class ProcessBoltUser:
     def process_user(self):
         if not all(self.hasura_config.values()):
             logger.error("Hasura config not provided")
-            return
+            raise ConfigurationError("Hasura is not properly configured")
         if not (users_list := self.auth0_client.get_users_list(self.email)):
             return
         user_google_list = list(filter(lambda u: u["identities"][0]["connection"] == CONNECTION_TYPE, users_list))
@@ -168,8 +169,7 @@ class ProcessBoltUser:
             raise ValueError(f"More then one google user for email {self.email}")
         user_id = user_google_list[0]["user_id"]
         # Current approach assumed that so far user can be assigned to one role
-        if not (role := self.auth0_client.get_role()):
-            return
+        role = self.auth0_client.get_role()
         self.auth0_client.assign_role_to_user(user_id, role)
         print(f"Role {ROLE_TO_ASSIGN} assigned to {self.email}")
         self.assign_user_to_project(user_id)
