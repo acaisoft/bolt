@@ -2,7 +2,7 @@ create_package:
 	python3 setup.py sdist bdist_wheel
 
 run_tests:
-	PYTHONPATH='.' pytest \
+	@PYTHONPATH='.' pytest \
 		--cov-report term-missing \
 		--cov=apps \
 		--cov=services unittests \
