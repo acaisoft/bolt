@@ -17,6 +17,7 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 import json
+import os
 import threading
 from time import sleep
 from urllib import parse
@@ -28,6 +29,7 @@ from services import const
 from services.logger import setup_custom_logger
 
 logger = setup_custom_logger(__file__)
+lock = threading.Lock()
 
 HEALTHY_REMOTE_SCHEMA = {'data': {'remote_schema_healthcheck': {'state': 'Alive'}}}
 
@@ -40,11 +42,12 @@ def verify_remote_schema_state(app):
     https://github.com/hasura/graphql-engine/issues/5126
     https://github.com/hasura/graphql-engine/issues/8396
     """
-    url = app.config.get(const.HASURA_GQL)
-    access_key = app.config.get('HASURA_GRAPHQL_ACCESS_KEY')
-    bidir_thread = threading.Thread(target=validate_dummy_mutation, args=(url, access_key))
-    logger.info('Checking remote schema state')
-    bidir_thread.start()
+    if os.environ.get("WERKZEUG_RUN_MAIN") == "true":
+        url = app.config.get(const.HASURA_GQL)
+        access_key = app.config.get('HASURA_GRAPHQL_ACCESS_KEY')
+        bidir_thread = threading.Thread(target=validate_dummy_mutation, args=(url, access_key))
+        logger.info('Checking remote schema state')
+        bidir_thread.start()
 
 
 def validate_dummy_mutation(url, access_key):
@@ -65,8 +68,9 @@ def validate_dummy_mutation(url, access_key):
             data=json.dumps({'query': query}),
             timeout=5
         ).json()
-    except Exception:
-        logger.info('Hasura is not up. Remote schema sync will happen naturally.')
+    except Exception as ex:
+        logger.warn('Hasura is not up. Starting Remote Schema reload watcher.')
+        request_remote_schema_reload(url, access_key)
     else:
         if response == HEALTHY_REMOTE_SCHEMA:
             logger.info('Hasura is up and remote schema is healthy.')
@@ -75,16 +79,17 @@ def validate_dummy_mutation(url, access_key):
 
 
 def request_remote_schema_reload(url, access_key, debug=True):
-    logger.info('Requesting remote schema reload.')
+    logger.info('Requesting Remote Schema reload.')
     headers = {
         'X-Hasura-Access-Key': access_key,
         'X-Hasura-User-Id': const.HASURA_CLIENT_USER_ID,
         'X-Hasura-Role': 'admin',
     }
-    retry_max = 3
+    retry_max = 60
     retry_count = 0
     success = False
     while retry_count < retry_max and not success:
+        lock.acquire()
         response = None
         try:
             response = requests.post(
@@ -95,7 +100,8 @@ def request_remote_schema_reload(url, access_key, debug=True):
                     'args': {
                         'name': const.HASURA_REMOTE_SCHEMA_NAME
                     }
-                })
+                }),
+                timeout=10
             ).json()
             if response == {'message': 'success'}:
                 success = True
@@ -104,12 +110,9 @@ def request_remote_schema_reload(url, access_key, debug=True):
                 raise Exception
         except Exception:
             retry_count += 1
-            logger.warn(f'Attempt {retry_count} of {retry_max}:\n'
-                        f'Remote Schema load failed.')
-            if retry_count < retry_max:
-                logger.warn('Retrying...')
-                sleep(3)
-            else:
-                logger.warn('This is a high risk of severe functionality loss.')
+            if retry_count >= retry_max:
+                logger.warn('Remote Schema load failed.\nThis is a high risk of severe functionality loss.')
         if debug:
-            logger.info(response)
+            logger.info(f"Attempt {retry_count}: {'no response.' if not response else response}")
+        lock.release()
+        sleep(5)
