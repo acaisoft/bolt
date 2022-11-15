@@ -190,7 +190,8 @@ class TestConfigurationMutations(BoltCase):
             'id': self.recorded_config_id,
         })
         self.assertIsNone(resp.errors(), 'expected no errors')
-        self.assertEqual(self.recorded_config_id, resp.one('testrun_configuration_delete')['id'], 'expected config to have been deleted')
+        self.assertEqual(self.recorded_config_id, resp.one('testrun_configuration_delete')['id'],
+                         'expected config to have been deleted')
 
     def test_create_wrong_role(self):
         self.user_role = const.ROLE_TESTRUNNER
@@ -220,9 +221,25 @@ class TestConfigurationMutations(BoltCase):
                     configuration_envvars { name value }
                 }}
             }''', {
-                'id': self.recorded_project_id,
-                'name': 'test',
-                'testsource_repo_id': self.recorded_repo_id,
-                'test_target': SMOKE_TEST_TARGET,
-            })
+            'id': self.recorded_project_id,
+            'name': 'test',
+            'testsource_repo_id': self.recorded_repo_id,
+            'test_target': SMOKE_TEST_TARGET,
+        })
         self.assertTrue('unauthorized role' in resp.json()['errors'][0]['message'])
+
+    def test_update_conf_wrong_slug(self):
+        resp = self.gql_client('''mutation ($id: UUID!, $type_slug: String!) {
+          testrun_configuration_update(id: $id, type_slug: $type_slug) {
+            returning {
+              type_slug
+            }
+          }
+        }''', {
+            'id': self.recorded_config_id,
+            'type_slug': 'test'
+        })
+        self.assertEqual(f"invalid choice of type_slug (valid choices: {const.TESTTYPE_CHOICE})",
+                         resp.json()['errors'][0]['message'], 'expected validation to kick in')
+
+

@@ -1,6 +1,7 @@
 *.pyc
 .DS_store
 .idea
+.coverage
 hasura-prod/
 hasura-dev/
 charts/bolt-api/files/secrets.py

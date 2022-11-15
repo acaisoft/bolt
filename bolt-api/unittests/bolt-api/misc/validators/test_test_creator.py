@@ -20,6 +20,8 @@
 import json
 import unittest
 
+from os import path
+
 from schematics.exceptions import DataError
 
 from services.validators.test_creator import validate_test_creator
@@ -27,8 +29,8 @@ from services.validators.test_creator import validate_test_creator
 
 class TestTestCreatorValidation(unittest.TestCase):
     @staticmethod
-    def _get_fixture(fixture_path):
-        with open(fixture_path, 'r') as f:
+    def _get_fixture(fixture_name):
+        with open(f"{path.dirname(__file__)}/fixtures/{fixture_name}", 'r') as f:
             return json.dumps(json.load(f))
 
     def test_validate_with_wrong_data(self):
@@ -69,26 +71,27 @@ class TestTestCreatorValidation(unittest.TestCase):
 
     def test_validate_json_fixtures(self):
         # good 1
-        json_data = self._get_fixture('services/validators/tests/fixtures/good_1.json')
+        json_data = self._get_fixture('good_1.json')
         self.assertIsNone(validate_test_creator(json_data, 100, 200))
         # good 2
-        json_data = self._get_fixture('services/validators/tests/fixtures/good_2.json')
+        json_data = self._get_fixture('good_2.json')
         self.assertIsNone(validate_test_creator(json_data, 100, 200))
         # good 3
-        json_data = self._get_fixture('services/validators/tests/fixtures/good_3.json')
+        json_data = self._get_fixture('good_3.json')
         self.assertIsNone(validate_test_creator(json_data, 100, 200))
         # bad 1
-        json_data = self._get_fixture('services/validators/tests/fixtures/bad_1.json')
+        json_data = self._get_fixture('bad_1.json')
         with self.assertRaises(DataError) as context:
             validate_test_creator(json_data, 100, 200)
-        self.assertEqual(str(context.exception), '{"test_type": ["Value must be one of (\'set\', \'sequence\')."]}')
+        self.assertEqual(str(context.exception), '{"test_type": ["Value (unknown) must be one of '
+                                                 '(\'set\', \'sequence\')."]}')
         # bad 2
-        json_data = self._get_fixture('services/validators/tests/fixtures/bad_2.json')
+        json_data = self._get_fixture('bad_2.json')
         with self.assertRaises(DataError) as context:
             validate_test_creator(json_data, 100, 200)
         self.assertEqual(str(context.exception), '{"payload": ["Only mappings may be used in a DictType"]}')
         # bad 3
-        json_data = self._get_fixture('services/validators/tests/fixtures/bad_3.json')
+        json_data = self._get_fixture('bad_3.json')
         with self.assertRaises(DataError) as context:
             validate_test_creator(json_data, 100, 200)
         self.assertEqual(str(context.exception), '{"endpoints": ["This field is required."]}')

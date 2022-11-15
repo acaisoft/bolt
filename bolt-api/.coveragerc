@@ -8,7 +8,7 @@ exclude_lines =
     # Don't complain about abstract methods, they aren't run:
     @(abc\.)?abstractmethod
 omit =
-    # no need to include these, code that is not used and waits for refactor or deletion
+    # no need to include these, code that is not used, is not testable (dev/debug/devops), or waits for refactor or deletion
     # upload processor is turned off
     services/uploads/*
     apps/bolt_api/app/appgraph/uploads.py
