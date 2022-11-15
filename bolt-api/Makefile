@@ -6,6 +6,7 @@ run_tests:
 		--cov-report term-missing \
 		--cov=apps \
 		--cov=services unittests \
+		--junitxml="unit_tests_results.xml"\
 		-W ignore::DeprecationWarning \
 		-W ignore::pytest.PytestCollectionWarning
 
