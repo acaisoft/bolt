@@ -31,6 +31,7 @@ export {
   composeValidators,
   requireWhenOtherIsSet,
   uniqueInArray,
+  requireWhenCondition,
 } from './validation'
 
 export { makeEmptyInitialValues, makeFlatValidationSchema } from './schema'

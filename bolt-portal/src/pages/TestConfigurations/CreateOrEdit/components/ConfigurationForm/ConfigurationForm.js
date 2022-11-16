@@ -87,8 +87,10 @@ export function ConfigurationForm(
     [fields, configuration]
   )
   React.useEffect(() => {
-    if (configuration?.configuration_monitorings[0]) {
+    if (configuration?.configuration_monitorings.length > 0) {
       setIsMonitoring(true)
+    } else {
+      setIsMonitoring(false)
     }
   }, [configuration])
 

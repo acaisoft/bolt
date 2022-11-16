@@ -74,6 +74,14 @@ export const requireWhenOtherIsSet = otherFieldPath => (value, allValues) => {
   }
 }
 
+export const requireWhenCondition = condition => value => {
+  if (condition && !['', undefined].includes(value)) {
+    return
+  } else {
+    return 'Required'
+  }
+}
+
 export const uniqueInArray = (arrayPath, fieldPath) => (value, allValues) => {
   if (!value) {
     return

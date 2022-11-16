@@ -298,8 +298,8 @@ function prepareInitialValues(data) {
     has_monitoring,
     configuration_envvars,
     configuration_monitorings,
+    prometheus_url,
   } = data
-
   const filteredParams = configuration_parameters.filter(
     ({ parameter_slug }) => !testSourceParameters.includes(parameter_slug)
   )
@@ -317,6 +317,7 @@ function prepareInitialValues(data) {
     configuration_type: type_slug,
     scenario_description: description,
     performed,
+    prometheus_url,
     scenario_parts: {
       has_pre_test,
       has_post_test,
@@ -364,6 +365,7 @@ function preparePayload(
     test_source_type,
     test_source,
     configuration_envvars,
+    prometheus_url,
   } = formValues
 
   const loadTestsSourceParams = Object.entries(test_source)
@@ -395,6 +397,7 @@ function preparePayload(
     has_post_test,
     has_load_tests,
     has_monitoring,
+    prometheus_url: isMonitoring ? prometheus_url : null,
     configuration_parameters: Object.entries({
       ...parameters,
       ...loadTestsSourceParams,
