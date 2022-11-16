@@ -49,7 +49,7 @@ const TestScenarioDetails = () => {
       <Grid container spacing={5} alignItems="center">
         <Grid item xs={12}>
           <SectionHeader
-            title={externalTestScenario.name || ''}
+            title={externalTestScenario?.name || ''}
             description={`${externalTestScenario?.configuration_type?.name} Scenario`}
           ></SectionHeader>
           <Typography
@@ -72,7 +72,7 @@ const TestScenarioDetails = () => {
                     title="Scenario Executions"
                   />
                   <ScenarioEvolutionGraph
-                    dataset={externalTestScenario.test_runs.slice(-20).reverse()}
+                    dataset={externalTestScenario.test_runs.slice(0, 20)}
                   />
                 </React.Fragment>
               ) : (
