@@ -131,6 +131,7 @@ select_permissions:
         - name
         - performed
         - project_id
+        - prometheus_url
         - test_source_id
         - type_slug
       filter:
