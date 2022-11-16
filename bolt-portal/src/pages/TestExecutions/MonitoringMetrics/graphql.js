@@ -19,19 +19,26 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { setFieldData } from './mutators'
-export const mutators = {
-  setFieldData,
-}
+import { gql } from '@apollo/client'
 
-export {
-  validateForm,
-  validateWhen,
-  validateOnFieldValue,
-  composeValidators,
-  requireWhenOtherIsSet,
-  uniqueInArray,
-  requireWhenCondition,
-} from './validation'
-
-export { makeEmptyInitialValues, makeFlatValidationSchema } from './schema'
+export const SUBSCRIBE_TO_EXECUTION_METRICS = gql`
+  subscription subscribeToExecutionMetrics(
+    $executionId: uuid!
+    $configurationId: uuid!
+  ) {
+    configuration_monitoring(
+      where: { configuration_id: { _eq: $configurationId } }
+    ) {
+      query
+      id
+      monitoring_metrics(
+        where: { execution_id: { _eq: $executionId } }
+        order_by: { timestamp: asc }
+      ) {
+        monitoring_id
+        timestamp
+        metric_value
+      }
+    }
+  }
+`

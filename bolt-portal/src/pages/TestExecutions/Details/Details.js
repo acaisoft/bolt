@@ -56,7 +56,8 @@ export function Details() {
     fetchPolicy: 'cache-and-network',
   })
 
-  const { getEndpointDetailsUrl, getMonitoringUrl } = useUrlGetters(params)
+  const { getEndpointDetailsUrl, getMonitoringUrl, getMonitoringMetricsDetailsUrl } =
+    useUrlGetters(params)
 
   if (loading || error || !execution) {
     return (
@@ -88,6 +89,14 @@ export function Details() {
           testStatus={execution.status}
           reportGenerationStatus={execution.report}
         />
+        <Button
+          color="primary"
+          variant="contained"
+          data-testid="monitoring-details-button"
+          href={getMonitoringMetricsDetailsUrl(executionId)}
+        >
+          Show metrics
+        </Button>
         <ExecutionActionsMenu execution={execution} />
       </SectionHeader>
       <div className={classes.configDetails}>
@@ -137,9 +146,20 @@ function useUrlGetters(matchParams) {
     })
   }, [matchParams])
 
+  const getMonitoringMetricsDetailsUrl = useCallback(
+    executionId => {
+      return getUrl(routes.projects.configurations.executions.monitoringMetrics, {
+        ...matchParams,
+        executionId: executionId,
+      })
+    },
+    [matchParams]
+  )
+
   return {
     getEndpointDetailsUrl,
     getMonitoringUrl,
+    getMonitoringMetricsDetailsUrl,
   }
 }
 

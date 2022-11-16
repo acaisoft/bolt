@@ -15,11 +15,13 @@ if __name__ == "__main__":
         raise EnvironmentError(f"{diff} variables are not provided")
 
     hasura_client = HasuraClient()
-    queries_resp = hasura_client.get_queries()
+    prometheus_url, queries_resp = hasura_client.get_prometheus_url_and_queries()
+    if not prometheus_url:
+        raise Exception("Prometheus Url not provided")
     if queries_resp:
         queries = list(map(lambda x: x["query"], queries_resp))
         concatenated_queries = "|".join(queries)
-        prometheus_client = PrometheusClient()
+        prometheus_client = PrometheusClient(prometheus_url)
         metrics_object_list = []
 
         def job():

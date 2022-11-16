@@ -19,19 +19,16 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { setFieldData } from './mutators'
-export const mutators = {
-  setFieldData,
-}
+import { makeStyles } from '@material-ui/core'
 
-export {
-  validateForm,
-  validateWhen,
-  validateOnFieldValue,
-  composeValidators,
-  requireWhenOtherIsSet,
-  uniqueInArray,
-  requireWhenCondition,
-} from './validation'
-
-export { makeEmptyInitialValues, makeFlatValidationSchema } from './schema'
+export default makeStyles(({ spacing }) => {
+  return {
+    paper: {
+      padding: spacing(4),
+      width: '100%',
+    },
+    buttonContainer: {
+      textAlign: 'right',
+    },
+  }
+})

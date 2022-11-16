@@ -19,19 +19,4 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { setFieldData } from './mutators'
-export const mutators = {
-  setFieldData,
-}
-
-export {
-  validateForm,
-  validateWhen,
-  validateOnFieldValue,
-  composeValidators,
-  requireWhenOtherIsSet,
-  uniqueInArray,
-  requireWhenCondition,
-} from './validation'
-
-export { makeEmptyInitialValues, makeFlatValidationSchema } from './schema'
+export { default } from './MonitoringMetrics'

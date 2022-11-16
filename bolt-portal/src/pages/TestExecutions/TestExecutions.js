@@ -26,6 +26,7 @@ import ListPage from './List'
 import DetailsPage from './Details'
 import EndpointDetailsPage from './EndpointDetails'
 import MonitoringPage from './Monitoring'
+import MonitoringMetricsPage from './MonitoringMetrics'
 
 export function TestExecutions() {
   return (
@@ -37,6 +38,10 @@ export function TestExecutions() {
         element={<EndpointDetailsPage />}
       />
       <Route path=":executionId/monitoring" element={<MonitoringPage />} />
+      <Route
+        path=":executionId/monitoringMetrics"
+        element={<MonitoringMetricsPage />}
+      />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )

@@ -87,8 +87,10 @@ export function ConfigurationForm(
     [fields, configuration]
   )
   React.useEffect(() => {
-    if (configuration?.configuration_monitorings[0]) {
+    if (configuration?.configuration_monitorings.length > 0) {
       setIsMonitoring(true)
+    } else {
+      setIsMonitoring(false)
     }
   }, [configuration])
 
@@ -144,11 +146,13 @@ export function ConfigurationForm(
           {/* TODO: uncomment when scenario parts section will be needed */}
           {/*<ScenarioPartsFields fields={fields} />*/}
           <ConfigurationTypeFields fields={fields} configuration={configuration} />
-          <MonitoringFields
-            key="monitoringFields"
-            setIsMonitoring={setIsMonitoring}
-            isMonitoring={isMonitoring}
-          />
+          {!isExternalScenario && (
+            <MonitoringFields
+              key="monitoringFields"
+              setIsMonitoring={setIsMonitoring}
+              isMonitoring={isMonitoring}
+            />
+          )}
         </form>
       )}
     </Form>

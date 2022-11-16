@@ -1,6 +1,13 @@
 table:
   schema: public
   name: monitoring_metric
+object_relationships:
+  - name: configuration_monitoring
+    using:
+      foreign_key_constraint_on: monitoring_id
+  - name: execution
+    using:
+      foreign_key_constraint_on: execution_id
 insert_permissions:
   - role: tenantadmin
     permission:

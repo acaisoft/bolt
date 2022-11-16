@@ -5,6 +5,14 @@ object_relationships:
   - name: configuration
     using:
       foreign_key_constraint_on: configuration_id
+array_relationships:
+  - name: monitoring_metrics
+    using:
+      foreign_key_constraint_on:
+        column: monitoring_id
+        table:
+          schema: public
+          name: monitoring_metric
 insert_permissions:
   - role: tenantadmin
     permission:

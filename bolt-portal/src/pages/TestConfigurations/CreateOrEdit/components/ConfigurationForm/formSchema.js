@@ -273,6 +273,7 @@ function prepareInitialValues(data) {
     return {
       configuration_type: 'load_tests',
       configuration_envvars: [{ name: '', value: '' }],
+      configuration_monitorings: [{ query: '', chart_type: 'line_chart' }],
       test_source_type: 'repository',
       scenario_parts: {
         has_load_tests: true,
@@ -297,8 +298,8 @@ function prepareInitialValues(data) {
     has_monitoring,
     configuration_envvars,
     configuration_monitorings,
+    prometheus_url,
   } = data
-
   const filteredParams = configuration_parameters.filter(
     ({ parameter_slug }) => !testSourceParameters.includes(parameter_slug)
   )
@@ -316,6 +317,7 @@ function prepareInitialValues(data) {
     configuration_type: type_slug,
     scenario_description: description,
     performed,
+    prometheus_url,
     scenario_parts: {
       has_pre_test,
       has_post_test,
@@ -363,6 +365,7 @@ function preparePayload(
     test_source_type,
     test_source,
     configuration_envvars,
+    prometheus_url,
   } = formValues
 
   const loadTestsSourceParams = Object.entries(test_source)
@@ -394,6 +397,7 @@ function preparePayload(
     has_post_test,
     has_load_tests,
     has_monitoring,
+    prometheus_url: isMonitoring ? prometheus_url : null,
     configuration_parameters: Object.entries({
       ...parameters,
       ...loadTestsSourceParams,
@@ -411,13 +415,12 @@ function preparePayload(
     test_source_id: test_source[test_source_type],
   })
 
-  const asd = {
+  return {
     ...variables,
     ...(isMonitoring && {
       configuration_monitorings: formValues.configuration_monitorings,
     }),
   }
-  return asd
 }
 
 export { useFormSchema, prepareInitialValues, preparePayload }

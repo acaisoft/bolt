@@ -74,6 +74,10 @@ class CreateValidate(graphene.Mutation):
             required=False,
             description='A few words summarizing the configuration'
         )
+        prometheus_url = graphene.String(
+            required=False,
+            description='Endpoint for metrics fetching'
+        )
 
     Output = gql_util.ValidationInterface
 
@@ -82,7 +86,7 @@ class CreateValidate(graphene.Mutation):
             info, name, type_slug, project_id,
             test_source_id=None, configuration_parameters=None, configuration_envvars=None,
             has_pre_test=False, has_post_test=False, has_load_tests=False, has_monitoring=False, description=None,
-            configuration_monitorings=None
+            configuration_monitorings=None, prometheus_url=None
     ):
         project_id = str(project_id)
         assert type_slug in const.TESTTYPE_CHOICE, \
@@ -195,6 +199,9 @@ class CreateValidate(graphene.Mutation):
         if type_slug:
             query_data['type_slug'] = type_slug
 
+        if prometheus_url is not None:
+            query_data['prometheus_url'] = prometheus_url
+
         if configuration_envvars:
             for rp in configuration_envvars:
                 assert rp['name'].replace('_', '').isalnum(), \
@@ -267,11 +274,11 @@ class CreateValidate(graphene.Mutation):
     def mutate(
             self, info, name, type_slug, project_id, test_source_id=None, configuration_parameters=None,
             configuration_envvars=None, has_pre_test=False, has_post_test=False, has_load_tests=False,
-            has_monitoring=False, description=None, configuration_monitorings=None):
+            has_monitoring=False, description=None, configuration_monitorings=None, prometheus_url=None):
         CreateValidate.validate(
             info, name, type_slug, project_id, test_source_id, configuration_parameters,
             configuration_envvars, has_pre_test, has_post_test, has_load_tests, has_monitoring, description,
-            configuration_monitorings
+            configuration_monitorings, prometheus_url
         )
         return gql_util.ValidationResponse(ok=True)
 
@@ -284,10 +291,11 @@ class Create(CreateValidate):
     def mutate(
             self, info, name, type_slug, project_id, test_source_id=None, configuration_parameters=None,
             configuration_envvars=None, has_pre_test=False, has_post_test=False, has_load_tests=False,
-            has_monitoring=False, description=None, configuration_monitorings=None):
+            has_monitoring=False, description=None, configuration_monitorings=None, prometheus_url=None):
         query_params = CreateValidate.validate(
             info, name, type_slug, project_id, test_source_id, configuration_parameters, configuration_envvars,
-            has_pre_test, has_post_test, has_load_tests, has_monitoring, description, configuration_monitorings
+            has_pre_test, has_post_test, has_load_tests, has_monitoring, description, configuration_monitorings,
+            prometheus_url
         )
 
         query = '''mutation ($data:[configuration_insert_input!]!) {

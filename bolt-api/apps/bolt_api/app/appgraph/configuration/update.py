@@ -76,6 +76,10 @@ class UpdateValidate(graphene.Mutation):
             types.ConfigurationMonitoringInput,
             required=False,
             description='-.')
+        prometheus_url = graphene.String(
+            required=False,
+            description='Endpoint for metrics fetching'
+        )
 
     Output = gql_util.ValidationInterface
 
@@ -83,7 +87,9 @@ class UpdateValidate(graphene.Mutation):
     def validate(
             info, id, name=None, type_slug=None, test_source_id=None, configuration_parameters=None,
             configuration_envvars=None, has_pre_test=None, has_post_test=None, has_load_tests=None,
-            has_monitoring=None, monitoring_chart_configuration=None, description=None, configuration_monitorings=None):
+            has_monitoring=None, monitoring_chart_configuration=None, description=None, configuration_monitorings=None,
+            prometheus_url=None
+    ):
 
         role, user_id = gql_util.get_request_role_userid(
             info, (const.ROLE_ADMIN, const.ROLE_TENANT_ADMIN, const.ROLE_MANAGER, const.ROLE_TESTER))
@@ -220,6 +226,9 @@ class UpdateValidate(graphene.Mutation):
         if type_slug:
             query_data['type_slug'] = type_slug
 
+
+        query_data['prometheus_url'] = prometheus_url
+
         if configuration_monitorings:
             query_data['configuration_monitorings'] = {'data': []}
             for item in configuration_monitorings:
@@ -299,10 +308,11 @@ class UpdateValidate(graphene.Mutation):
 
     def mutate(self, info, id, name=None, type_slug=None, test_source_id=None, configuration_parameters=None,
                configuration_envvars=None, has_pre_test=None, has_post_test=None, has_load_tests=None,
-               has_monitoring=None, description=None, configuration_monitorings=None):
+               has_monitoring=None, description=None, configuration_monitorings=None, prometheus_url=None):
         UpdateValidate.validate(
             info, id, name, type_slug, test_source_id, configuration_parameters, configuration_envvars,
-            has_pre_test, has_post_test, has_load_tests, has_monitoring, description, configuration_monitorings
+            has_pre_test, has_post_test, has_load_tests, has_monitoring, description, configuration_monitorings,
+            prometheus_url
         )
         return gql_util.ValidationResponse(ok=True)
 
@@ -315,11 +325,13 @@ class Update(UpdateValidate):
     def mutate(
             self, info, id, name=None, type_slug=None, test_source_id=None, configuration_parameters=None,
             configuration_envvars=None, has_pre_test=None, has_post_test=None, has_load_tests=None,
-            has_monitoring=None, monitoring_chart_configuration=None, description=None, configuration_monitorings=None):
+            has_monitoring=None, monitoring_chart_configuration=None, description=None, configuration_monitorings=None,
+            prometheus_url=None
+    ):
         query_params = UpdateValidate.validate(
             info, id, name, type_slug, test_source_id, configuration_parameters, configuration_envvars,
             has_pre_test, has_post_test, has_load_tests, has_monitoring, monitoring_chart_configuration, description,
-            configuration_monitorings
+            configuration_monitorings, prometheus_url
         )
 
         params = query_params.pop('configuration_parameters', {'data': []})['data']
