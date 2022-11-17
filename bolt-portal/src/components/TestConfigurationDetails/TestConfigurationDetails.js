@@ -44,7 +44,13 @@ function TestConfigurationDetails({ children, configuration, gridProps = {} }) {
     )
   }
 
-  const { test_source, description, configuration_envvars = [] } = configuration
+  const {
+    test_source,
+    description,
+    configuration_envvars = [],
+    configuration_monitorings = [],
+    prometheus_url = null,
+  } = configuration
   const { source_type } = test_source || {}
   const isRepository = source_type === TestSourceType.REPOSITORY
 
@@ -74,11 +80,8 @@ function TestConfigurationDetails({ children, configuration, gridProps = {} }) {
             </Grid>
             {description && (
               <Grid item xs={12} md={3} {...generalSectionItemProps}>
-              <LabeledValue
-                label="Description"
-                value={description}
-              />
-            </Grid>
+                <LabeledValue label="Description" value={description} />
+              </Grid>
             )}
             <Grid item xs={12} md={3} {...generalSectionItemProps}>
               <LabeledValue
@@ -106,6 +109,23 @@ function TestConfigurationDetails({ children, configuration, gridProps = {} }) {
               gridProps={gridProps}
             />
 
+            {configuration_monitorings.length > 0 && (
+              <React.Fragment>
+                <Grid item xs={12}>
+                  <SectionHeader size="medium" title="Monitoring Parameters" />
+                </Grid>
+                {prometheus_url && (
+                  <Grid item xs={12}>
+                    <LabeledValue label="Prometheus Url" value={prometheus_url} />
+                  </Grid>
+                )}
+                {configuration_monitorings.map(query => (
+                  <Grid key={query.query} item xs={12} md={3}>
+                    <LabeledValue label={query.query} />
+                  </Grid>
+                ))}
+              </React.Fragment>
+            )}
             {configuration_envvars.length > 0 && (
               <React.Fragment>
                 <Grid item xs={12}>
