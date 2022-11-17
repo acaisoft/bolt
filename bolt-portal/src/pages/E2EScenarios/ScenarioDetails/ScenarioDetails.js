@@ -58,7 +58,7 @@ const TestScenarioDetails = () => {
             variant="body1"
             className={classes.marginTop}
           >
-            {externalTestScenario.description || ''}
+            {externalTestScenario?.description || ''}
           </Typography>
         </Grid>
         {externalTestScenario?.test_runs?.length > 0 && (
@@ -84,7 +84,7 @@ const TestScenarioDetails = () => {
       </Grid>
       <div className={classes.marginTop}>
         <DataTable
-          data={externalTestScenario.test_runs}
+          data={externalTestScenario?.test_runs}
           isLoading={loading}
           rowKey={test_run => test_run.id}
         >
