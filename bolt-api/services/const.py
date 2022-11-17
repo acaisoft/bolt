@@ -167,6 +167,9 @@ DEFAULT_IMAGE_BOLT_BUILDER = 'eu.gcr.io/acai-bolt/argo-builder:revival-v4'
 # default report generator image, override with IMAGE_REPORT_BUILDER
 DEFAULT_IMAGE_REPORT_BUILDER = 'eu.gcr.io/acai-bolt/bolt-reporting:os-test-05'
 
+# default metric watcher image, override with IMAGE_METRIC_WATCHER
+DEFAULT_IMAGE_METRIC_WATCHER = 'eu.gcr.io/acai-bolt-internal/bolt-metric-watcher:dev-01'
+
 # allows load tests setup/teardown to work without getting ratelimited by repository hosting
 MOCK_REPOSITORY = 'git@mockbitbucket.org:repo'
 
@@ -181,6 +184,7 @@ MAX_GRAPH_POINTS = 1400
 # argo images
 IMAGE_BOLT_BUILDER = 'IMAGE_BOLT_BUILDER'
 IMAGE_REPORT_BUILDER = 'IMAGE_REPORT_BUILDER'
+IMAGE_METRIC_WATCHER = 'IMAGE_METRIC_WATCHER'
 
 # images upload
 BUCKET_PRIVATE_STORAGE = "uploads-bolt-acaisoft"

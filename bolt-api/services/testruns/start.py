@@ -62,6 +62,7 @@ def start(app_config, conf_id, user_id, no_cache):
             has_load_tests
             has_monitoring
             monitoring_chart_configuration
+            prometheus_url
             configuration_parameters {
                 parameter_slug
                 value
@@ -164,6 +165,7 @@ def start(app_config, conf_id, user_id, no_cache):
             'job_monitoring': None,
             'job_post_stop': None,
             'job_report': None,
+            'job_metric_watcher': None,
             'no_cache': no_cache,
         }
         # pre start
@@ -186,6 +188,10 @@ def start(app_config, conf_id, user_id, no_cache):
         # post stop
         if test_config['has_post_test']:
             workflow_data['job_post_stop'] = {'env_vars': {}}
+
+        # metrics
+        if test_config['prometheus_url']:
+            workflow_data['job_metric_watcher'] = {'env_vars': {}}
 
         try:
             workflow = WorkflowsResource(KubernetesService(app_config))
