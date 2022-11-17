@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { useParams } from 'react-router-dom'
 import { FormHelperText } from '@material-ui/core'
@@ -78,7 +78,7 @@ function GenerateReportButton({ testStatus, reportGenerationStatus }) {
     try {
       let data = await generateReportMutation()
       let url = data.response.data.testrun_get_report.data
-      if (typeof(url) === "string" && url.startsWith("http")) {
+      if (typeof url === 'string' && url.startsWith('http')) {
         downloadReport(url)
         setProcessClick(false)
       } else {
@@ -90,8 +90,13 @@ function GenerateReportButton({ testStatus, reportGenerationStatus }) {
     }
   }
 
+  const infoText = useMemo(
+    () => getInfoText({ reportGenerationStatus, processClick, ...reportState }),
+    [processClick, reportGenerationStatus]
+  )
+
   return (
-    <div className={classes.wrapper}>
+    <div className={classes.wrapper} style={{ ...(infoText && { marginTop: 24 }) }}>
       <Button
         color="secondary"
         variant="contained"
@@ -102,9 +107,7 @@ function GenerateReportButton({ testStatus, reportGenerationStatus }) {
         {getButtonText(reportGenerationStatus, processClick)}
       </Button>
 
-      <FormHelperText>
-        {getInfoText({ reportGenerationStatus, processClick, ...reportState })}
-      </FormHelperText>
+      <FormHelperText>{infoText}</FormHelperText>
     </div>
   )
 }
