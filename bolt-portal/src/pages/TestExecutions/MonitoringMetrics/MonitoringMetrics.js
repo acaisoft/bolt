@@ -28,6 +28,7 @@ import {
   SectionHeader,
   LoadingPlaceholder,
   ErrorPlaceholder,
+  NoDataPlaceholder,
 } from 'components/index'
 import { getUrl } from 'utils/router'
 import { Paper, Box } from '@material-ui/core'
@@ -64,7 +65,13 @@ const MonitoringMetrics = () => {
   )
 
   const formatTitle = title => title.replace(/_/g, ' ')
-
+  if (configuration_monitoring?.length === 0) {
+    return (
+      <Box p={3}>
+        <NoDataPlaceholder title="No metrics have been gathered..." />
+      </Box>
+    )
+  }
   if (loading || error) {
     return (
       <Box p={3}>
@@ -91,9 +98,10 @@ const MonitoringMetrics = () => {
       </SectionHeader>
 
       {configuration_monitoring &&
-        configuration_monitoring.map(query => (
+        configuration_monitoring.map((query, index) => (
           <ExpandablePanel
             defaultExpanded={true}
+            key={`${index}-expand-chart`}
             style={{ textTransform: 'capitalize' }}
             title={formatTitle(query.query)}
           >
