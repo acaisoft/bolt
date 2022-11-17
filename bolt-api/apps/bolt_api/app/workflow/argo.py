@@ -340,25 +340,25 @@ class Argo:
                     "resources": self.CONTAINER_RESOURCES["worker"],
                 },
             }
-
-            template_load_tests_metric_watcher = {
-                "name": "load-tests-metric-watcher",
-                "nodeSelector": {"group": "load-tests-metric-watcher"},
-                "container": {
-                    "image": "{{workflow.outputs.parameters.image}}",
-                    "command": ["python", "-m", "monitoring"],
-                    "env": [
-                        *self._map_envs(workflow.job_metric_watcher.env_vars),
-                        {"name": "EXECUTION_ID", "value": workflow.execution_id},
-                        {"name": "BOLT_GRAPHQL_URL", "value": self.HASURA_GQL},
-                        {"name": "BOLT_HASURA_TOKEN", "value": workflow.auth_token},
-                        {"name": "PROMETHEUS_URL", "value": self.PROMETHEUS_URL},
-                        {"name": "MONITORING_INTERVAL", "value": str(self.MONITORING_INTERVAL)},
-                    ],
-                    "resources": self.CONTAINER_RESOURCES["master"],
-                },
-            }
-            templates.append(template_load_tests_metric_watcher)
+            if workflow.job_metric_watcher is not None:
+                template_load_tests_metric_watcher = {
+                    "name": "load-tests-metric-watcher",
+                    "nodeSelector": {"group": "load-tests-metric-watcher"},
+                    "container": {
+                        "image": "{{workflow.outputs.parameters.image}}",
+                        "command": ["python", "-m", "monitoring"],
+                        "env": [
+                            *self._map_envs(workflow.job_metric_watcher.env_vars),
+                            {"name": "EXECUTION_ID", "value": workflow.execution_id},
+                            {"name": "BOLT_GRAPHQL_URL", "value": self.HASURA_GQL},
+                            {"name": "BOLT_HASURA_TOKEN", "value": workflow.auth_token},
+                            {"name": "PROMETHEUS_URL", "value": self.PROMETHEUS_URL},
+                            {"name": "MONITORING_INTERVAL", "value": str(self.MONITORING_INTERVAL)},
+                        ],
+                        "resources": self.CONTAINER_RESOURCES["master"],
+                    },
+                }
+                templates.append(template_load_tests_metric_watcher)
 
             if workflow.job_load_tests.host is not None:
                 template_load_tests_slave["container"]["env"].append(
