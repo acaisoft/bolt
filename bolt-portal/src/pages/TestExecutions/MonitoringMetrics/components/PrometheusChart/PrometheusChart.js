@@ -35,7 +35,8 @@ const PrometheusChart = ({ data }) => {
           data &&
           data.length > 0 &&
           data[0].metric_value.map(
-            value => value.metric.pod || value.metric.service
+            value =>
+              value.metric.bolt_name || value.metric.pod || value.metric.service
           ),
       },
       xAxis: {
@@ -51,7 +52,8 @@ const PrometheusChart = ({ data }) => {
       series:
         data && data.length > 0
           ? data[0].metric_value.map((value, index) => ({
-              name: value.metric.pod || value.metric.service,
+              name:
+                value.metric.bolt_name || value.metric.pod || value.metric.service,
               type: 'line',
               symbol: 'none',
               data:
