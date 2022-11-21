@@ -43,6 +43,7 @@ export const SUBSCRIBE_TO_EXECUTION_DETAILS = gql`
       end_locust
       argo_name
       status
+      cpu_warning
       configuration {
         id
         name
