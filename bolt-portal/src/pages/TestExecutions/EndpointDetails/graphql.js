@@ -34,6 +34,9 @@ export const GET_ENDPOINT = gql`
       method
       name
       execution_id
+      execution {
+        cpu_warning
+      }
     }
   }
 `
