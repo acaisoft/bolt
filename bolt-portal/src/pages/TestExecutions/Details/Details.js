@@ -40,6 +40,7 @@ import { ExecutionActionsMenu, GenerateReportButton } from '../components'
 import { CompareResults, StatusGraph, ResultsPerEndpoint } from './components'
 import { SUBSCRIBE_TO_EXECUTION } from './graphql'
 import useStyles from './Details.styles'
+import CPUWarningBadge from "../components/CPUWarningBadge/CPUWarningBadge";
 
 export function Details() {
   const params = useParams()
@@ -118,6 +119,7 @@ export function Details() {
           executionId={executionId}
           configurationId={configurationId}
         />
+        {execution.cpu_warning && <CPUWarningBadge/>}
         <ResultsPerTick classes={classes} execution={execution} />
         <ResultsPerEndpoint
           classes={classes}
