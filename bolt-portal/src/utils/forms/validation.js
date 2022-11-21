@@ -82,6 +82,18 @@ export const requireWhenCondition = condition => value => {
   }
 }
 
+export const validatePrometheusUrl = () => value => {
+  if (/^(http|https):\/\/[^ "]+$/.test(value)) {
+    if (value.split('//')[1].split('/').length > 1) {
+      return 'Domain name must be provided'
+    } else {
+      return
+    }
+  } else {
+    return 'Inorrect url format'
+  }
+}
+
 export const uniqueInArray = (arrayPath, fieldPath) => (value, allValues) => {
   if (!value) {
     return

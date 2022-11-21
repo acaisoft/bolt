@@ -37,6 +37,7 @@ import {
   requireWhenOtherIsSet,
   uniqueInArray,
   requireWhenCondition,
+  validatePrometheusUrl,
 } from 'utils/forms'
 
 function MonitoringFields({ isMonitoring, setIsMonitoring }) {
@@ -65,7 +66,10 @@ function MonitoringFields({ isMonitoring, setIsMonitoring }) {
                 field={{ inputProps: { label: 'Prometheus Url' } }}
                 variant="filled"
                 fullWidth
-                validate={composeValidators(requireWhenCondition(isMonitoring))}
+                validate={composeValidators(
+                  requireWhenCondition(isMonitoring),
+                  validatePrometheusUrl()
+                )}
               />
             </Grid>
           </Grid>
