@@ -75,7 +75,7 @@ function TestDetails({ titleStart, execution, className }) {
         </ExpandablePanel>
       </div>
       <Grid container spacing={2}>
-        {execution.cpu_warning && <CPUWarningBadge/>}
+        {execution?.cpu_warning && <CPUWarningBadge/>}
         <ResultsPerTick
           classes={classes}
           execution={execution}
