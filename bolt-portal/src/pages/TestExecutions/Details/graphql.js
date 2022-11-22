@@ -45,6 +45,7 @@ export const SUBSCRIBE_TO_EXECUTION = gql`
       argo_namespace
       status
       report
+      cpu_warning
       configuration {
         id
         name

@@ -106,6 +106,7 @@ select_permissions:
         - commit_hash
         - configuration_id
         - configuration_snapshot
+        - cpu_warning
         - created_by_id
         - end
         - end_locust
@@ -146,6 +147,7 @@ select_permissions:
         - commit_hash
         - configuration_id
         - configuration_snapshot
+        - cpu_warning
         - created_by_id
         - end
         - end_locust
@@ -180,6 +182,7 @@ select_permissions:
       columns:
         - configuration_id
         - configuration_snapshot
+        - cpu_warning
         - id
         - report
       filter:
@@ -193,13 +196,14 @@ select_permissions:
         - commit_hash
         - configuration_id
         - configuration_snapshot
+        - cpu_warning
         - created_by_id
         - end
         - end_locust
         - failed_requests
         - id
-        - report
         - passed_requests
+        - report
         - start
         - start_locust
         - status
@@ -233,6 +237,7 @@ select_permissions:
         - commit_hash
         - configuration_id
         - configuration_snapshot
+        - cpu_warning
         - created_by_id
         - end
         - end_locust
@@ -270,6 +275,7 @@ select_permissions:
         - commit_hash
         - configuration_id
         - configuration_snapshot
+        - cpu_warning
         - created_by_id
         - end
         - id
@@ -289,6 +295,7 @@ update_permissions:
   - role: reportgenerator
     permission:
       columns:
+        - cpu_warning
         - report
       filter:
         id:
@@ -297,6 +304,7 @@ update_permissions:
   - role: testrunner
     permission:
       columns:
+        - cpu_warning
         - end
         - end_locust
         - start

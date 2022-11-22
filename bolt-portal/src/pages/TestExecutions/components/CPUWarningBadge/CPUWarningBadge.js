@@ -19,24 +19,29 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { gql } from '@apollo/client'
+import useStyles from "./CPUWarningBadge.style";
+import {Grid, Paper, Typography} from "@material-ui/core";
+import {WarningRounded} from '@material-ui/icons'
+import React from "react";
 
-export const GET_ENDPOINT = gql`
-  query getEndpoint($endpointId: String!) {
-    endpoint: execution_requests(
-      where: { identifier: { _eq: $endpointId } }
-      order_by: { timestamp: desc }
-      limit: 1
-    ) {
-      id
-      identifier
-      timestamp
-      method
-      name
-      execution_id
-      execution {
-        cpu_warning
-      }
-    }
-  }
-`
+
+export function CPUWarningBadge() {
+  const classes = useStyles()
+
+  return (
+    <Grid item xs={12}>
+      <Paper square className={classes.tile}>
+        <div className={classes.wrapper} data-testid="cpu-warning-badge">
+          <WarningRounded data-testid="test-run-status-icon" className={classes.icon} />
+          <Typography className={classes.text} variant="body1" displayBlock>
+            CPU usage has surpassed 90% on at least one of the worker nodes.
+            This may cause test results to be inaccurate.
+            Please consider lowering users/worker ratio.
+          </Typography>
+        </div>
+      </Paper>
+    </Grid>
+  )
+}
+
+export default CPUWarningBadge

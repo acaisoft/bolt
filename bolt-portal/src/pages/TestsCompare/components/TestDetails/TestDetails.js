@@ -34,6 +34,7 @@ import {
 } from 'components'
 import CompareEndpointResults from './CompareEndpointResults'
 import useStyles from './TestDetails.styles'
+import CPUWarningBadge from "../../../TestExecutions/components/CPUWarningBadge/CPUWarningBadge";
 
 const gridProps = {
   iconContainerProps: { xs: 12, md: 12, xl: 1 },
@@ -74,6 +75,7 @@ function TestDetails({ titleStart, execution, className }) {
         </ExpandablePanel>
       </div>
       <Grid container spacing={2}>
+        {execution?.cpu_warning && <CPUWarningBadge/>}
         <ResultsPerTick
           classes={classes}
           execution={execution}
