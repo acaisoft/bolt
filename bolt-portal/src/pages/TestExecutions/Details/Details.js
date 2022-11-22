@@ -119,7 +119,7 @@ export function Details() {
           executionId={executionId}
           configurationId={configurationId}
         />
-        {execution.cpu_warning && <CPUWarningBadge/>}
+        {execution?.cpu_warning && <CPUWarningBadge/>}
         <ResultsPerTick classes={classes} execution={execution} />
         <ResultsPerEndpoint
           classes={classes}

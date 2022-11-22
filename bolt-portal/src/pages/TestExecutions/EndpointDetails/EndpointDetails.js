@@ -59,7 +59,7 @@ function EndpointDetails() {
     <div>
       <SectionHeader title={`${endpoint.method} ${endpoint.name}`} marginBottom />
       <Grid container spacing={2}>
-        {endpoint.execution.cpu_warning && <CPUWarningBadge/>}
+        {endpoint?.execution?.cpu_warning && <CPUWarningBadge/>}
         <Results classes={classes} executionId={endpoint.execution_id} name={endpoint.name} />
         <Grid item xs={12} md={12}>
           <TimeDistribution classes={classes} endpointId={endpointId} />
