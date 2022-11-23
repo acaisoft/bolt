@@ -191,6 +191,12 @@ class UpdateValidate(graphene.Mutation):
             hasUserAccess: configuration (where:{id:{_eq:$confId}, project:{userProjects:{user_id:{_eq:$userId}}}}) {
                 id
             }
+            
+            monitoring: configuration (where:{id:{_eq:$confId}}) {
+                configuration_monitorings {
+                    id
+                }
+            }
         }''', repo_query)
 
         if role not in (const.ROLE_ADMIN, const.ROLE_TENANT_ADMIN):
@@ -228,7 +234,8 @@ class UpdateValidate(graphene.Mutation):
 
 
         query_data['prometheus_url'] = prometheus_url
-
+        cm = repo.get('monitoring', {})[0]['configuration_monitorings']
+        query_data['configuration_monitorings_to_update'] = list(map(lambda x: x['id'], repo.get('monitoring', {})[0].get('configuration_monitorings')) )
         if configuration_monitorings:
             query_data['configuration_monitorings'] = {'data': []}
             for item in configuration_monitorings:
@@ -337,6 +344,7 @@ class Update(UpdateValidate):
         params = query_params.pop('configuration_parameters', {'data': []})['data']
         envs = query_params.pop('configuration_envvars', {'data': []})['data']
         monitorings = query_params.pop('configuration_monitorings', {'data': []})['data']
+        configuration_monitorings_to_update = query_params.pop('configuration_monitorings_to_update')
         for item in monitorings:
             item['configuration_id'] = str(id)
         query = '''mutation (
@@ -345,6 +353,8 @@ class Update(UpdateValidate):
             $params:[configuration_parameter_insert_input!]!
             $envs:[configuration_envvars_insert_input!]!
             $monitorings:[configuration_monitoring_insert_input!]!
+            $none: uuid
+            $ids: [uuid]
         ) {
             
             delete_configuration_parameter (
@@ -379,10 +389,10 @@ class Update(UpdateValidate):
                 affected_rows
             }
             
-            delete_configuration_monitoring (
-                where: {configuration_id:{_eq:$id}}
-            ) {
-                affected_rows
+            update_configuration_monitoring (
+              where:{id: {_in: $ids}},
+              _set: {configuration_id: $none}){
+              affected_rows
             }
             
             insert_configuration_monitoring (
@@ -415,14 +425,16 @@ class Update(UpdateValidate):
                     monitoring_chart_configuration
                 } 
             }
-        }'''
+        }''' % configuration_monitorings_to_update
 
         conf_response = hce(current_app.config, query, variable_values={
             'id': str(id),
             'data': query_params,
             'params': params,
             'envs': envs,
-            'monitorings': monitorings
+            'monitorings': monitorings,
+            'none': None,
+            'ids': configuration_monitorings_to_update
         })
         assert conf_response['update_configuration'], f'cannot update configuration ({str(conf_response)})'
         return gql_util.OutputValueFromFactory(Update, conf_response['update_configuration'])

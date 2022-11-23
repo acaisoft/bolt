@@ -109,6 +109,21 @@ function TestConfigurationDetails({ children, configuration, gridProps = {} }) {
               gridProps={gridProps}
             />
 
+            {configuration_envvars.length > 0 && (
+              <React.Fragment>
+                <Grid item xs={12}>
+                  <SectionHeader
+                    size="medium"
+                    title="Custom Environment Variables"
+                  />
+                </Grid>
+                {configuration_envvars.map(envvar => (
+                  <Grid key={envvar.name} item xs={12} md={3}>
+                    <LabeledValue label={envvar.name} value={envvar.value} />
+                  </Grid>
+                ))}
+              </React.Fragment>
+            )}
             {configuration_monitorings.length > 0 && (
               <React.Fragment>
                 <Grid item xs={12}>
@@ -122,21 +137,6 @@ function TestConfigurationDetails({ children, configuration, gridProps = {} }) {
                 {configuration_monitorings.map(query => (
                   <Grid key={query.query} item xs={12} md={3}>
                     <LabeledValue label={query.query} />
-                  </Grid>
-                ))}
-              </React.Fragment>
-            )}
-            {configuration_envvars.length > 0 && (
-              <React.Fragment>
-                <Grid item xs={12}>
-                  <SectionHeader
-                    size="medium"
-                    title="Custom Environment Variables"
-                  />
-                </Grid>
-                {configuration_envvars.map(envvar => (
-                  <Grid key={envvar.name} item xs={12} md={3}>
-                    <LabeledValue label={envvar.name} value={envvar.value} />
                   </Grid>
                 ))}
               </React.Fragment>

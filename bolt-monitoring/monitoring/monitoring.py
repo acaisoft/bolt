@@ -18,25 +18,26 @@ if __name__ == "__main__":
     prometheus_url, queries_resp = hasura_client.get_prometheus_url_and_queries()
     if not prometheus_url:
         raise Exception("Prometheus Url not provided")
-    if queries_resp:
-        queries = list(map(lambda x: x["query"], queries_resp))
-        concatenated_queries = "|".join(queries)
-        prometheus_client = PrometheusClient(prometheus_url)
-        metrics_object_list = []
+    if not queries_resp:
+        raise Exception("Queries not provided")
+    queries = list(map(lambda x: x["query"], queries_resp))
+    concatenated_queries = "|".join(queries)
+    prometheus_client = PrometheusClient(prometheus_url)
+    metrics_object_list = []
 
-        def job():
-            objects = []
-            if prometheus_response := prometheus_client.get_metrics(concatenated_queries).get("data", {}).get("result"):
-                for obj in queries_resp:
-                    query = obj.get("query")
-                    metric_obj = {
-                        # TODO find better way to get metrics grouped by query
-                        "metric_value": [i for i in prometheus_response if i["metric"].get("__name__") == query],
-                        "timestamp": datetime.fromtimestamp(prometheus_response[0]["value"][0]).isoformat(),
-                        "execution_id": os.environ.get("EXECUTION_ID"),
-                        "monitoring_id": obj.get("id"),
-                    }
-                    objects.append(metric_obj)
-                hasura_client.insert_metrics(objects)
+    def job():
+        objects = []
+        if prometheus_response := prometheus_client.get_metrics(concatenated_queries).get("data", {}).get("result"):
+            for obj in queries_resp:
+                query = obj.get("query")
+                metric_obj = {
+                    # TODO find better way to get metrics grouped by query
+                    "metric_value": [i for i in prometheus_response if i["metric"].get("__name__") == query],
+                    "timestamp": datetime.fromtimestamp(prometheus_response[0]["value"][0]).isoformat(),
+                    "execution_id": os.environ.get("EXECUTION_ID"),
+                    "monitoring_id": obj.get("id"),
+                }
+                objects.append(metric_obj)
+            hasura_client.insert_metrics(objects)
 
-        MonitoringWatcher(MONITORING_INTERVAL, job)
+    MonitoringWatcher(MONITORING_INTERVAL, job)

@@ -40,7 +40,7 @@ import useStyles from './MonitoringMetrics.styles'
 const MonitoringMetrics = () => {
   const classes = useStyles()
   const params = useParams()
-  const { executionId, configurationId } = params
+  const { executionId } = params
 
   const {
     data: { configuration_monitoring } = {},
@@ -49,7 +49,6 @@ const MonitoringMetrics = () => {
   } = useSubscription(SUBSCRIBE_TO_EXECUTION_METRICS, {
     variables: {
       executionId,
-      configurationId: configurationId,
     },
     fetchPolicy: 'cache-and-network',
   })

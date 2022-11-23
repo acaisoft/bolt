@@ -66,7 +66,7 @@ export const ADD_CONFIGURATION_MUTATION = gql`
     $has_post_test: Boolean
     $has_load_tests: Boolean
     $has_monitoring: Boolean
-    $prometheus_url: String!
+    $prometheus_url: String
     $configuration_envvars: [ConfigurationEnvVarInput]
     $configuration_monitorings: [ConfigurationMonitoringInput]
   ) {
@@ -103,7 +103,7 @@ export const EDIT_CONFIGURATION_MUTATION = gql`
     $has_post_test: Boolean
     $has_load_tests: Boolean
     $has_monitoring: Boolean
-    $prometheus_url: String!
+    $prometheus_url: String
     $configuration_envvars: [ConfigurationEnvVarInput]
     $configuration_monitorings: [ConfigurationMonitoringInput]
   ) {

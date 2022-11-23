@@ -81,6 +81,10 @@ def start(app_config, conf_id, user_id, no_cache):
                 name
                 value
             }
+            configuration_monitorings {
+                query
+                chart_type
+            }
             test_source {
                 source_type
                 project {

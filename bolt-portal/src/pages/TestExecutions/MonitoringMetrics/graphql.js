@@ -22,12 +22,9 @@
 import { gql } from '@apollo/client'
 
 export const SUBSCRIBE_TO_EXECUTION_METRICS = gql`
-  subscription subscribeToExecutionMetrics(
-    $executionId: uuid!
-    $configurationId: uuid!
-  ) {
+  subscription subscribeToExecutionMetrics($executionId: uuid!) {
     configuration_monitoring(
-      where: { configuration_id: { _eq: $configurationId } }
+      where: { monitoring_metrics: { execution_id: { _eq: $executionId } } }
     ) {
       query
       id

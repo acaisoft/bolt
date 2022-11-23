@@ -83,6 +83,13 @@ array_relationships:
         table:
           schema: public
           name: execution_users
+  - name: monitoring_metrics
+    using:
+      foreign_key_constraint_on:
+        column: execution_id
+        table:
+          schema: public
+          name: monitoring_metric
   - name: result_aggregate
     using:
       foreign_key_constraint_on:
