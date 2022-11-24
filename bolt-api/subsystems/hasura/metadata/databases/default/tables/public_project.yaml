@@ -106,13 +106,3 @@ select_permissions:
           - is_deleted:
               _eq: false
       allow_aggregations: true
-delete_permissions:
-  - role: tenantadmin
-    permission:
-      filter:
-        _and:
-          - userProjects:
-              user_id:
-                _eq: X-Hasura-User-Id
-          - is_deleted:
-              _eq: false

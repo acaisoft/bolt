@@ -44,7 +44,20 @@ select_permissions:
         - query
         - configuration_id
         - id
-      filter: {}
+      filter:
+        _and:
+          - configuration:
+              is_deleted:
+                _eq: false
+          - configuration:
+              project:
+                is_deleted:
+                  _eq: false
+          - configuration:
+              project:
+                userProjects:
+                  user_id:
+                    _eq: X-Hasura-User-Id
 update_permissions:
   - role: tenantadmin
     permission:

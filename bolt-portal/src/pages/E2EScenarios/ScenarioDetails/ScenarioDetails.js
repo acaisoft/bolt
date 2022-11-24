@@ -31,18 +31,35 @@ import { getUrl } from 'utils/router'
 import useStyles from './ScenarioDetails.styles'
 import ScenarioEvolutionGraph from './ScenarioEvolutionGraph'
 
+import { useListFilters } from 'hooks'
+
+import { Pagination } from 'containers'
+
 const TestScenarioDetails = () => {
   const params = useParams()
   const { scenarioId, projectId } = params
   const classes = useStyles()
 
-  const { loading, data: { externalTestScenario = [] } = {} } = useQuery(
+    const { pagination, orderBy, setPagination } = useListFilters({
+    pagination: { rowsPerPage: 10 }
+  })
+
+  const {
+    loading,
+    data: { externalTestScenario = [] } = {}
+  } = useQuery(
     GET_SCENARIO,
     {
-      variables: { scenarioId },
+      variables: {
+        scenarioId,
+        limit: pagination.rowsPerPage,
+        offset: pagination.offset,
+      },
       fetchPolicy: 'cache-and-network',
     }
   )
+
+  const totalCount = externalTestScenario?.test_runs_total ? externalTestScenario.test_runs_total.aggregate['count'] : 0
 
   return (
     <React.Fragment>
@@ -72,7 +89,7 @@ const TestScenarioDetails = () => {
                     title="Scenario Executions"
                   />
                   <ScenarioEvolutionGraph
-                    dataset={externalTestScenario.test_runs.slice(0, 20)}
+                    dataset={externalTestScenario.test_runs}
                   />
                 </React.Fragment>
               ) : (
@@ -83,6 +100,11 @@ const TestScenarioDetails = () => {
         )}
       </Grid>
       <div className={classes.marginTop}>
+        <Pagination
+          {...pagination}
+          onChange={setPagination}
+          totalCount={totalCount}
+        />
         <DataTable
           data={externalTestScenario?.test_runs}
           isLoading={loading}
