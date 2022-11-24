@@ -34,16 +34,21 @@ import {
 import { Button, PopoverMenu } from 'components'
 
 import { MoreHoriz, ChevronRight } from '@material-ui/icons'
-
+import { DELETE_PROJECT_MUTATION } from './graphql'
+import { useMutationWithState } from 'hooks'
 import useStyles from './ProjectCard.styles'
 import { useTheme } from '@material-ui/styles'
 
 function ProjectCard({ project, onEdit }) {
   const theme = useTheme()
 
-  const { num_scenarios = 0, num_sources = 0 } = project
+  const { id: projectId, num_scenarios = 0, num_sources = 0 } = project
 
   const classes = useStyles()
+
+  const { mutation } = useMutationWithState(DELETE_PROJECT_MUTATION, {
+    variables: { projectId },
+  })
 
   return (
     <React.Fragment>
@@ -65,6 +70,15 @@ function ProjectCard({ project, onEdit }) {
               onClick={() => onEdit(project)}
             >
               Edit project
+            </MenuItem>
+            <MenuItem
+              data-testid={`delete-project-${project.id}`}
+              onClick={() => {
+                mutation(projectId)
+                window.location.reload()
+              }}
+            >
+              Delete project
             </MenuItem>
           </PopoverMenu>
         }
