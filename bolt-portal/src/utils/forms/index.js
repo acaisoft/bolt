@@ -31,6 +31,8 @@ export {
   composeValidators,
   requireWhenOtherIsSet,
   uniqueInArray,
+  requireWhenCondition,
+  validatePrometheusUrl,
 } from './validation'
 
 export { makeEmptyInitialValues, makeFlatValidationSchema } from './schema'

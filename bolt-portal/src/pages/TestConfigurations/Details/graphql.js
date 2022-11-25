@@ -32,6 +32,10 @@ export const GET_CONFIGURATION = gql`
       has_post_test
       has_pre_test
       has_load_tests
+      prometheus_url
+      configuration_monitorings {
+        query
+      }
       configuration_envvars {
         name
         value

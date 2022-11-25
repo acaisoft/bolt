@@ -22,7 +22,11 @@
 import { gql } from '@apollo/client'
 
 export const GET_SCENARIO = gql`
-  query getTestConfiguration($scenarioId: uuid!) {
+  query getTestConfiguration(
+    $scenarioId: uuid!
+    $limit: Int
+    $offset: Int
+  ) {
     externalTestScenario: configuration_by_pk(id: $scenarioId) {
       id
       name
@@ -30,7 +34,16 @@ export const GET_SCENARIO = gql`
       configuration_type {
         name
       }
-      test_runs(order_by: { timestamp: desc }) {
+      test_runs_total: test_runs_aggregate {
+        aggregate {
+          count
+        }
+      }
+      test_runs(
+        order_by: { timestamp: desc }
+        limit: $limit
+        offset: $offset
+      ) {
         successes
         total
         failures

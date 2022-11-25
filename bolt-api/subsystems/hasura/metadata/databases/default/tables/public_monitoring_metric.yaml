@@ -1,0 +1,31 @@
+table:
+  schema: public
+  name: monitoring_metric
+object_relationships:
+  - name: configuration_monitoring
+    using:
+      foreign_key_constraint_on: monitoring_id
+  - name: execution
+    using:
+      foreign_key_constraint_on: execution_id
+insert_permissions:
+  - role: tenantadmin
+    permission:
+      check: {}
+      columns:
+        - metric_value
+        - timestamp
+        - execution_id
+        - id
+        - monitoring_id
+      backend_only: false
+select_permissions:
+  - role: tenantadmin
+    permission:
+      columns:
+        - id
+        - monitoring_id
+        - timestamp
+        - metric_value
+        - execution_id
+      filter: {}

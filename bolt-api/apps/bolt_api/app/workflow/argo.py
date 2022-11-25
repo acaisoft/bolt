@@ -47,8 +47,8 @@ class Argo:
         self.GOOGLE_LOGS_BUCKET = app_config.get(const.GOOGLE_LOGS_BUCKET)
         self.IMAGE_BOLT_BUILDER = app_config.get(const.IMAGE_BOLT_BUILDER, const.DEFAULT_IMAGE_BOLT_BUILDER)
         self.IMAGE_REPORT_BUILDER = app_config.get(const.IMAGE_REPORT_BUILDER, const.DEFAULT_IMAGE_REPORT_BUILDER)
+        self.IMAGE_METRIC_WATCHER = app_config.get(const.IMAGE_METRIC_WATCHER, const.DEFAULT_IMAGE_METRIC_WATCHER)
         self.STAT_GATHER_INTERVAL = const.STAT_GATHER_INTERVAL
-        logger.info(f"Stat gather interval: {self.STAT_GATHER_INTERVAL}")
 
     def create_argo_tests_workflow(self, workflow: Workflow) -> Dict[str, Any]:
         """
@@ -67,7 +67,7 @@ class Argo:
                                         "operator": "In",
                                         "values": [
                                             "load-tests-workers-slave",
-                                            "load-tests-workers-master",
+                                            "load-tests-workers-master"
                                         ]
                                     }
                                 ]
@@ -213,6 +213,15 @@ class Argo:
                     }
                 )
 
+            if workflow.job_metric_watcher is not None:
+                tasks.append(
+                    {
+                        "name": "load-tests-metric-watcher",
+                        "template": "load-tests-metric-watcher",
+                        "dependencies": master_dependencies,
+                    }
+                )
+
         if workflow.job_monitoring is not None:
             monitor_dependencies = []
             if workflow.job_pre_start is not None:
@@ -339,6 +348,24 @@ class Argo:
                     "resources": self.CONTAINER_RESOURCES["worker"],
                 },
             }
+            if workflow.job_metric_watcher is not None:
+                template_load_tests_metric_watcher = {
+                    "name": "load-tests-metric-watcher",
+                    "nodeSelector": {"group": "load-tests-workers-slave"},
+                    "container": {
+                        "image": self.IMAGE_METRIC_WATCHER,
+                        "command": ["python", "-m", "monitoring"],
+                        "env": [
+                            *self._map_envs(workflow.job_metric_watcher.env_vars),
+                            {"name": "EXECUTION_ID", "value": workflow.execution_id},
+                            {"name": "BOLT_GRAPHQL_URL", "value": self.HASURA_GQL},
+                            {"name": "BOLT_HASURA_TOKEN", "value": workflow.auth_token}
+                        ],
+                        "resources": self.CONTAINER_RESOURCES["master"],
+                    },
+                }
+                templates.append(template_load_tests_metric_watcher)
+
             if workflow.job_load_tests.host is not None:
                 template_load_tests_slave["container"]["env"].append(
                     {"name": "BOLT_HOST", "value": workflow.job_load_tests.host}

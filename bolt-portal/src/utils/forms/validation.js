@@ -74,6 +74,26 @@ export const requireWhenOtherIsSet = otherFieldPath => (value, allValues) => {
   }
 }
 
+export const requireWhenCondition = condition => value => {
+  if (condition && !['', undefined].includes(value)) {
+    return
+  } else {
+    return 'Required'
+  }
+}
+
+export const validatePrometheusUrl = () => value => {
+  if (/^(http|https):\/\/[^ "]+$/.test(value)) {
+    if (value.split('//')[1].split('/').length > 1) {
+      return 'Domain name must be provided'
+    } else {
+      return
+    }
+  } else {
+    return 'Inorrect url format'
+  }
+}
+
 export const uniqueInArray = (arrayPath, fieldPath) => (value, allValues) => {
   if (!value) {
     return

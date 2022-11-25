@@ -45,6 +45,7 @@ export const SUBSCRIBE_TO_EXECUTION = gql`
       argo_namespace
       status
       report
+      cpu_warning
       configuration {
         id
         name
@@ -59,16 +60,17 @@ export const SUBSCRIBE_TO_EXECUTION = gql`
 
 export const SUBSCRIBE_TO_EXECUTION_STATUS = gql`
   subscription subscribeToExecutionStatus($executionId: uuid!) {
-    execution(
-      where: { id: { _eq: $executionId } }
-    ) {
+    execution(where: { id: { _eq: $executionId } }) {
       status
     }
   }
 `
 
 export const SUBSCRIBE_TO_EXECUTION_STAGE_LOG = gql`
-  subscription subscribeToExecutionStageLog($executionId: uuid!, $statuses: [String!]!) {
+  subscription subscribeToExecutionStageLog(
+    $executionId: uuid!
+    $statuses: [String!]!
+  ) {
     execution_stage_log(
       where: { execution_id: { _eq: $executionId }, level: { _in: $statuses } }
     ) {

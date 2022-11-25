@@ -31,19 +31,25 @@ import {
   CardActions,
   MenuItem,
 } from '@material-ui/core'
-import { Button, PopoverMenu } from 'components'
-
+import { Button, PopoverMenu, SubmitCancelModal } from 'components'
+import { useToggle } from 'hooks'
 import { MoreHoriz, ChevronRight } from '@material-ui/icons'
-
+import { DELETE_PROJECT_MUTATION } from './graphql'
+import { useMutationWithState } from 'hooks'
 import useStyles from './ProjectCard.styles'
 import { useTheme } from '@material-ui/styles'
 
 function ProjectCard({ project, onEdit }) {
   const theme = useTheme()
 
-  const { num_scenarios = 0, num_sources = 0 } = project
+  const { id: projectId, num_scenarios = 0, num_sources = 0 } = project
 
   const classes = useStyles()
+  const [isDeleteModalOpen, toggleDeleteModal] = useToggle(false)
+
+  const { mutation } = useMutationWithState(DELETE_PROJECT_MUTATION, {
+    variables: { projectId },
+  })
 
   return (
     <React.Fragment>
@@ -65,6 +71,12 @@ function ProjectCard({ project, onEdit }) {
               onClick={() => onEdit(project)}
             >
               Edit project
+            </MenuItem>
+            <MenuItem
+              data-testid={`delete-project-${project.id}`}
+              onClick={() => toggleDeleteModal(true)}
+            >
+              Delete project
             </MenuItem>
           </PopoverMenu>
         }
@@ -114,6 +126,18 @@ function ProjectCard({ project, onEdit }) {
           More
         </Button>
       </CardActions>
+      <SubmitCancelModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => toggleDeleteModal(false)}
+        onSubmit={() => {
+          mutation(projectId)
+          window.location.reload()
+        }}
+        submitLabel="Delete"
+      >
+        Are you sure you want to delete the project <q>{project.name}</q>? This
+        operation is irreversible.
+      </SubmitCancelModal>
     </React.Fragment>
   )
 }

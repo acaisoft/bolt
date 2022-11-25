@@ -47,10 +47,16 @@ import {
 import useStyles from './TestExecutionsList.styles'
 
 function TestExecutionsList({
-  configuration: { id: configurationId, has_monitoring, has_load_tests },
+  configuration: {
+    id: configurationId,
+    has_monitoring,
+    has_load_tests,
+    prometheus_url,
+  },
   getMonitoringDetailsUrl,
   getTestDetailsUrl,
   getDebugUrl,
+  getMonitoringMetricsDetailsUrl,
   onTerminate,
   hasMonitoring,
 }) {
@@ -214,6 +220,27 @@ function TestExecutionsList({
                 >
                   Monitoring
                 </Button>
+              )}
+            </NoWrap>
+          )}
+        />
+        <DataTable.Column
+          key="monitoring"
+          title="Monitoring"
+          width={150}
+          render={execution => (
+            <NoWrap>
+              {has_load_tests && prometheus_url ? (
+                <Button
+                  data-testid="testrun-details-button"
+                  href={getMonitoringMetricsDetailsUrl(execution)}
+                  title="Show test run details"
+                  variant="link"
+                >
+                  Metrics
+                </Button>
+              ) : (
+                '-'
               )}
             </NoWrap>
           )}

@@ -27,6 +27,7 @@ from .dao import JobPostStop
 from .dao import JobPreStart
 from .dao import JobReport
 from .dao import Workflow
+from .dao import JobMetricWatcher
 
 
 class PreStartSchema(Schema):
@@ -38,6 +39,10 @@ class PostStopSchema(Schema):
 
 
 class MonitoringSchema(Schema):
+    env_vars = fields.Dict()
+
+
+class MetricWatcherSchema(Schema):
     env_vars = fields.Dict()
 
 
@@ -70,6 +75,7 @@ class WorkflowSchema(Schema):
     job_post_stop = fields.Nested(PostStopSchema, load_default=None)
     job_monitoring = fields.Nested(MonitoringSchema, load_default=None)
     job_load_tests = fields.Nested(LoadTestsSchema, load_default=None)
+    job_metric_watcher = fields.Nested(MetricWatcherSchema, load_default=None)
     job_report = fields.Nested(JobReportSchema, load_default=None)
 
     no_cache = fields.Boolean(required=False, load_default=False)
@@ -91,6 +97,10 @@ class WorkflowSchema(Schema):
         if data.get("job_load_tests") is not None:
             data["job_load_tests"] = (
                 JobLoadTests(**data["job_load_tests"])
+            )
+        if data.get("job_metric_watcher") is not None:
+            data["job_metric_watcher"] = (
+                JobMetricWatcher(**data["job_metric_watcher"])
             )
         if data.get("job_report") is not None:
             data["job_report"] = (

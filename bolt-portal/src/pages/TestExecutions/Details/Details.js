@@ -40,6 +40,7 @@ import { ExecutionActionsMenu, GenerateReportButton } from '../components'
 import { CompareResults, StatusGraph, ResultsPerEndpoint } from './components'
 import { SUBSCRIBE_TO_EXECUTION } from './graphql'
 import useStyles from './Details.styles'
+import CPUWarningBadge from '../components/CPUWarningBadge/CPUWarningBadge'
 
 export function Details() {
   const params = useParams()
@@ -56,7 +57,8 @@ export function Details() {
     fetchPolicy: 'cache-and-network',
   })
 
-  const { getEndpointDetailsUrl, getMonitoringUrl } = useUrlGetters(params)
+  const { getEndpointDetailsUrl, getMonitoringUrl, getMonitoringMetricsDetailsUrl } =
+    useUrlGetters(params)
 
   if (loading || error || !execution) {
     return (
@@ -88,6 +90,14 @@ export function Details() {
           testStatus={execution.status}
           reportGenerationStatus={execution.report}
         />
+        <Button
+          color="primary"
+          variant="contained"
+          data-testid="monitoring-details-button"
+          href={getMonitoringMetricsDetailsUrl(executionId)}
+        >
+          Show metrics
+        </Button>
         <ExecutionActionsMenu execution={execution} />
       </SectionHeader>
       <div className={classes.configDetails}>
@@ -109,6 +119,7 @@ export function Details() {
           executionId={executionId}
           configurationId={configurationId}
         />
+        {execution?.cpu_warning && <CPUWarningBadge />}
         <ResultsPerTick classes={classes} execution={execution} />
         <ResultsPerEndpoint
           classes={classes}
@@ -137,9 +148,20 @@ function useUrlGetters(matchParams) {
     })
   }, [matchParams])
 
+  const getMonitoringMetricsDetailsUrl = useCallback(
+    executionId => {
+      return getUrl(routes.projects.configurations.executions.monitoringMetrics, {
+        ...matchParams,
+        executionId: executionId,
+      })
+    },
+    [matchParams]
+  )
+
   return {
     getEndpointDetailsUrl,
     getMonitoringUrl,
+    getMonitoringMetricsDetailsUrl,
   }
 }
 

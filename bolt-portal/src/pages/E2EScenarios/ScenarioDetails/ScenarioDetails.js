@@ -31,25 +31,42 @@ import { getUrl } from 'utils/router'
 import useStyles from './ScenarioDetails.styles'
 import ScenarioEvolutionGraph from './ScenarioEvolutionGraph'
 
+import { useListFilters } from 'hooks'
+
+import { Pagination } from 'containers'
+
 const TestScenarioDetails = () => {
   const params = useParams()
   const { scenarioId, projectId } = params
   const classes = useStyles()
 
-  const { loading, data: { externalTestScenario = [] } = {} } = useQuery(
+    const { pagination, orderBy, setPagination } = useListFilters({
+    pagination: { rowsPerPage: 10 }
+  })
+
+  const {
+    loading,
+    data: { externalTestScenario = [] } = {}
+  } = useQuery(
     GET_SCENARIO,
     {
-      variables: { scenarioId },
+      variables: {
+        scenarioId,
+        limit: pagination.rowsPerPage,
+        offset: pagination.offset,
+      },
       fetchPolicy: 'cache-and-network',
     }
   )
+
+  const totalCount = externalTestScenario?.test_runs_total ? externalTestScenario.test_runs_total.aggregate['count'] : 0
 
   return (
     <React.Fragment>
       <Grid container spacing={5} alignItems="center">
         <Grid item xs={12}>
           <SectionHeader
-            title={externalTestScenario.name || ''}
+            title={externalTestScenario?.name || ''}
             description={`${externalTestScenario?.configuration_type?.name} Scenario`}
           ></SectionHeader>
           <Typography
@@ -58,7 +75,7 @@ const TestScenarioDetails = () => {
             variant="body1"
             className={classes.marginTop}
           >
-            {externalTestScenario.description || ''}
+            {externalTestScenario?.description || ''}
           </Typography>
         </Grid>
         {externalTestScenario?.test_runs?.length > 0 && (
@@ -72,7 +89,7 @@ const TestScenarioDetails = () => {
                     title="Scenario Executions"
                   />
                   <ScenarioEvolutionGraph
-                    dataset={externalTestScenario.test_runs.slice(-20).reverse()}
+                    dataset={externalTestScenario.test_runs}
                   />
                 </React.Fragment>
               ) : (
@@ -83,8 +100,13 @@ const TestScenarioDetails = () => {
         )}
       </Grid>
       <div className={classes.marginTop}>
+        <Pagination
+          {...pagination}
+          onChange={setPagination}
+          totalCount={totalCount}
+        />
         <DataTable
-          data={externalTestScenario.test_runs}
+          data={externalTestScenario?.test_runs}
           isLoading={loading}
           rowKey={test_run => test_run.id}
         >

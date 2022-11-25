@@ -19,20 +19,16 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-
-import { withStyles } from "@material-ui/core";
-import React from "react";
-import PropTypes from "prop-types";
+import { withStyles } from '@material-ui/core'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { DefaultChart } from 'components'
-import theme from "config/theme";
-import {TooltipBuilder} from "../../../utils/echartUtils";
-import moment from "moment";
-
+import theme from 'config/theme'
+import { TooltipBuilder } from '../../../utils/echartUtils'
+import moment from 'moment'
 
 const countResults = (run_data, result_to_count) => {
-  return run_data.map(
-    c => c[result_to_count]
-  )
+  return run_data.map(c => c[result_to_count])
 }
 
 const ScenarioEvolutionGraph = ({ dataset }) => {
@@ -57,32 +53,36 @@ const ScenarioEvolutionGraph = ({ dataset }) => {
       barGap: '-100%',
       barWidth: '30%',
       offset: '-50%',
-      z: 0
-    }
+      z: 0,
+    },
   ]
-  successes.reduce((x, y) => x + y) && series.push({
+  successes.reduce((x, y) => x + y) &&
+    series.push({
       name: 'Successes',
       data: successes,
       color: color.area.success,
-      ...common_params
+      ...common_params,
     })
-  failures.reduce((x, y) => x + y) && series.push({
+  failures.reduce((x, y) => x + y) &&
+    series.push({
       name: 'Failures',
       data: failures,
       color: color.area.error,
-      ...common_params
+      ...common_params,
     })
-  errors.reduce((x, y) => x + y) && series.push({
+  errors.reduce((x, y) => x + y) &&
+    series.push({
       name: 'Errors',
       data: errors,
       color: color.errors[0],
-      ...common_params
+      ...common_params,
     })
-  skipped.reduce((x, y) => x + y) && series.push({
+  skipped.reduce((x, y) => x + y) &&
+    series.push({
       name: 'Skipped',
       data: skipped,
       color: color.area.secondary,
-      ...common_params
+      ...common_params,
     })
 
   const options = React.useMemo(() => {
@@ -97,41 +97,38 @@ const ScenarioEvolutionGraph = ({ dataset }) => {
             .withNumericDataLine('Errors')
             .withNumericDataLine('Skipped')
             .getHtml()
-        }
+        },
       },
       yAxis: {
-        type: 'value'
+        type: 'value',
       },
       xAxis: {
         type: 'category',
         boundaryGap: true,
         scale: false,
-        data: [...new Set(dataset.map(d => d.timestamp))],
+        data: dataset.map(d => d.timestamp),
         axisLabel: {
           formatter: label => {
             return moment(label).format('HH:mm:ss YYYY-MM-DD').replace(' ', '\n')
           },
           show: true,
-          interval: 0
+          interval: 0,
         },
       },
       legend: {
         show: true,
-        data: [...new Set(series.map(d => d.name))],
+        data: series.map(d => d.name),
       },
       color: series.map(x => x.color),
-      series: series
+      series: series,
     }
   }, [dataset])
 
-  return (
-      <DefaultChart options={options} />
-    )
-
+  return <DefaultChart options={options} />
 }
 
 ScenarioEvolutionGraph.propTypes = {
-  dataset: PropTypes.array
+  dataset: PropTypes.array,
 }
 
 export default withStyles({}, { withTheme: true })(ScenarioEvolutionGraph)
