@@ -27,6 +27,7 @@ export const SUBSCRIBE_TO_EXECUTION_METRICS = gql`
       where: { monitoring_metrics: { execution_id: { _eq: $executionId } } }
     ) {
       query
+      unit
       id
       monitoring_metrics(
         where: { execution_id: { _eq: $executionId } }

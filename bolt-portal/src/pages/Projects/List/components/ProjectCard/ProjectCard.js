@@ -130,7 +130,7 @@ function ProjectCard({ project, onEdit }) {
         isOpen={isDeleteModalOpen}
         onClose={() => toggleDeleteModal(false)}
         onSubmit={() => {
-          mutation(projectId)
+          mutation(project.id)
           window.location.reload()
         }}
         submitLabel="Delete"

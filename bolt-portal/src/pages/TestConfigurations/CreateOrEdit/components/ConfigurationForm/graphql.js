@@ -48,6 +48,7 @@ export const GET_CONFIGURATION = gql`
       configuration_monitorings {
         query
         chart_type
+        unit
       }
     }
   }

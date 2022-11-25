@@ -92,7 +92,7 @@ function MonitoringFields({ isMonitoring, setIsMonitoring }) {
                         )}
                       />
                     </Grid>
-                    <Grid item xs={5}>
+                    <Grid item xs={3}>
                       <FormField
                         data-testid="chart_type"
                         id="chart_type"
@@ -107,6 +107,16 @@ function MonitoringFields({ isMonitoring, setIsMonitoring }) {
                           </MenuItem>
                         ))}
                       </FormField>
+                    </Grid>
+                    <Grid item xs={2} key={name}>
+                      <FormField
+                        data-testid="unit"
+                        id="unit"
+                        name={`${name}.unit`}
+                        field={{ inputProps: { label: 'Unit' } }}
+                        fullWidth
+                        variant="filled"
+                      />
                     </Grid>
                     <Grid item xs={2} md={2}>
                       <IconButton

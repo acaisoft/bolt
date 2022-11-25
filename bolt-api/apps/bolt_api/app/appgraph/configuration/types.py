@@ -60,6 +60,7 @@ class ConfigurationEnvVarType(graphene.ObjectType):
 class ConfigurationMonitoringAbstractType(object):
     query = graphene.String()
     chart_type = graphene.String()
+    unit = graphene.String()
 
 
 class ConfigurationMonitoringInput(ConfigurationMonitoringAbstractType, graphene.InputObjectType):

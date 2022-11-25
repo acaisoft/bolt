@@ -332,11 +332,12 @@ function prepareInitialValues(data) {
       value,
     })) || [{ name: '', value: '' }],
     configuration_monitorings: configuration_monitorings.map(
-      ({ query, chart_type }) => ({
+      ({ query, chart_type, unit }) => ({
         query,
         chart_type,
+        unit,
       })
-    ) || [{ query: '', chart_type: '' }],
+    ) || [{ query: '', chart_type: '', unit: '' }],
   }
 }
 

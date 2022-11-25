@@ -95,7 +95,6 @@ const MonitoringMetrics = () => {
           Show test results
         </Button>
       </SectionHeader>
-
       {configuration_monitoring &&
         configuration_monitoring.map((query, index) => (
           <ExpandablePanel
@@ -109,6 +108,7 @@ const MonitoringMetrics = () => {
                 executionId={executionId}
                 monitoringId={query.id}
                 data={query.monitoring_metrics}
+                unit={query.unit}
               />
             </Paper>
           </ExpandablePanel>

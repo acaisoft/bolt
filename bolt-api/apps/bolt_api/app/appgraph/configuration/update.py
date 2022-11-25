@@ -217,15 +217,16 @@ class UpdateValidate(graphene.Mutation):
             query_data['type_slug'] = type_slug
 
         query_data['prometheus_url'] = prometheus_url
-        cm = repo.get('monitoring', {})[0]['configuration_monitorings']
-        query_data['configuration_monitorings_to_update'] = list(map(lambda x: x['id'], repo.get('monitoring', {})[0].get('configuration_monitorings')) )
-
+        query_data['configuration_monitorings_to_update'] = list(
+            map(lambda x: x['id'], repo.get('monitoring', {})[0].get('configuration_monitorings'))
+        )
         if configuration_monitorings:
             query_data['configuration_monitorings'] = {'data': []}
             for item in configuration_monitorings:
                 query_data['configuration_monitorings']['data'].append({
                     'query': item['query'],
                     'chart_type': item['chart_type'],
+                    'unit': item.get('unit'),
                 })
 
         if test_source_id:

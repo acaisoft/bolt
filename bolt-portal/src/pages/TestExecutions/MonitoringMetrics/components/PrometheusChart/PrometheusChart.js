@@ -25,19 +25,33 @@ import moment from 'moment'
 import { Box } from '@material-ui/core'
 import { NoDataPlaceholder } from 'components/index'
 
-const PrometheusChart = ({ data }) => {
+const PrometheusChart = ({ data, unit = '' }) => {
+  const getPrometheusString = metric => {
+    delete metric.__name__
+    delete metric.endpoint
+    return JSON.stringify(metric)
+  }
+
   const options = useMemo(() => {
     return {
       legend: {
         show: true,
         type: 'scroll',
+        orient: 'vertical',
+        top: 200,
+        left: 0,
         data:
           data &&
           data.length > 0 &&
           data[0].metric_value.map(
-            value =>
-              value.metric.bolt_name || value.metric.pod || value.metric.service
+            value => value.metric.bolt_name || getPrometheusString(value.metric)
           ),
+      },
+      grid: {
+        left: 5,
+        top: 10,
+        right: 30,
+        bottom: 120,
       },
       xAxis: {
         type: 'category',
@@ -46,14 +60,13 @@ const PrometheusChart = ({ data }) => {
       yAxis: {
         type: 'value',
         axisLabel: {
-          formatter: value => value,
+          formatter: value => value + unit,
         },
       },
       series:
         data && data.length > 0
           ? data[0].metric_value.map((value, index) => ({
-              name:
-                value.metric.bolt_name || value.metric.pod || value.metric.service,
+              name: value.metric.bolt_name || getPrometheusString(value.metric),
               type: 'line',
               symbol: 'none',
               data:
@@ -68,7 +81,10 @@ const PrometheusChart = ({ data }) => {
     }
   }, [data])
 
-  if (data.length === 0) {
+  if (
+    data.length === 0 ||
+    !data.map(metric => metric.metric_value).every(i => i.length > 0)
+  ) {
     return (
       <Box p={3}>
         <NoDataPlaceholder />

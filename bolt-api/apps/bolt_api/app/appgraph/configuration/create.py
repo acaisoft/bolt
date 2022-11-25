@@ -224,6 +224,7 @@ class CreateValidate(graphene.Mutation):
                 query_data['configuration_monitorings']['data'].append({
                     'query': item['query'],
                     'chart_type': item['chart_type'],
+                    'unit': item['unit'],
                 })
 
         if test_source_id:
@@ -304,6 +305,7 @@ class Create(CreateValidate):
                     configuration_monitorings {
                         query
                         chart_type
+                        unit
                     }
                 } 
             }
