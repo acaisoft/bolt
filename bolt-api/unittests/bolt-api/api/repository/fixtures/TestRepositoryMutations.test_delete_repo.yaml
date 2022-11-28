@@ -5,7 +5,7 @@ interactions:
       {_eq: $userId}}}}, _set: {is_deleted: true}) {\n    affected_rows\n    returning
       {\n      id\n      name\n      repository_url: url\n      project_id\n      type_slug\n    }\n  }\n  update_test_source(where:
       {id: {_eq: $pk}}, _set: {is_deleted: true}) {\n    affected_rows\n  }\n}\n",
-      "variables": {"pk": "daf50e01-4037-4587-8305-2523dad5ebfd", "userId": "7f1aab7a-e941-46a2-b63a-5b28b80ad384"}}'
+      "variables": {"pk": "26ae0b53-a9e5-41f9-8804-9f7e06f923b0", "userId": "7f1aab7a-e941-46a2-b63a-5b28b80ad384"}}'
     headers:
       Accept:
       - '*/*'
@@ -30,23 +30,23 @@ interactions:
   response:
     body:
       string: !!binary |
-        H4sIAAAAAAAEA5WQwYrDMAxEfyXonLRpU9OS0/7HshgnVoLbNAqyTCnB/74KS2EPvfQmRsO8YVbw
-        Thy0K6RFL7SMC8UgxM9NdMOAvaC3TI8IRVscygIYJfEc5nETvlcIHlqNGUyN9aE61c25OpnLubo0
-        tamO5th45w12g4cSZndHdf/BfPGPVmruC20TT+oag3zdqb91QbrU31B2xGO72fbyoJ2+NXFhumpH
-        +0kLeS5o45RGhUzkvBWMEiH/5PK1w6bYSIl77ftuiJzzL33U1RU9AQAA
+        H4sIAAAAAAAEA5WQzYrDMAyEXyXonHTT321y6nssi3FiOXibRkGWKSX43atQCnvYy97EaJhvmAWc
+        FQvtAmnWCw3jTDEI8WMVrffYCzrDdI9QtMW2LIBREk9hGlbha4HgoIXdyWLdHfeVbfBYHba+qc7n
+        +lA1/hPrk292+66GEiZ7Q3W/YK74RSs19402iUd1DUEuN+qvXZAu9VeUDfHQrrYPudNG35o4M/1o
+        R/OfFvKY0cQxDQoZyTojGCVC/s7le4dVMZES99r3ryFyzk8+VNwYPQEAAA==
     headers:
       Content-Encoding:
       - gzip
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Thu, 10 Nov 2022 15:17:39 GMT
+      - Mon, 28 Nov 2022 08:01:05 GMT
       Server:
       - Warp/3.3.19
       Transfer-Encoding:
       - chunked
       x-request-id:
-      - 4bd458ae-3553-4d08-afe6-7c13251170e7
+      - bbca344a-2f13-4284-834b-639f7b244110
     status:
       code: 200
       message: OK

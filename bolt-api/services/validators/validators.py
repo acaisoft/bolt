@@ -103,50 +103,6 @@ def validate_text(value: str, required=True, key='name'):
     return value
 
 
-def validate_monitoring_chart_configuration(configuration: dict):
-    """
-    Validates and returns monitoring subset of params.
-    >>> validate_monitoring_chart_configuration({ 'charts': [
-    ...      {"x_format":"a","node_name":"b","x_data_key":"c","y_format":"d","y_label":"e","title":"f","type":"g","y_data_key":"h"},
-    ...      {"x_format":"i","node_name":"j","x_data_key":"k","y_format":"l","y_label":"m","title":"n","type":"o","y_data_key":"p"},
-    ... ],},)
-    True
-    """
-    schema = {
-        "type": "object",
-        "properties": {
-            "x_format": {"type": "string"},
-            "node_name": {"type": "string"},
-            "x_data_key": {"type": "string"},
-            "y_format": {"type": "string"},
-            "y_label": {"type": "string"},
-            "title": {"type": "string"},
-            "type": {"type": "string"},
-            "y_data_key": {"type": "string"},
-        },
-    }
-    try:
-        # TODO fix jsonschema import
-        from jsonschema import validate
-        from jsonschema import ValidationError
-
-        if configuration.get("charts", None):
-            for chart in configuration['charts']:
-                try:
-                    validate(instance=chart, schema=schema)
-                except ValidationError:
-                    return False
-        else:
-            return False
-
-        return True
-
-    except ModuleNotFoundError:
-        return True
-
-
-
-
 VALIDATORS = {
     '-t': validate_time,
     '-u': validate_users,

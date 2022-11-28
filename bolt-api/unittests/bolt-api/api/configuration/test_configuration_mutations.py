@@ -34,7 +34,6 @@ class TestConfigurationMutations(BoltCase):
             testrun_configuration_create(
                 name:$name
                 has_load_tests:true
-                has_monitoring:false
                 project_id:$id
                 type_slug:"load_tests"
                 test_source_id:$testsource_repo_id
@@ -87,7 +86,6 @@ class TestConfigurationMutations(BoltCase):
                 id:$id
                 name:$name
                 has_load_tests:true
-                has_monitoring:false
                 configuration_envvars:[{
                     name:"testvar_2"
                     value:"testvarvalue 2"
@@ -98,7 +96,6 @@ class TestConfigurationMutations(BoltCase):
                 }]
             ) { returning { 
                 name 
-                has_monitoring
                 configuration_parameters { value parameter_slug }
                 configuration_envvars { name value }
             }}
@@ -110,7 +107,6 @@ class TestConfigurationMutations(BoltCase):
         self.assertIsNone(resp.errors(), 'expected no errors')
         out = resp.one('testrun_configuration_update')
         self.assertEqual(name, out['name'], 'expected config to have been renamed')
-        self.assertEqual(False, out['has_monitoring'], 'expected monitoring to have been disabled')
         # envvar was saved correctly
         self.assertCountEqual([{
             "name": "testvar_2",
@@ -199,7 +195,6 @@ class TestConfigurationMutations(BoltCase):
                 testrun_configuration_create(
                     name:$name
                     has_load_tests:true
-                    has_monitoring:false
                     project_id:$id
                     type_slug:"load_tests"
                     test_source_id:$testsource_repo_id

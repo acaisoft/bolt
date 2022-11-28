@@ -2922,8 +2922,6 @@
           - has_pre_test
           - has_post_test
           - has_load_tests
-          - has_monitoring
-          - monitoring_chart_configuration
           filter:
             _and:
             - project:
@@ -2952,8 +2950,6 @@
           - has_pre_test
           - has_post_test
           - has_load_tests
-          - has_monitoring
-          - monitoring_chart_configuration
           filter:
             _and:
             - project:
@@ -2972,7 +2968,6 @@
           columns:
           - created_by_id
           - has_load_tests
-          - has_monitoring
           - has_post_test
           - has_pre_test
           - id
@@ -3009,8 +3004,6 @@
           - has_pre_test
           - has_post_test
           - has_load_tests
-          - has_monitoring
-          - monitoring_chart_configuration
           filter:
             _and:
             - project:
@@ -3039,8 +3032,6 @@
           - has_pre_test
           - has_post_test
           - has_load_tests
-          - has_monitoring
-          - monitoring_chart_configuration
           filter:
             _and:
             - project:

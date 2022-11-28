@@ -303,19 +303,9 @@ export function StatusGraph({ executionId, configurationId, executionStatus }) {
               </Grid>
             </Grid>
 
-            {(Boolean(configuration.has_monitoring) ||
-              Boolean(configuration.has_load_tests)) && (
+            {(Boolean(configuration.has_load_tests)) && (
               <Grid item className={classes.section}>
                 <Grid container direction="column">
-                  {Boolean(configuration.has_monitoring) && (
-                    <Grid container justifyContent="center" alignItems="center">
-                      <Step
-                        stepName="Run Monitoring"
-                        ref={monitoringRef}
-                        stepData={stagesData[Stages.MONITORING]}
-                      />
-                    </Grid>
-                  )}
 
                   {Boolean(configuration.has_load_tests) && (
                     <Grid container justifyContent="center" alignItems="center">

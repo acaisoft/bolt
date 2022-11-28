@@ -89,7 +89,6 @@ function Details() {
           getMonitoringMetricsDetailsUrl={getMonitoringMetricsDetailsUrl}
           getDebugUrl={getDebugUrl}
           onTerminate={handleTerminate}
-          hasMonitoring={configuration.has_monitoring}
         />
       </div>
     </div>

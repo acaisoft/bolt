@@ -13,8 +13,8 @@ interactions:
       $projId) {\n    id\n  }\n  configuration(where: {is_deleted: {_eq: false}, name:
       {_eq: $confName}, project_id: {_eq: $projId}, project: {userProjects: {user_id:
       {_eq: $userId}}, is_deleted: {_eq: false}}}) {\n    id\n  }\n}\n", "variables":
-      {"type_slug": "load_tests", "confName": "test config 12345", "projId": "daf50e01-4037-4587-8305-2523dad5ebfd",
-      "userId": "7f1aab7a-e941-46a2-b63a-5b28b80ad384", "sourceId": "daf50e01-4037-4587-8305-2523dad5ebfd",
+      {"type_slug": "load_tests", "confName": "test config 12345", "projId": "26ae0b53-a9e5-41f9-8804-9f7e06f923b0",
+      "userId": "7f1aab7a-e941-46a2-b63a-5b28b80ad384", "sourceId": "26ae0b53-a9e5-41f9-8804-9f7e06f923b0",
       "fetchSource": true}}'
     headers:
       Accept:
@@ -40,100 +40,48 @@ interactions:
   response:
     body:
       string: !!binary |
-        H4sIAAAAAAAEA61Uy46bMBT9FeRVK40TXh4gqy677L6KLBsbhgYw8qOjKMq/9xrI0CQMUqXuwPY9
-        555zHxckmGXocEFWGkuNcrqU6PDzgqZPas8D/CMtB2Uaq/QZvaBBq1+ytD7KGal/TL9mDPMHtBEQ
-        klURYzxjWBZphNNXFmP+mjBMeJzzPGQiyVN0PV5f/gYHyJ51ntENkJkUwR2z0y1c1Y391qnyxBvL
-        XXmSdqd0ffAP9/Zd7eAakixVXzW108w2qp9lgKrW1XRmaBUT1Ms2CJL4v6IAcDS01JKBa+jQu7a9
-        HoGGadBnJRx5k1fToWJOG2QIWTHXWvqbtc7bEoW+AB7kJgN7tbOkW2DwxXwFUcGnDBA/uGEFn4TP
-        BHoh8OU1eyPBXbFJMD5cwY/CFQL3QPCM3Kned1/T1/9oTicW7AUkuBm1ydT0UCcwfkUGgbP7KnTN
-        KtEHxlY13pTxRXys9RPH94ViDNnCrJpWTi3yDLx0/m4YB/qun6qFxYMEY29tUS0jSrlmffm2oqVj
-        xjf9o2t84VpQghlli3PsLzrAsnlX+jQiP9q31mr9ni2MUzPP8X44/QH9WAQwn+MiE0JUZZGlOCEF
-        LLI8l7ggSYLjlLO0yJMoigksMpA2LULKz3Q4+e04hbOKhDKEyDDJcEryDOdJSHBM4kQwQSSv/Cjd
-        LyzYDsfr9Q9kri+RngUAAA==
+        H4sIAAAAAAAEA61UTY+bMBT8K8inVlonkJAEctrjHnuvIusZG5YGMPJHV1HEf+8zkKVJWKRKvYHt
+        N+OZN35XIsACOV6JlcYyo5zOJDn+vJLhk9lLi/9Ey1aZ0ip9IS+k1eqXzKyvckbqH8Ov6cv8AisF
+        lhzyCIAfgMo0jmi8hw3l+y3QHd8kPAlBbJOYdKfu5W9whGyg9oyuxZtJEdwxO13hVlHa11plZ15a
+        7rKztCuli6M/uLYfaoXbeMlMNXlZOA22VM0oA1VVrmAjQ6VAMC/bELzE/xWFgL2hmZaArpFj46qq
+        OyENaNRnJS55k2evw8R4bZQhZA6usuw3VM7bEoW+AR7kJoN6taOkW2HwzXxHUcGXDFjfunYGfxc+
+        E+iJwLfXrI1Ed8UiQX9wBj8KZwjcA8Ezcq0an76yKf7RnFpM2BNIcDNqkalssE9o/IyMHa7dd6Eu
+        Z4k+MZa68a6Mb+Jjr5843iaKvmQJMy8rOUTkGXhK/qrtH/RdnvKJxYMEfbaWqKYnyriGJnuf0VKD
+        8aF/dI1PXBNKMKIscfb5Yi0Omw+lzz3yo31zUWvWMDEOYR7r/eP0C+xzEOD77AdZKngSJXlGeSxT
+        GkdiQyHkO3oIE0iyNEpFfMBBhtKGQcj4hbVnPx378s0eJB7fUkjlDsvzlCZJGNM0P8hwn6ebLQ8x
+        hvcDC6fDqev+AL1PBKmeBQAA
     headers:
       Content-Encoding:
       - gzip
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Thu, 10 Nov 2022 15:39:10 GMT
+      - Mon, 28 Nov 2022 08:01:52 GMT
       Server:
       - Warp/3.3.19
       Transfer-Encoding:
       - chunked
       x-request-id:
-      - c8837fcc-daf5-4b56-95de-5ff3b0675bda
+      - 4d8cb429-fbd1-49a7-b006-7c6c2e602626
     status:
       code: 200
       message: OK
 - request:
     body: '{"query": "mutation ($data: [configuration_insert_input!]!) {\n  insert_configuration(objects:
-      $data) {\n    returning {\n      id\n      name\n      type_slug\n      description\n      project_id\n      test_source_id\n      has_pre_test\n      has_post_test\n      has_load_tests\n      has_monitoring\n      configuration_parameters
+      $data) {\n    returning {\n      id\n      name\n      type_slug\n      description\n      project_id\n      test_source_id\n      has_pre_test\n      has_post_test\n      has_load_tests\n      configuration_parameters
       {\n        parameter_slug\n        value\n      }\n      configuration_envvars
       {\n        name\n        value\n      }\n      configuration_monitorings {\n        query\n        chart_type\n      }\n    }\n  }\n}\n",
-      "variables": {"data": {"name": "test config 12345", "project_id": "daf50e01-4037-4587-8305-2523dad5ebfd",
-      "has_pre_test": false, "has_post_test": false, "has_load_tests": true, "has_monitoring":
-      false, "monitoring_chart_configuration": {"charts": [{"x_format": "number",
-      "node_name": "global_throughput", "x_data_key": "timestamp", "y_format": "number",
-      "y_label": "name", "title": "Global throughput (events/s)", "type": "line",
-      "y_data_key": "value"}, {"x_format": "number", "node_name": "nodes", "x_data_key":
-      "timestamp", "y_format": "number", "y_label": "name", "title": "Nodes messages/second",
-      "type": "line", "y_data_key": "value"}, {"x_format": "number", "node_name":
-      "lag", "x_data_key": "timestamp", "y_format": "number", "y_label": "name", "title":
-      "Kafka consumer lag", "type": "line", "y_data_key": "value"}, {"x_format": "number",
-      "node_name": "kafka_messages", "x_data_key": "timestamp", "y_format": "number",
-      "y_label": "name", "title": "Kafka messages count", "type": "line", "y_data_key":
-      "value"}, {"x_format": "number", "node_name": "global_cpu", "x_data_key": "timestamp",
-      "y_format": "percent", "y_label": "name", "title": "CPU usage (Apps + Server)
-      (Striim)", "type": "line", "y_data_key": "value"}, {"x_format": "number", "node_name":
-      "vm_cpu", "x_data_key": "timestamp", "y_format": "percent", "y_label": "name",
-      "title": "CPU Usage (Prometheus)", "type": "line", "y_data_key": "value"}, {"x_format":
-      "number", "node_name": "vm_ram", "x_data_key": "timestamp", "y_format": "percent",
-      "y_label": "name", "title": "Memory usage (Prometheus)", "type": "line", "y_data_key":
-      "value"}, {"x_format": "number", "node_name": "global_memory", "x_data_key":
-      "timestamp", "y_format": "bytes", "y_label": "name", "title": "Memory usage
-      (Striim)", "type": "line", "y_data_key": "value"}, {"x_format": "number", "node_name":
-      "global_disc_data", "x_data_key": "timestamp", "y_format": "bytes", "y_label":
-      "name", "title": "Disc space (Striim)", "type": "line", "y_data_key": "value"},
-      {"x_format": "number", "node_name": "vm_disc_usage", "x_data_key": "timestamp",
-      "y_format": "percent", "y_label": "name", "title": "Disc usage (Prometheus)",
-      "type": "line", "y_data_key": "value"}, {"x_format": "number", "node_name":
-      "vm_disc", "x_data_key": "timestamp", "y_format": "bytes", "y_label": "name",
-      "title": "Disc space (Prometheus)", "type": "line", "y_data_key": "value"},
-      {"x_format": "number", "node_name": "vm_io", "x_data_key": "timestamp", "y_format":
-      "bytes", "y_label": "name", "title": "I/O (Prometheus)", "type": "line", "y_data_key":
-      "value"}, {"x_format": "number", "node_name": "apps_source_input", "x_data_key":
-      "timestamp", "y_format": "number", "y_label": "app_name", "title": "Source input
-      per App", "type": "line", "y_data_key": "source_input"}, {"x_format": "number",
-      "node_name": "apps_threads", "x_data_key": "timestamp", "y_format": "number",
-      "y_label": "app_name", "title": "CPU thread per app", "type": "line", "y_data_key":
-      "threads_num"}, {"x_format": "number", "node_name": "apps_cpu", "x_data_key":
-      "timestamp", "y_format": "percent", "y_label": "app_name", "title": "CPU usage
-      per App (Striim)", "type": "line", "y_data_key": "cpu"}, {"x_format": "number",
-      "node_name": "apps_wactions", "x_data_key": "timestamp", "y_format": "number",
-      "y_label": "app_name", "title": "WebActions per App (Striim)", "type": "line",
-      "y_data_key": "wactions_created"}, {"x_format": "number", "node_name": "number_of_apps",
-      "x_data_key": "timestamp", "y_format": "number", "y_label": "name", "title":
-      "Number of running apps", "type": "line", "y_data_key": "value"}, {"x_format":
-      "number", "node_name": "apps_latency", "x_data_key": "timestamp", "y_format":
-      "number", "y_label": "app_component", "title": "Latency per App (ms)", "type":
-      "line", "y_data_key": "latency"}, {"x_format": "number", "node_name": "apps_backpressed",
-      "x_data_key": "timestamp", "y_format": "bool", "y_label": "app_name", "title":
-      "Backpressured per App", "type": "heatmap", "y_data_key": "backpressured"},
-      {"x_format": "number", "node_name": "elastic_search_docs", "x_data_key": "timestamp",
-      "y_format": "number", "y_label": "name", "title": "Number of Elastic Search
-      Docs", "type": "line", "y_data_key": "value"}, {"x_format": "bytes", "node_name":
-      "elastic_search_size", "x_data_key": "timestamp", "y_format": "number", "y_label":
-      "name", "title": "Elastic Search Size", "type": "line", "y_data_key": "value"}]},
-      "created_by_id": "7f1aab7a-e941-46a2-b63a-5b28b80ad384", "type_slug": "load_tests",
-      "configuration_envvars": {"data": [{"name": "testvar", "value": "testvarvalue"}]},
-      "configuration_parameters": {"data": [{"parameter_slug": "load_tests_host",
-      "value": "https://test-target.dev.bolt.acaisoft.io"}, {"parameter_slug": "load_tests_duration",
-      "value": "30"}, {"parameter_slug": "load_tests_rampup", "value": "500"}, {"parameter_slug":
-      "load_tests_users", "value": "1000"}, {"parameter_slug": "load_tests_file_name",
-      "value": "load_tests.py"}, {"parameter_slug": "load_tests_repository_branch",
-      "value": "master"}, {"parameter_slug": "load_tests_users_per_worker", "value":
-      "1000"}]}, "instances": 1, "test_source_id": "daf50e01-4037-4587-8305-2523dad5ebfd"}}}'
+      "variables": {"data": {"name": "test config 12345", "project_id": "26ae0b53-a9e5-41f9-8804-9f7e06f923b0",
+      "has_pre_test": false, "has_post_test": false, "has_load_tests": true, "created_by_id":
+      "7f1aab7a-e941-46a2-b63a-5b28b80ad384", "type_slug": "load_tests", "configuration_envvars":
+      {"data": [{"name": "testvar", "value": "testvarvalue"}]}, "configuration_parameters":
+      {"data": [{"parameter_slug": "load_tests_host", "value": "https://test-target.dev.bolt.acaisoft.io"},
+      {"parameter_slug": "load_tests_duration", "value": "30"}, {"parameter_slug":
+      "load_tests_rampup", "value": "500"}, {"parameter_slug": "load_tests_users",
+      "value": "1000"}, {"parameter_slug": "load_tests_file_name", "value": "load_tests.py"},
+      {"parameter_slug": "load_tests_repository_branch", "value": "master"}, {"parameter_slug":
+      "load_tests_users_per_worker", "value": "1000"}]}, "instances": 1, "test_source_id":
+      "26ae0b53-a9e5-41f9-8804-9f7e06f923b0"}}}'
     headers:
       Accept:
       - '*/*'
@@ -142,7 +90,7 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '5718'
+      - '1463'
       Content-Type:
       - application/json
       User-Agent:
@@ -158,27 +106,27 @@ interactions:
   response:
     body:
       string: !!binary |
-        H4sIAAAAAAAEA5VT7Y6bMBB8FeTfmIMQl5RXqSJrwevELbEtf6SKTrx7bXIpRCf10p/s7oxnZ5Z3
-        IiAA6d+J0h5d4KPRUp2ig6CMznWHITqt9IkUffEjzQnSk2+sZTB0He0Oo6T776ylA4iOMmyaEeEg
-        B9mQkmi4YJoO6ENxJy6aXbtnqRVuFrmf4in1JwOC5yGfGgL96JS9P6/jNJXEOvMTx8CXpwVIVmPd
-        0H3ddnTPDh09tDWjO7ZrBQiGgxSZP9Fxb6Ib8b9wZ/DcOlzkkF7C5LEkS9Ekwsz6VN1I74OLH7MX
-        o1UwLpv2oHjylVtwyZqAzpM+efr387Mj/JzeTftcYYrZy3MI1vdvb1kJDeBOGCqB12owU6hgBOWN
-        DJUyZC6LfxOLR8greVt/DUvCbbQbRax+ARXTceV0H2s09SsoqSbkyxGtyNXxyt5ekIvW+BzGjQ8O
-        9HjeiLiATxF8zbGI5xYd/23cr4RY1dz3OJbkOV/U1yt8hLv5CVJtg80RpsrdkvkTx3pE+UiO83Ge
-        5z9XTUnJrwMAAA==
+        H4sIAAAAAAAEA5VT7W6DMAx8FZTfhaVQWuBVpioyYNpsNIny0amaePc5dFvZJm3dP2L7zuezeWU9
+        eGDNK5PKofWi02qQh2DBS61i3KIPVkl1YEmTPFJdzxq2q3lbVFtIyzXydDPQV73t27TMoYBu11Y5
+        VmzFFJyQqj06n1yJk3VebEpK+YtB4cZwoPyooRexyFGiR9dZaa7tVRjHFTNWP2Hnxdw63wLytixS
+        qLFMN+uhTquKb9J62CHfDnVetDzyE51wOtgO/4U7ghPG4iyHNQOMDldsDmoijKxfogvpjbeBar8Y
+        KAxY8sCjdawh8z6fP0cXR2pAws8whmja0XvjmoeH2DL1YA/osx7PWatHn0EH0unBZ1KzaZX8Ttx/
+        bPNGXvC/YSTcBLNQVPI7UIGuKK7xY4w1vwc1yBHFfC035M3azFzukItGO+m1vYjWguqOCxEncLSC
+        vzlm8cKgFS/aPhPipuY6x/77flGdz/C+3MW1U2yBjSukyNWS6QfHSauom36xeCT7aT9N0xto/CgM
+        mAMAAA==
     headers:
       Content-Encoding:
       - gzip
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Thu, 10 Nov 2022 15:39:10 GMT
+      - Mon, 28 Nov 2022 08:01:52 GMT
       Server:
       - Warp/3.3.19
       Transfer-Encoding:
       - chunked
       x-request-id:
-      - d949d064-12fe-4f39-bf89-bbac064de9a1
+      - 771c7f36-d512-4b74-82a4-807ddf71a9c7
     status:
       code: 200
       message: OK

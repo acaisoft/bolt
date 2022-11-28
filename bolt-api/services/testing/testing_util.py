@@ -22,6 +22,7 @@ import logging
 import os
 from contextlib import contextmanager
 from unittest import mock
+from uuid import UUID
 
 import sys
 import unittest
@@ -65,10 +66,12 @@ class BoltCase(unittest.TestCase):
     To record responses Hasura must be up and running in development mode.
     """
 
-    recorded_project_id = 'daf50e01-4037-4587-8305-2523dad5ebfd'
-    recorded_repo_id = 'daf50e01-4037-4587-8305-2523dad5ebfd'
-    recorded_config_id = '6535ab77-78cf-4953-bad7-5e11cea8fbf1'
-    recorded_cloned_config_id = 'bb56e2c4-e1d9-4bcb-aeb1-8ff915f7cb18'
+    recorded_project_id = '26ae0b53-a9e5-41f9-8804-9f7e06f923b0'
+    recorded_repo_id = '26ae0b53-a9e5-41f9-8804-9f7e06f923b0'
+    recorded_config_id = '790b386a-51e0-4f6a-96db-52a3ac7b82e8'
+    recorded_cloned_config_id = '14e1dbd0-512a-48ee-b7fd-ff5bcc562914'
+    recorded_e2e_config_id = 'd66341eb-099a-4138-817a-24a4c589377d'
+    recorded_e2e_run_id = 'bea05e03-aa11-43ea-a390-a2ea774a4b5d'
     recorded_execution_id = '0765dd5e-61b1-11ed-811c-000c299af887'
     nonexistent_item = '96e1223c-8dc3-486a-881a-776952454cd4'
     user_role = const.ROLE_ADMIN
@@ -89,6 +92,7 @@ class BoltCase(unittest.TestCase):
             record_mode='once',
             match_on=['uri', 'method', 'raw_body'],
             filter_headers=['authorization'],
+            decode_compressed_response=True
         ).use_cassette(self.vcr_cassette_name)
         self.vcr = _vcr.__enter__()
         self.addCleanup(_vcr.__exit__)
@@ -181,8 +185,20 @@ class BoltCase(unittest.TestCase):
     def generate_hasura_token(self, *args, **kwargs):
         return 'test_token', self.recorded_execution_id
 
+    def fake_uuid_factory(self, uuid_values: list[UUID]):
+        class FakeUUID:
+            def __init__(self, values):
+                self._index = 0
+                self.values = values
+
+            def uuid4(self):
+                faked = self.values[self._index]
+                self._index += 1
+                return faked
+        return FakeUUID(uuid_values)
+
     @contextmanager
-    def patch(self, name: str):
+    def patch(self, name: str, uuids=None):
         """
         Wraps mock method to clean up long, absolute package paths from tests
         """
@@ -206,6 +222,10 @@ class BoltCase(unittest.TestCase):
             'storage_gcp': (
                 'cloudstorage.drivers.google.GoogleStorageDriver',
                 get_storage_client_prototype(f'reports/{self.recorded_execution_id}.pdf')
+            ),
+            'junit_parser': (
+                'apps.bolt_api.app.external_tests.parsers.junit_parser.uuid',
+                self.fake_uuid_factory(uuids)
             )
         }
         with mock.patch(*mocks.get(name, None)) as m:

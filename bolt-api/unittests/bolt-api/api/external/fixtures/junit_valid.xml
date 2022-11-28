@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+    <testsuite name="pytest" errors="0" failures="1" skipped="0" tests="3" time="6.068"
+               timestamp="2022-11-28T18:16:03.830428" hostname="Bleeding-Edge">
+        <testcase
+                time="1.234"
+                classname="unittests.bolt-api.samples.SampleClass"
+                name="test_one_thing"/>
+        <testcase
+                time="1.234"
+                classname="unittests.bolt-api.samples.SampleClass"
+                name="test_another_thing"/>
+        <testcase
+                time="1.234"
+                classname="unittests.bolt-api.samples.AnotherSampleClass"
+                name="test_that_thing_that_never_works">
+            <failure message="common.exceptions.TimeoutException: Message:">
+                common.exceptions.Exception: Message: Something went wrong, Murphy's Law.
+            </failure>
+        </testcase>
+    </testsuite>
+</testsuites>

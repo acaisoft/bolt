@@ -70,3 +70,16 @@ def get_error(code, msg):
 
 def get_entry(collection, field):
     return {collection: [{field: 'test'}]}
+
+
+class RemoteSchemaHandler:
+    def __init__(self, repairs_after=5):
+        self.edge = repairs_after
+        self.attempt = 0
+
+    def handle(self, *args):
+        if self.attempt < self.edge:
+            self.attempt += 1
+            return get_error(0, 'Still dead.')
+        else:
+            return {'message': 'success'}

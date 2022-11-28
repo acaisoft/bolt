@@ -34,7 +34,7 @@ class TestRepositoryMutations(BoltCase):
                 type_slug:"load_tests"
             ) { returning { name repository_url type_slug } }
         }''', {
-            'id': BoltCase.recorded_project_id,
+            'id': self.recorded_project_id,
             'name': name,
             'repo': repo,
         })

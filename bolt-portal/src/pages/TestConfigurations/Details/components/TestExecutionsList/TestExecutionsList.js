@@ -49,7 +49,6 @@ import useStyles from './TestExecutionsList.styles'
 function TestExecutionsList({
   configuration: {
     id: configurationId,
-    has_monitoring,
     has_load_tests,
     prometheus_url,
   },
@@ -211,16 +210,6 @@ function TestExecutionsList({
                   Tests
                 </Button>
               )}
-              {has_monitoring && (
-                <Button
-                  data-testid="monitoring-details-button"
-                  href={getMonitoringDetailsUrl(execution)}
-                  title="Show monitoring details"
-                  variant="link"
-                >
-                  Monitoring
-                </Button>
-              )}
             </NoWrap>
           )}
         />
@@ -232,9 +221,9 @@ function TestExecutionsList({
             <NoWrap>
               {has_load_tests && prometheus_url ? (
                 <Button
-                  data-testid="testrun-details-button"
+                  data-testid="testrun-monitoring-button"
                   href={getMonitoringMetricsDetailsUrl(execution)}
-                  title="Show test run details"
+                  title="Show monitoring details"
                   variant="link"
                 >
                   Metrics

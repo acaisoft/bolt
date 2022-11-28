@@ -48,11 +48,6 @@ const scenarioParts = [
     label: 'Load Tests',
     description: 'load tests description',
   },
-  {
-    id: 'has_monitoring',
-    label: 'Monitoring',
-    description: 'monitoring description',
-  },
 ]
 
 const testSourceParameters = ['load_tests_repository_branch', 'load_tests_file_name']
@@ -199,8 +194,7 @@ function generateFields({
                 formValues.configuration_type === parameter.type_slug &&
                 ((formValues.scenario_parts.has_load_tests &&
                   parameter.slug_name.includes('load_tests')) ||
-                  (formValues.scenario_parts.has_monitoring &&
-                    parameter.slug_name.includes('monitoring')))
+                  parameter.slug_name.includes('monitoring'))
               ) {
                 return {
                   presence: { allowEmpty: true },
@@ -295,7 +289,6 @@ function prepareInitialValues(data) {
     has_pre_test,
     has_post_test,
     has_load_tests,
-    has_monitoring,
     configuration_envvars,
     configuration_monitorings,
     prometheus_url,
@@ -322,7 +315,6 @@ function prepareInitialValues(data) {
       has_pre_test,
       has_post_test,
       has_load_tests,
-      has_monitoring,
     },
     parameters: filteredParams.reduce(
       (acc, parameter) => ({
@@ -360,7 +352,7 @@ function preparePayload(
     scenario_name,
     configuration_type,
     scenario_description,
-    scenario_parts: { has_pre_test, has_post_test, has_load_tests, has_monitoring },
+    scenario_parts: { has_pre_test, has_post_test, has_load_tests },
     parameters,
     test_source_type,
     test_source,
@@ -396,7 +388,6 @@ function preparePayload(
     has_pre_test,
     has_post_test,
     has_load_tests,
-    has_monitoring,
     prometheus_url: isMonitoring ? prometheus_url : null,
     configuration_parameters: Object.entries({
       ...parameters,
@@ -409,8 +400,7 @@ function preparePayload(
       // Skip parameters for not checked scenario parts
       .filter(
         ({ parameter_slug }) =>
-          (has_load_tests && parameter_slug.includes('load_tests')) ||
-          (has_monitoring && parameter_slug.includes('monitoring'))
+          (has_load_tests && parameter_slug.includes('load_tests'))
       ),
     test_source_id: test_source[test_source_type],
   })

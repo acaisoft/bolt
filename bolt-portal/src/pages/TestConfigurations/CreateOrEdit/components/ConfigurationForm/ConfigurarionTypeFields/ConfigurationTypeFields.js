@@ -46,9 +46,7 @@ function ConfigurationTypeFields({ fields, configuration }) {
                   title="Test Parameters"
                 >
                   <Grid container spacing={4}>
-                    {!configurationType ||
-                    (!scenarioParts?.has_load_tests &&
-                      !scenarioParts?.has_monitoring) ? (
+                    {!configurationType || !scenarioParts?.has_load_tests ? (
                       <Grid item xs={12}>
                         <Typography variant="body1">
                           Select test type and scenario parts to see available

@@ -41,7 +41,6 @@ def validate_test_configuration_by_id(test_conf_id):
             id
             name
             has_load_tests
-            has_monitoring
             
             test_source {
                 source_type
@@ -95,7 +94,6 @@ def validate_test_configuration(conf: dict, defaultParams: list):
     >>> validate_test_configuration({
     ...    "name": "conf 1",
     ...    "has_load_tests": True,
-    ...    "has_monitoring": True,
     ...    "test_source": {
     ...        "source_type": "repository",
     ...        "repository": {
@@ -117,11 +115,8 @@ def validate_test_configuration(conf: dict, defaultParams: list):
     if conf['has_load_tests']:
         validate_load_test_params(conf['configuration_parameters'], defaults=defaultParams)
 
-    if conf['has_monitoring']:
-        validate_monitoring_params(conf['configuration_parameters'], defaults=defaultParams)
-
-    if not conf['has_monitoring'] and not conf['has_load_tests']:
-        raise AssertionError(f'cannot start test without either load_tests or monitoring defined')
+    if not conf['has_load_tests']:
+        raise AssertionError(f'cannot start test without load_tests defined')
 
     validate_extensions(conf.get('configuration_extensions', []))
 

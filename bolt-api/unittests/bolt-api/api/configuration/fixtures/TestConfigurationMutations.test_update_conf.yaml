@@ -4,8 +4,8 @@ interactions:
       {id: {_eq: $confId}, project: {userProjects: {user_id: {_eq: $userId}}, is_deleted:
       {_eq: false}}}) {\n    performed\n    name\n    type_slug\n    description\n    project_id\n    test_source_id\n    configuration_parameters
       {\n      parameter_slug\n      value\n      configuration_id\n    }\n    configuration_envvars
-      {\n      name\n      value\n      configuration_id\n    }\n    has_pre_test\n    has_post_test\n    has_load_tests\n    has_monitoring\n    monitoring_chart_configuration\n  }\n}\n",
-      "variables": {"confId": "6535ab77-78cf-4953-bad7-5e11cea8fbf1", "userId": "7f1aab7a-e941-46a2-b63a-5b28b80ad384"}}'
+      {\n      name\n      value\n      configuration_id\n    }\n    has_pre_test\n    has_post_test\n    has_load_tests\n  }\n}\n",
+      "variables": {"confId": "790b386a-51e0-4f6a-96db-52a3ac7b82e8", "userId": "7f1aab7a-e941-46a2-b63a-5b28b80ad384"}}'
     headers:
       Accept:
       - '*/*'
@@ -14,7 +14,7 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '695'
+      - '639'
       Content-Type:
       - application/json
       User-Agent:
@@ -30,38 +30,26 @@ interactions:
   response:
     body:
       string: !!binary |
-        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
+        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
     headers:
       Content-Encoding:
       - gzip
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Thu, 10 Nov 2022 15:42:50 GMT
+      - Mon, 28 Nov 2022 08:02:21 GMT
       Server:
       - Warp/3.3.19
       Transfer-Encoding:
       - chunked
       x-request-id:
-      - 942632dc-9f17-411b-a20f-652e2d2b20cc
+      - 28825ff7-99c6-491e-a9b6-5761a04d3cfd
     status:
       code: 200
       message: OK
@@ -78,10 +66,11 @@ interactions:
       configuration(where: {name: {_eq: $confName}, project: {userProjects: {user_id:
       {_eq: $userId}}, is_deleted: {_eq: false}}}) {\n    id\n  }\n  hasUserAccess:
       configuration(where: {id: {_eq: $confId}, project: {userProjects: {user_id:
-      {_eq: $userId}}}}) {\n    id\n  }\n}\n", "variables": {"type_slug": "load_tests",
-      "confId": "6535ab77-78cf-4953-bad7-5e11cea8fbf1", "confName": "updated test
-      config name 12345", "userId": "7f1aab7a-e941-46a2-b63a-5b28b80ad384", "sourceId":
-      "None", "fetchSource": false}}'
+      {_eq: $userId}}}}) {\n    id\n  }\n  monitoring: configuration(where: {id: {_eq:
+      $confId}}) {\n    configuration_monitorings {\n      id\n    }\n  }\n}\n", "variables":
+      {"type_slug": "load_tests", "confId": "790b386a-51e0-4f6a-96db-52a3ac7b82e8",
+      "confName": "updated test config name 12345", "userId": "7f1aab7a-e941-46a2-b63a-5b28b80ad384",
+      "sourceId": "None", "fetchSource": false}}'
     headers:
       Accept:
       - '*/*'
@@ -90,7 +79,7 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '1424'
+      - '1539'
       Content-Type:
       - application/json
       User-Agent:
@@ -106,63 +95,65 @@ interactions:
   response:
     body:
       string: !!binary |
-        H4sIAAAAAAAEA3WUy27bMBBFf8XQqgUyDd+P7LrrqrusgkAYimQixJZcPVoEgf+9I8WJHFvWRsJw
-        NDzkvTNvRcQBi7u3Yo8d7tKQuuLu4a2oY3FXGJ5VypID85hBSTSAGDnYxFFkdGhcKm6KmDKO26H8
-        i9sx0W+cUXAuVzZUkiIwUOT4HccOh7ptNt/67xTtt+PTR9q2xVgOqR/68iOrONxsjjQSbcBKISif
-        HdF4Di5GCVYHJ4LDSs4bn9NodonTLThjn7r+tk9V28TrOHQ1+3F/AqPQKYFKA7NOgMpZgpc6AgtS
-        exdCFBap3DkMZys04xnNdYwZ9oSCJad9FhFytAqU1Ry8CgQVhDbSJ8O1WaWg4FeBdtPhjwrt2qYe
-        2q5unjafMnwVaslYEyrJVEVlDHjmIiitMzgTGBhhbY60mMIalb6Eqleh6oZcSmajxVP3nEB9Zizu
-        8VHHrBEhh8xARUuCCdIvxRBTJRlX3lPBc8EumH4tSM9tP/n6lOHEwfPqsr9UzLNcZTDZkFSVSYBC
-        CcKhh0lnvF8zzFLwx/71AiYvMLneps0s4FWiKeW91RYspTgzmVfU085SU8kKUCN9RSfpbZLxa1rt
-        sJ8mxbmLwsLTpX3bTzZ63YQOm+qZlq7c1JJaHlMXPsFErpzIU58ZUIJbcIyaXpDtvbKMZbvGt9Zn
-        ze10wUePv7f9v7Z7mY9xhWzOKvepK4+Zh8ebou5/01S7b+o/07R7oMgz9vc0Rn5WVer7k/Gp6QqD
-        tWAd6a68lhAwWtCJ8yqhIyfy4vB4OPwHY2oK+IUFAAA=
+        H4sIAAAAAAAEA3WUy27bQAxFf8XQqgXCZt4zyq67rrrLKggEzisRakuuHi2CwP9eynEyriPvBpwr
+        zhF5ydcq4oTV3Wu1xwF3aUpDdffwWrWxuqscE9J6YUFh0qB8suCRCxAm1YIrY4NL1U0VU8Z5OzV/
+        cDsn+owzCh7TNR2lpAhMFDmd4zzg1Pbd5sv4laLjdn56l217jM2Uxmls3lXV4WZzohEWLWauwDHL
+        QTmpoc6eQ5K1EdkaYxhfodHsM85QcOYxDePtmELfxes4VJr9vD+DMcGLkJOC7AKCkq4Gz4QBLnhI
+        LubAmF6B4WyFZr6guY5xhD2jYDLZrIOFWmAAlWUEX9MJo0zRYFbcmlUKCv7foN3y86cO7fqunfqh
+        7Z42H234v1FFsdYox0IgxxjIOZJtmA5QyxCAJ2ZzsgKlWV67tM1SrwuodhWq7cilZDa6PHfPGdSH
+        orhHKeN4JIqI2lCptAPnowIULCqrkWlUK1CfmH4UpOd+XHx9znDm4ONteR+Vyl6TV4yREpRABbXz
+        DowMPjqTmYtrs1QSftu/fILJBSa327Q5NvAq0SJ5G7WCRT5RhicB3GrqVQ4ZfKYT0yZyLXxNZqZH
+        Lnu1w3HZFJcN84VnSPt+XGz0svEDduGZrq5Uqkibk7TwBeFN5ramUZcMVHAM6mAlBCUjI38FwdfK
+        tjZn3S0WvLex/9sPv46/cYXsqGr2aWhOysPjTdWOP2mr3Xft72XbPVDkGcd7WiPfQ0jjWNanrZmX
+        ziBocj7Vlk61iR40TQAG651IrloyFuceP6ZVlNun05psyuWS+vHweDj8A06bYO+1BQAA
     headers:
       Content-Encoding:
       - gzip
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Thu, 10 Nov 2022 15:42:50 GMT
+      - Mon, 28 Nov 2022 08:02:21 GMT
       Server:
       - Warp/3.3.19
       Transfer-Encoding:
       - chunked
       x-request-id:
-      - 0e907e5d-48c3-419e-ab66-86820f240252
+      - 35f9674d-b57d-4d86-a800-f1f39bdb8d07
     status:
       code: 200
       message: OK
 - request:
     body: '{"query": "mutation ($id: uuid!, $data: configuration_set_input!, $params:
       [configuration_parameter_insert_input!]!, $envs: [configuration_envvars_insert_input!]!,
-      $monitorings: [configuration_monitoring_insert_input!]!) {\n  delete_configuration_parameter(where:
-      {configuration_id: {_eq: $id}}) {\n    affected_rows\n  }\n  insert_configuration_parameter(objects:
+      $monitorings: [configuration_monitoring_insert_input!]!, $none: uuid, $ids:
+      [uuid]) {\n  delete_configuration_parameter(where: {configuration_id: {_eq:
+      $id}}) {\n    affected_rows\n  }\n  insert_configuration_parameter(objects:
       $params, on_conflict: {constraint: configuration_parameter_pkey, update_columns:
       [value]}) {\n    affected_rows\n  }\n  delete_configuration_envvars(where: {configuration_id:
       {_eq: $id}}) {\n    affected_rows\n  }\n  insert_configuration_envvars(objects:
       $envs, on_conflict: {constraint: configuration_envvars_pkey, update_columns:
-      [value]}) {\n    affected_rows\n  }\n  delete_configuration_monitoring(where:
-      {configuration_id: {_eq: $id}}) {\n    affected_rows\n  }\n  insert_configuration_monitoring(objects:
+      [value]}) {\n    affected_rows\n  }\n  update_configuration_monitoring(where:
+      {id: {_in: $ids}}, _set: {configuration_id: $none}) {\n    affected_rows\n  }\n  insert_configuration_monitoring(objects:
       $monitorings, on_conflict: {constraint: configuration_monitoring_pkey, update_columns:
       [query]}) {\n    affected_rows\n  }\n  update_configuration(where: {id: {_eq:
-      $id}}, _set: $data) {\n    returning {\n      id\n      name\n      type_slug\n      description\n      project_id\n      test_source_id\n      has_pre_test\n      has_post_test\n      has_load_tests\n      has_monitoring\n      configuration_envvars
-      {\n        name\n        value\n      }\n      configuration_parameters {\n        parameter_slug\n        value\n      }\n      monitoring_chart_configuration\n    }\n  }\n}\n",
-      "variables": {"id": "6535ab77-78cf-4953-bad7-5e11cea8fbf1", "data": {"has_load_tests":
-      true, "has_monitoring": false, "name": "updated test config name 12345", "type_slug":
-      "load_tests", "instances": 1}, "params": [{"parameter_slug": "load_tests_host",
-      "value": "https://test-target.dev.bolt.acaisoft.io", "configuration_id": "6535ab77-78cf-4953-bad7-5e11cea8fbf1"},
+      $id}}, _set: $data) {\n    returning {\n      id\n      name\n      type_slug\n      description\n      project_id\n      test_source_id\n      has_pre_test\n      has_post_test\n      has_load_tests\n      configuration_envvars
+      {\n        name\n        value\n      }\n      configuration_parameters {\n        parameter_slug\n        value\n      }\n    }\n  }\n}\n",
+      "variables": {"id": "790b386a-51e0-4f6a-96db-52a3ac7b82e8", "data": {"has_load_tests":
+      true, "name": "updated test config name 12345", "type_slug": "load_tests", "prometheus_url":
+      null, "instances": 1}, "params": [{"parameter_slug": "load_tests_host", "value":
+      "https://test-target.dev.bolt.acaisoft.io", "configuration_id": "790b386a-51e0-4f6a-96db-52a3ac7b82e8"},
       {"parameter_slug": "load_tests_duration", "value": "10", "configuration_id":
-      "6535ab77-78cf-4953-bad7-5e11cea8fbf1"}, {"parameter_slug": "load_tests_rampup",
-      "value": "500", "configuration_id": "6535ab77-78cf-4953-bad7-5e11cea8fbf1"},
+      "790b386a-51e0-4f6a-96db-52a3ac7b82e8"}, {"parameter_slug": "load_tests_rampup",
+      "value": "500", "configuration_id": "790b386a-51e0-4f6a-96db-52a3ac7b82e8"},
       {"parameter_slug": "load_tests_users", "value": "1000", "configuration_id":
-      "6535ab77-78cf-4953-bad7-5e11cea8fbf1"}, {"parameter_slug": "load_tests_file_name",
-      "value": "load_tests.py", "configuration_id": "6535ab77-78cf-4953-bad7-5e11cea8fbf1"},
+      "790b386a-51e0-4f6a-96db-52a3ac7b82e8"}, {"parameter_slug": "load_tests_file_name",
+      "value": "load_tests.py", "configuration_id": "790b386a-51e0-4f6a-96db-52a3ac7b82e8"},
       {"parameter_slug": "load_tests_repository_branch", "value": "master", "configuration_id":
-      "6535ab77-78cf-4953-bad7-5e11cea8fbf1"}, {"parameter_slug": "load_tests_users_per_worker",
-      "value": "1000", "configuration_id": "6535ab77-78cf-4953-bad7-5e11cea8fbf1"}],
+      "790b386a-51e0-4f6a-96db-52a3ac7b82e8"}, {"parameter_slug": "load_tests_users_per_worker",
+      "value": "1000", "configuration_id": "790b386a-51e0-4f6a-96db-52a3ac7b82e8"}],
       "envs": [{"name": "testvar_2", "value": "testvarvalue 2", "configuration_id":
-      "6535ab77-78cf-4953-bad7-5e11cea8fbf1"}], "monitorings": []}}'
+      "790b386a-51e0-4f6a-96db-52a3ac7b82e8"}], "monitorings": [], "none": null, "ids":
+      []}}'
     headers:
       Accept:
       - '*/*'
@@ -171,7 +162,7 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '2720'
+      - '2731'
       Content-Type:
       - application/json
       User-Agent:
@@ -187,39 +178,28 @@ interactions:
   response:
     body:
       string: !!binary |
-        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
+        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
+        9BfvMVC80AQAAA==
     headers:
       Content-Encoding:
       - gzip
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Thu, 10 Nov 2022 15:42:50 GMT
+      - Mon, 28 Nov 2022 08:02:21 GMT
       Server:
       - Warp/3.3.19
       Transfer-Encoding:
       - chunked
       x-request-id:
-      - 89b83d86-cd84-4d46-8d24-452c1c3e80e3
+      - 2a0dabdf-7ff5-4967-8e1a-3291f3f437e4
     status:
       code: 200
       message: OK

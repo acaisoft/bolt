@@ -26,22 +26,20 @@ interactions:
     uri: http://localhost:8080/v1alpha1/graphql
   response:
     body:
-      string: !!binary |
-        H4sIAAAAAAAEA6tWSkksSVSyqlYqLQCyUuNTK1KTS0sy8/NAYolpaanJJakp8UX55cVKClYKhrW1
-        tQAmrCbJMwAAAA==
+      string: '{"data":{"update_execution":{"affected_rows" : 1}}}'
     headers:
-      Content-Encoding:
-      - gzip
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Tue, 15 Nov 2022 15:04:57 GMT
+      - Mon, 28 Nov 2022 08:12:35 GMT
       Server:
       - Warp/3.3.19
       Transfer-Encoding:
       - chunked
+      content-length:
+      - '51'
       x-request-id:
-      - 7b4d97bb-f7d7-4537-a7c5-0a782172d5b1
+      - edce0532-0dde-49a9-856e-7b73567bafaa
     status:
       code: 200
       message: OK

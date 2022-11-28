@@ -170,7 +170,6 @@ export const testConfigurationBase = {
     has_pre_test: false,
     has_post_test: false,
     has_load_tests: true,
-    has_monitoring: false,
     configuration_envvars: [
       {
         name: 'TEST_KEY',

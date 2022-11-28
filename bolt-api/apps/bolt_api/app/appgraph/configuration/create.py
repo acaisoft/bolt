@@ -17,7 +17,6 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import json
 import graphene
 
 from flask import current_app
@@ -27,7 +26,6 @@ from apps.bolt_api.app.appgraph.configuration import utils
 from services import const, gql_util
 from services import validators
 from services.hasura import hce
-from services.testruns.defaults import DEFAULT_CHART_CONFIGURATION
 
 
 class CreateValidate(graphene.Mutation):
@@ -67,17 +65,12 @@ class CreateValidate(graphene.Mutation):
         has_load_tests = graphene.Boolean(
             required=False,
             description='Test has load_tests hooks.')
-        has_monitoring = graphene.Boolean(
-            required=False,
-            description='Test has monitoring hooks.')
         description = graphene.String(
             required=False,
-            description='A few words summarizing the configuration'
-        )
+            description='A few words summarizing the configuration')
         prometheus_url = graphene.String(
             required=False,
-            description='Endpoint for metrics fetching'
-        )
+            description='Endpoint for metrics fetching')
 
     Output = gql_util.ValidationInterface
 
@@ -85,7 +78,7 @@ class CreateValidate(graphene.Mutation):
     def validate(
             info, name, type_slug, project_id,
             test_source_id=None, configuration_parameters=None, configuration_envvars=None,
-            has_pre_test=False, has_post_test=False, has_load_tests=False, has_monitoring=False, description=None,
+            has_pre_test=False, has_post_test=False, has_load_tests=False, description=None,
             configuration_monitorings=None, prometheus_url=None
     ):
         project_id = str(project_id)
@@ -102,7 +95,7 @@ class CreateValidate(graphene.Mutation):
         )
 
         if not is_external:
-            assert any((has_pre_test, has_post_test, has_load_tests, has_monitoring)), \
+            assert any((has_pre_test, has_post_test, has_load_tests)), \
                 f'At least one section is required'
 
             repo_query = {
@@ -189,8 +182,6 @@ class CreateValidate(graphene.Mutation):
             'has_pre_test': has_pre_test,
             'has_post_test': has_post_test,
             'has_load_tests': has_load_tests,
-            'has_monitoring': has_monitoring,
-            'monitoring_chart_configuration': json.loads(DEFAULT_CHART_CONFIGURATION),
         }
 
         if user_id:
@@ -227,16 +218,6 @@ class CreateValidate(graphene.Mutation):
                     if parameter_slug == const.TESTPARAM_USERS:
                         query_data['instances'] = utils.get_instances_count(patched_params, param_value)
 
-        if has_monitoring:
-            monitoring_parameters = validators.validate_monitoring_params(configuration_parameters or [], defaults=repo['parameter'])
-            if monitoring_parameters:
-                if 'configuration_parameters' not in query_data:
-                    query_data['configuration_parameters'] = {'data': []}
-                for slug, value in monitoring_parameters.items():
-                    query_data['q']['data'].append({
-                        'parameter_slug': slug,
-                        'value': value,
-                    })
         if configuration_monitorings:
             query_data['configuration_monitorings'] = {'data': []}
             for item in configuration_monitorings:
@@ -274,10 +255,10 @@ class CreateValidate(graphene.Mutation):
     def mutate(
             self, info, name, type_slug, project_id, test_source_id=None, configuration_parameters=None,
             configuration_envvars=None, has_pre_test=False, has_post_test=False, has_load_tests=False,
-            has_monitoring=False, description=None, configuration_monitorings=None, prometheus_url=None):
+            description=None, configuration_monitorings=None, prometheus_url=None):
         CreateValidate.validate(
             info, name, type_slug, project_id, test_source_id, configuration_parameters,
-            configuration_envvars, has_pre_test, has_post_test, has_load_tests, has_monitoring, description,
+            configuration_envvars, has_pre_test, has_post_test, has_load_tests, description,
             configuration_monitorings, prometheus_url
         )
         return gql_util.ValidationResponse(ok=True)
@@ -291,10 +272,10 @@ class Create(CreateValidate):
     def mutate(
             self, info, name, type_slug, project_id, test_source_id=None, configuration_parameters=None,
             configuration_envvars=None, has_pre_test=False, has_post_test=False, has_load_tests=False,
-            has_monitoring=False, description=None, configuration_monitorings=None, prometheus_url=None):
+            description=None, configuration_monitorings=None, prometheus_url=None):
         query_params = CreateValidate.validate(
             info, name, type_slug, project_id, test_source_id, configuration_parameters, configuration_envvars,
-            has_pre_test, has_post_test, has_load_tests, has_monitoring, description, configuration_monitorings,
+            has_pre_test, has_post_test, has_load_tests, description, configuration_monitorings,
             prometheus_url
         )
 
@@ -312,7 +293,6 @@ class Create(CreateValidate):
                     has_pre_test
                     has_post_test
                     has_load_tests
-                    has_monitoring
                     configuration_parameters {
                         parameter_slug
                         value

@@ -1,9 +1,9 @@
 interactions:
 - request:
     body: '{"query": "query ($id: uuid) {\n  configuration(where: {id: {_eq: $id}})
-      {\n    name\n    project_id\n    type_slug\n    description\n    test_source_id\n    has_pre_test\n    has_post_test\n    has_load_tests\n    has_monitoring\n    monitoring_chart_configuration\n    configuration_envvars
+      {\n    name\n    project_id\n    type_slug\n    description\n    test_source_id\n    has_pre_test\n    has_post_test\n    has_load_tests\n    configuration_envvars
       {\n      name\n      value\n    }\n    configuration_parameters {\n      value\n      parameter_slug\n    }\n  }\n}\n",
-      "variables": {"id": "6535ab77-78cf-4953-bad7-5e11cea8fbf1"}}'
+      "variables": {"id": "790b386a-51e0-4f6a-96db-52a3ac7b82e8"}}'
     headers:
       Accept:
       - '*/*'
@@ -12,7 +12,7 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '473'
+      - '417'
       Content-Type:
       - application/json
       User-Agent:
@@ -28,63 +28,49 @@ interactions:
   response:
     body:
       string: !!binary |
-        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
+        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
+        QGf6BNt1NAFHAwAA
     headers:
       Content-Encoding:
       - gzip
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Sat, 12 Nov 2022 10:13:32 GMT
+      - Mon, 28 Nov 2022 08:06:04 GMT
       Server:
       - Warp/3.3.19
-      Transfer-Encoding:
-      - chunked
       x-request-id:
-      - 4a98bd00-432d-4460-be86-9a18774ecadc
+      - 6cc0285e-1ec3-46ec-8e6e-66e138c648cf
     status:
       code: 200
       message: OK
 - request:
     body: '{"query": "mutation ($name: String!, $type_slug: String!, $description:
       String!, $project_id: UUID!, $test_source_id: UUID, $has_pre_test: Boolean,
-      $has_post_test: Boolean, $has_load_tests: Boolean, $has_monitoring: Boolean,
-      $configuration_envvars: [ConfigurationEnvVarInput], $configuration_monitorings:
-      [ConfigurationMonitoringInput], $configuration_parameters: [ConfigurationParameterInput])
-      {\n  testrun_configuration_create(name: $name, type_slug: $type_slug, description:
-      $description, project_id: $project_id, test_source_id: $test_source_id, has_pre_test:
-      $has_pre_test, has_post_test: $has_post_test, has_load_tests: $has_load_tests,
-      has_monitoring: $has_monitoring, configuration_envvars: $configuration_envvars,
+      $has_post_test: Boolean, $has_load_tests: Boolean, $configuration_envvars: [ConfigurationEnvVarInput],
+      $configuration_monitorings: [ConfigurationMonitoringInput], $configuration_parameters:
+      [ConfigurationParameterInput]) {\n  testrun_configuration_create(name: $name,
+      type_slug: $type_slug, description: $description, project_id: $project_id, test_source_id:
+      $test_source_id, has_pre_test: $has_pre_test, has_post_test: $has_post_test,
+      has_load_tests: $has_load_tests, configuration_envvars: $configuration_envvars,
       configuration_monitorings: $configuration_monitorings, configuration_parameters:
       $configuration_parameters) {\n    affected_rows\n    returning {\n      id\n      name\n    }\n  }\n}\n",
       "variables": {"name": "updated test config name 12345 (Cloned at 00/00/0000
-      - 00:00:00)", "project_id": "daf50e01-4037-4587-8305-2523dad5ebfd", "type_slug":
-      "load_tests", "description": null, "test_source_id": "daf50e01-4037-4587-8305-2523dad5ebfd",
-      "has_pre_test": false, "has_post_test": false, "has_load_tests": true, "has_monitoring":
-      false, "configuration_envvars": [{"name": "testvar_2", "value": "testvarvalue
-      2"}], "configuration_parameters": [{"value": "https://test-target.dev.bolt.acaisoft.io",
-      "parameter_slug": "load_tests_host"}, {"value": "10", "parameter_slug": "load_tests_duration"},
-      {"value": "500", "parameter_slug": "load_tests_rampup"}, {"value": "1000", "parameter_slug":
-      "load_tests_users"}, {"value": "load_tests.py", "parameter_slug": "load_tests_file_name"},
-      {"value": "master", "parameter_slug": "load_tests_repository_branch"}, {"value":
-      "1000", "parameter_slug": "load_tests_users_per_worker"}]}}'
+      - 00:00:00)", "project_id": "26ae0b53-a9e5-41f9-8804-9f7e06f923b0", "type_slug":
+      "load_tests", "description": null, "test_source_id": "26ae0b53-a9e5-41f9-8804-9f7e06f923b0",
+      "has_pre_test": false, "has_post_test": false, "has_load_tests": true, "configuration_envvars":
+      [{"name": "testvar_2", "value": "testvarvalue 2"}], "configuration_parameters":
+      [{"value": "https://test-target.dev.bolt.acaisoft.io", "parameter_slug": "load_tests_host"},
+      {"value": "10", "parameter_slug": "load_tests_duration"}, {"value": "500", "parameter_slug":
+      "load_tests_rampup"}, {"value": "1000", "parameter_slug": "load_tests_users"},
+      {"value": "load_tests.py", "parameter_slug": "load_tests_file_name"}, {"value":
+      "master", "parameter_slug": "load_tests_repository_branch"}, {"value": "1000",
+      "parameter_slug": "load_tests_users_per_worker"}]}}'
     headers:
       Accept:
       - '*/*'
@@ -93,7 +79,7 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '1836'
+      - '1752'
       Content-Type:
       - application/json
       User-Agent:
@@ -109,30 +95,27 @@ interactions:
   response:
     body:
       string: !!binary |
-        H4sIAAAAAAAEAyWNUQvCIBRG/4rcp4JJurbafO1nRIyrXmNQGk7pYfjfcwu+l8OB76xgMSGoFRIt
-        KWY/meDd/MwR0xwqRcJEm0fnyCSyUwzfBZRsIFLK0c/+Ceq+wmxBgdb9hVrTcZJ25J02miNpyQfn
-        Rtm7q9FygAY8vusn5E+Nk2Vbmv27bFNMtueuZ4fbK/iqMTEhTvuEYLyC2neE8iil/AAyURLbwwAA
-        AA==
+        H4sIAAAAAAAEAyWNywrDIBBFf0Vm1UKkmmofbvsZpQSjYwm0WsxIF8F/r0nhbg4H7lnAW7JgFiCc
+        KZc4uBTD9CzZ0pQaZbSEq7choCP0Q07fGYzsICOVHKf4BHNfYPJgQCqUfvSCa9lbri6IfDwHz0PQ
+        o3P61F+lgg6ifbdPKJ8WR8/WNPt32aqY7I9Ks93tlWLTlpgQh21CMN7AbNtDfdRaf6FSrxTDAAAA
     headers:
       Content-Encoding:
       - gzip
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Sat, 12 Nov 2022 10:13:32 GMT
+      - Mon, 28 Nov 2022 08:06:04 GMT
       Server:
       - Warp/3.3.19
-      Transfer-Encoding:
-      - chunked
       x-request-id:
-      - 5331c010-b18d-4512-8cce-be76ff5d0f49
+      - dd3d785a-cd66-414b-8398-290da51dac3f
     status:
       code: 200
       message: OK
 - request:
     body: '{"query": "query ($id: uuid!) {\n  configuration_by_pk(id: $id) {\n    name\n    configuration_envvars
       {\n      name\n      value\n    }\n    configuration_parameters {\n      parameter_slug\n      value\n    }\n  }\n}\n",
-      "variables": {"id": "bb56e2c4-e1d9-4bcb-aeb1-8ff915f7cb18"}}'
+      "variables": {"id": "14e1dbd0-512a-48ee-b7fd-ff5bcc562914"}}'
     headers:
       Accept:
       - '*/*'
@@ -169,13 +152,13 @@ interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Sat, 12 Nov 2022 10:13:32 GMT
+      - Mon, 28 Nov 2022 08:06:27 GMT
       Server:
       - Warp/3.3.19
       Transfer-Encoding:
       - chunked
       x-request-id:
-      - 224ae71a-2a7a-4da8-aa57-fae3c879eb8b
+      - 86b6cf53-b15d-45ff-942e-c92f82678926
     status:
       code: 200
       message: OK

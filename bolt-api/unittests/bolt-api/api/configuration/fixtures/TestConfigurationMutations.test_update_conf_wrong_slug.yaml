@@ -1,0 +1,57 @@
+interactions:
+- request:
+    body: '{"query": "query ($confId: uuid!, $userId: String!) {\n  configuration(where:
+      {id: {_eq: $confId}, project: {userProjects: {user_id: {_eq: $userId}}, is_deleted:
+      {_eq: false}}}) {\n    performed\n    name\n    type_slug\n    description\n    project_id\n    test_source_id\n    configuration_parameters
+      {\n      parameter_slug\n      value\n      configuration_id\n    }\n    configuration_envvars
+      {\n      name\n      value\n      configuration_id\n    }\n    has_pre_test\n    has_post_test\n    has_load_tests\n  }\n}\n",
+      "variables": {"confId": "790b386a-51e0-4f6a-96db-52a3ac7b82e8", "userId": "7f1aab7a-e941-46a2-b63a-5b28b80ad384"}}'
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate, br
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '639'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.27.1
+      X-Hasura-Access-Key:
+      - devaccess
+      X-Hasura-Role:
+      - admin
+      X-Hasura-User-Id:
+      - 7f1aab7a-e941-46a2-b63a-5b28b80ad384
+    method: POST
+    uri: http://localhost:8080/v1alpha1/graphql
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAEA7VU226DMAz9FZRnoFxKC/zKVEUGnMKWkigXpqrqvy+h7dpu0qRt4g3sOOdiOyfS
+        gQFSn0grRjbsrQIziJHULyciUTGhDtiRmgHXGJIRDkhqYqUrwi4wqE1wqQt8KkizfF2QkJijRKq5
+        3bvDXEBH/UntEh3qVg3yAjFazkMilXjF1tDBwZBsA5g0RR5BhUW0TlkVlWWyjiq2xWTDqixvEn+/
+        u45qYVWLv6p70kglKEfaoNIXubff78xpL7RxuBNw6w3ojZG6Xq08j8iA2qOJO5ziRnATQwuDFszE
+        g3Alz5CzyG2VNHm5gahIMYnWzH1Vm66JigxyaLdNmWFJzmHgOvADpe7Wqjut1HuzGKAzS1r54EKR
+        LIpnte/Mo7pl8djAkc4Tfse8D28sj4uai1LowQh1pI2Cse0fhB9AuyFdEn22mrp9p+9Cvc1Yt1FP
+        k/+5vvs6kThOE1xX7vqe+DVyMZo9iL7GZhqBT/x5rh2DHjSVCudn6PMxm4Nur79H710ntVEWz7vz
+        +QNp6YQKKQUAAA==
+    headers:
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Mon, 28 Nov 2022 08:07:30 GMT
+      Server:
+      - Warp/3.3.19
+      Transfer-Encoding:
+      - chunked
+      x-request-id:
+      - 277405c0-b51d-435d-ac82-e6b1edb07e45
+    status:
+      code: 200
+      message: OK
+version: 1

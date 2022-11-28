@@ -25,7 +25,6 @@ const EXECUTION_TIME_PARAMETER_FRAGMENT = gql`
   fragment executionTimeParameter on execution {
     configuration {
       id
-      has_monitoring
       configuration_parameters(where: { parameter: { name: { _eq: "time" } } }) {
         id
         value
@@ -84,7 +83,6 @@ export const GET_GRAPH_CONFIGURATION = gql`
   query getTestConfiguration($configurationId: uuid!) {
     configuration: configuration_by_pk(id: $configurationId) {
       id
-      has_monitoring
       has_post_test
       has_pre_test
       has_load_tests

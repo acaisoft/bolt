@@ -34,7 +34,6 @@ class ArgoFlowParser(object):
     execution_status: None
     current_statuses: None
     has_load_tests: None
-    has_monitoring = None
 
     flow_terminated = False
 
@@ -75,7 +74,6 @@ class ArgoFlowParser(object):
         self.execution_id = execution_data['execution'][0]['id']
         self.execution_status = execution_data['execution'][0]['status']
         self.has_load_tests = execution_data['execution'][0]['configuration']['has_load_tests']
-        self.has_monitoring = execution_data['execution'][0]['configuration']['has_monitoring']
         self.current_statuses = self.get_current_statuses()
 
     def get_execution_by_argo_id(self, argo_id):
@@ -86,7 +84,6 @@ class ArgoFlowParser(object):
                     status
                     configuration {
                         has_load_tests
-                        has_monitoring
                     }
                 }
             }

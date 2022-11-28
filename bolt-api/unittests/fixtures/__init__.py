@@ -30,8 +30,18 @@ from .app import (
 from .fake_apis import (
     fake_auth0,
     fake_hasura,
+    fake_hasura_synced,
+    fake_hasura_dead,
+    fake_hasura_desync,
+    fake_hasura_desync_repairable,
     fake_broken_auth0_token,
     fake_broken_auth0_list_email,
     fake_broken_auth0_get_role
 )
 from .data.env import values as environment
+
+from .mocked_modules import (
+    fake_threading,
+    fake_cmd_zero,
+    fake_cmd_nonzero
+)

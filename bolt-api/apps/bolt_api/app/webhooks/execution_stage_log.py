@@ -50,7 +50,7 @@ class Graph(models.Model):
             g.pop('type')
             self[g['name']] = Item(g)
 
-    def to_json(self, has_load_tests, has_monitoring):
+    def to_json(self, has_load_tests):
         graph = []
         if self.start:
             graph.append({'type': 'sequence', **self.start})
@@ -58,10 +58,8 @@ class Graph(models.Model):
             graph.append({'type': 'sequence', **self.downloading_source})
         if self.image_preparation:
             graph.append({'type': 'sequence', **self.image_preparation})
-        if self.monitoring:
-            graph.append({'type': 'parallel' if has_load_tests else 'sequence', **self.monitoring})
         if self.load_tests:
-            graph.append({'type': 'parallel' if has_monitoring else 'sequence', **self.load_tests})
+            graph.append({'type': 'sequence', **self.load_tests})
         if self.clean_up:
             graph.append({'type': 'sequence', **self.clean_up})
         if self.finished:
@@ -94,7 +92,6 @@ def execution_stage_log_insert():
     # execution_stage_graph_id, graph_data = get_execution_stage_graph(execution_id)
     # execution_data = get_execution(execution_id)
     # has_load_tests = execution_data['execution'][0]['configuration']['has_load_tests']
-    # has_monitoring = execution_data['execution'][0]['configuration']['has_monitoring']
     # logger.info('------------------')
     # logger.info(f'{status} {stage}')
     # logger.info(f'{graph_data}')
@@ -102,7 +99,7 @@ def execution_stage_log_insert():
     # model = Graph()
     # model.init(graph_data)
     # model.update(status, stage)
-    # update_execution_stage_graph(execution_stage_graph_id, model.to_json(has_load_tests, has_monitoring))
+    # update_execution_stage_graph(execution_stage_graph_id, model.to_json(has_load_tests))
     # return jsonify({})
 
 
@@ -157,7 +154,6 @@ def get_execution(execution_id):
                 id
                 configuration{
                     has_load_tests
-                    has_monitoring
                 }
             }
         }

@@ -16,10 +16,9 @@
 # COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+import pathlib
 
-ERROR_STR_FLAG = "_throw_err"
-ERROR_UUID_FLAG = "00000000-0000-0000-0000-666666666666"
-ERROR_MESSAGE_HCE = "This error was supposed to be raised. It originates from fake HCE"
-ERROR_MESSAGE_HASURA = "This error was supposed to be raised. It originates from fake Hasura API"
-ERROR_MESSAGE_AUTH0 = "This error was supposed to be raised. It originates from fake Auth0"
-ERROR_FLAGS = [ERROR_STR_FLAG, ERROR_UUID_FLAG]
+# Workaround for (Unittest + VCR + mocks) + Pytest + monkeypatches unexpectedly changing abspath of cwd depending on
+# testclass inheritance. Basically some tests see cwd as path singular scripts are being run in, other times cwd changes
+# to Unittests masterclass path (BoltCase). Without this workaround it works ~80% of times.
+TEST_JUNIT_PATH = pathlib.Path(__file__).parent.resolve()

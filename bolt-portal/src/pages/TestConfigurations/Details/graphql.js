@@ -28,7 +28,6 @@ export const GET_CONFIGURATION = gql`
       name
       description
       performed
-      has_monitoring
       has_post_test
       has_pre_test
       has_load_tests

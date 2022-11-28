@@ -1,0 +1,114 @@
+interactions:
+- request:
+    body: '{"query": "query ($project_id: uuid) {\n  group(where: {test_cases: {test_results:
+      {test_run: {configuration: {project_id: {_eq: $project_id}}}}}}) {\n    id\n    name\n  }\n  test_case(where:
+      {test_results: {test_run: {configuration: {project_id: {_eq: $project_id}}}}})
+      {\n    id\n    name_from_file\n  }\n}\n", "variables": {"project_id": "26ae0b53-a9e5-41f9-8804-9f7e06f923b0"}}'
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate, br
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '382'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.27.1
+      X-Hasura-Access-Key:
+      - devaccess
+      X-Hasura-Role:
+      - admin
+      X-Hasura-User-Id:
+      - 7f1aab7a-e941-46a2-b63a-5b28b80ad384
+    method: POST
+    uri: http://localhost:8080/v1alpha1/graphql
+  response:
+    body:
+      string: '{"data":{"group":[],"test_case":[]}}'
+    headers:
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Mon, 28 Nov 2022 20:06:56 GMT
+      Server:
+      - Warp/3.3.19
+      Transfer-Encoding:
+      - chunked
+      content-length:
+      - '36'
+      x-request-id:
+      - e7c0a61a-da19-48c4-9ad6-33cc9cf7d815
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"query": "mutation insertTestRunWithResults($test_run: test_run_insert_input!,
+      $groups: [group_insert_input!]!, $test_cases: [test_case_insert_input!]!, $results:
+      [test_result_insert_input!]!, $custom_fields: [custom_field_insert_input!]!)
+      {\n  insert_test_run_one(object: $test_run) {\n    id\n  }\n  insert_group(objects:
+      $groups) {\n    affected_rows\n  }\n  insert_test_case(objects: $test_cases)
+      {\n    affected_rows\n  }\n  insert_test_result(objects: $results) {\n    affected_rows\n  }\n  insert_custom_field(objects:
+      $custom_fields) {\n    affected_rows\n  }\n}\n", "variables": {"test_run": {"id":
+      "bea05e03-aa11-43ea-a390-a2ea774a4b5d", "duration": "6.068", "scenario_id":
+      "d66341eb-099a-4138-817a-24a4c589377d", "timestamp": "2022-11-28T18:16:03.830428",
+      "failures": 1, "skipped": 0, "errors": 0, "total": 3, "successes": 2}, "results":
+      [{"id": "960cdac2-f58b-4b36-ae88-4d48f3d8b837", "test_case_id": "c70a8df4-a5fd-455e-976d-73d672155cc9",
+      "result": "success", "message": null, "duration": "1.234", "test_run_id": "bea05e03-aa11-43ea-a390-a2ea774a4b5d"},
+      {"id": "b24398ea-d41a-488f-88b7-173851472583", "test_case_id": "6a32907e-781f-4f2f-a25d-72089d62377e",
+      "result": "success", "message": null, "duration": "1.234", "test_run_id": "bea05e03-aa11-43ea-a390-a2ea774a4b5d"},
+      {"id": "aa7d6883-f281-4e54-a779-50ddf4c68277", "test_case_id": "beb23af0-c798-407c-a289-0082d314e462",
+      "result": "failure", "message": null, "duration": "1.234", "test_run_id": "bea05e03-aa11-43ea-a390-a2ea774a4b5d"}],
+      "test_cases": [{"id": "c70a8df4-a5fd-455e-976d-73d672155cc9", "name_from_file":
+      "test_one_thing", "group_id": "b373d93b-d5d2-44d5-b076-969a3e003db2"}, {"id":
+      "6a32907e-781f-4f2f-a25d-72089d62377e", "name_from_file": "test_another_thing",
+      "group_id": "b373d93b-d5d2-44d5-b076-969a3e003db2"}, {"id": "beb23af0-c798-407c-a289-0082d314e462",
+      "name_from_file": "test_that_thing_that_never_works", "group_id": "f0dd2a7b-91b7-4f02-9445-91e82b8b8885"}],
+      "groups": [{"id": "b373d93b-d5d2-44d5-b076-969a3e003db2", "name": "SampleClass"},
+      {"id": "f0dd2a7b-91b7-4f02-9445-91e82b8b8885", "name": "AnotherSampleClass"}],
+      "custom_fields": []}}'
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate, br
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '2134'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.27.1
+      X-Hasura-Access-Key:
+      - devaccess
+      X-Hasura-Role:
+      - admin
+      X-Hasura-User-Id:
+      - 7f1aab7a-e941-46a2-b63a-5b28b80ad384
+    method: POST
+    uri: http://localhost:8080/v1alpha1/graphql
+  response:
+    body:
+      string: '{"data":{"insert_test_run_one":{"id":"bea05e03-aa11-43ea-a390-a2ea774a4b5d"},"insert_group":{"affected_rows"
+        : 2},"insert_test_case":{"affected_rows" : 3},"insert_test_result":{"affected_rows"
+        : 3},"insert_custom_field":{"affected_rows":0}}}'
+    headers:
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Mon, 28 Nov 2022 20:06:56 GMT
+      Server:
+      - Warp/3.3.19
+      Transfer-Encoding:
+      - chunked
+      content-length:
+      - '241'
+      x-request-id:
+      - e2264699-f26f-42a8-9901-fed5cc950177
+    status:
+      code: 200
+      message: OK
+version: 1

@@ -17,9 +17,43 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-ERROR_STR_FLAG = "_throw_err"
-ERROR_UUID_FLAG = "00000000-0000-0000-0000-666666666666"
-ERROR_MESSAGE_HCE = "This error was supposed to be raised. It originates from fake HCE"
-ERROR_MESSAGE_HASURA = "This error was supposed to be raised. It originates from fake Hasura API"
-ERROR_MESSAGE_AUTH0 = "This error was supposed to be raised. It originates from fake Auth0"
-ERROR_FLAGS = [ERROR_STR_FLAG, ERROR_UUID_FLAG]
+import pytest
+
+
+class FakeThread:
+    def __init__(self, target, args):
+        self.target = target
+        self.args = args
+
+    def start(self):
+        self.target(*self.args)
+
+    def join(self):
+        pass
+
+
+def do_nothing(*args, **kwargs):
+    pass
+
+
+def cmd_return_zero(*args, **kwargs):
+    return 0
+
+
+def cmd_return_nonzero(*args, **kwargs):
+    return 5
+
+
+@pytest.fixture
+def fake_threading(monkeypatch):
+    monkeypatch.setattr("threading.Thread", FakeThread)
+
+
+@pytest.fixture
+def fake_cmd_zero(monkeypatch):
+    monkeypatch.setattr("os.system", cmd_return_zero)
+
+
+@pytest.fixture
+def fake_cmd_nonzero(monkeypatch):
+    monkeypatch.setattr("os.system", cmd_return_nonzero)

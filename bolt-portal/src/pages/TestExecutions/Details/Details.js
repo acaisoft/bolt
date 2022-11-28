@@ -81,11 +81,6 @@ export function Details() {
           'YYYY-MM-DD HH:mm:ss'
         )}
       >
-        {execution.configuration.has_monitoring && (
-          <Button data-testid="monitoring-details-button" href={getMonitoringUrl()}>
-            Monitoring
-          </Button>
-        )}
         <GenerateReportButton
           testStatus={execution.status}
           reportGenerationStatus={execution.report}
