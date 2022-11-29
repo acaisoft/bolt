@@ -1,12 +1,18 @@
 import os
 
 from datetime import datetime
-from constants import REQUIRED_ENV_VARS
+from constants import REQUIRED_ENV_VARS, ExecutionStatuses
+from exceptions import (
+    PrometheusUrlException,
+    QueriesException
+)
 from hasura_client import HasuraClient
 from monitoring_watcher import MonitoringWatcher
 from prometheus_client import PrometheusClient
 
+HASURA_TOKEN = os.getenv("BOLT_HASURA_TOKEN")
 MONITORING_INTERVAL = int(os.environ.get("MONITORING_INTERVAL", 2))
+WATCHER = None
 
 if __name__ == "__main__":
 
@@ -16,10 +22,11 @@ if __name__ == "__main__":
 
     hasura_client = HasuraClient()
     prometheus_url, queries_resp = hasura_client.get_prometheus_url_and_queries()
+    status_generator = hasura_client.subscribe_execution_status()
     if not prometheus_url:
-        raise Exception("Prometheus Url not provided")
+        raise PrometheusUrlException()
     if not queries_resp:
-        raise Exception("Queries not provided")
+        raise QueriesException()
     queries = list(map(lambda x: x["query"], queries_resp))
     concatenated_queries = "|".join(queries)
     prometheus_client = PrometheusClient(prometheus_url)
@@ -40,4 +47,15 @@ if __name__ == "__main__":
                 objects.append(metric_obj)
             hasura_client.insert_metrics(objects)
 
-    MonitoringWatcher(MONITORING_INTERVAL, job)
+    WATCHER = MonitoringWatcher(MONITORING_INTERVAL, job)
+    while True:
+        try:
+            status = next(status_generator)['execution'][0]['status']
+            if status in [ExecutionStatuses.TERMINATED.value, ExecutionStatuses.FINNISHED.value]:
+                WATCHER.stop()
+                break
+
+        except ValueError:
+            # Generator throws error if already executing
+            # Returns value if status in db has changed
+            pass

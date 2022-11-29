@@ -24,6 +24,8 @@ import os
 from datetime import datetime
 from gql import gql, Client
 from bolt_transport import WrappedTransport
+from gql.transport.websockets import WebsocketsTransport
+
 
 import urllib3
 
@@ -34,6 +36,7 @@ logger = logging.getLogger(__name__)
 GRAPHQL_URL = os.getenv("BOLT_GRAPHQL_URL")
 HASURA_TOKEN = os.getenv("BOLT_HASURA_TOKEN")
 EXECUTION_ID = os.environ.get("EXECUTION_ID")
+WS_URL = os.environ.get("BOLT_WS_URL")
 
 
 class HasuraClient(object):
@@ -49,6 +52,13 @@ class HasuraClient(object):
                 use_json=True,
                 headers={"Authorization": f"Bearer {HASURA_TOKEN}"},
             )
+        )
+        self.gql_sub_client = Client(
+            transport=WebsocketsTransport(
+                url=WS_URL,
+                headers={"Authorization": f"Bearer {HASURA_TOKEN}"}
+            ),
+            fetch_schema_from_transport=True,
         )
 
     def log_error(self, result, message):
@@ -74,7 +84,7 @@ class HasuraClient(object):
         if result.data:
             configuration = result.formatted['data']["execution_by_pk"]["configuration"]
             return configuration['prometheus_url'], configuration["configuration_monitorings"]
-        return None, None
+        raise Exception(result.errors)
 
     def insert_metrics(self, data):
         query = gql("""
@@ -86,6 +96,19 @@ class HasuraClient(object):
         """)
         result = self.gql_client.transport.execute(query, variable_values={"data": data})
         self.log_error(result, message="Insert metrics failed")
+
+    def subscribe_execution_status(self):
+        query = gql("""
+             subscription subscribeToExecutionStatus($executionId: uuid!) {
+                execution(where: { id: { _eq: $executionId } }) {
+                  status
+                }
+              }
+        """)
+        result = self.gql_sub_client.subscribe(query, variable_values={"executionId": EXECUTION_ID})
+        self.log_error(result, message="Subscribe statuses failed")
+        return result
+
 
 
 
