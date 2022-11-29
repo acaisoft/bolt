@@ -75,20 +75,6 @@ class TestrunTerminate(graphene.Mutation):
             logger.exception(f'Error during updating execution status (TERMINATE)')
             return False
 
-    @staticmethod
-    def validate_user_assigned_to_project(argo_name, user_id):
-        query = '''
-            query ($argo_name: String, $user_id: String){
-                user_project(where: {
-                    project: {configurations: {executions: {status: {_eq: $argo_name}}}}, 
-                    user_id: {_eq: $user_id}}) {
-                        id
-                }
-            }
-        '''
-        response = hce(current_app.config, query, {'argo_name': argo_name, 'user_id': user_id})
-        assert response['user_project'], f'User {user_id} is not assigned to this project'
-
     def mutate(self, info, argo_name):
         role, user_id = gql_util.get_request_role_userid(
             info, (const.ROLE_ADMIN, const.ROLE_TENANT_ADMIN, const.ROLE_MANAGER, const.ROLE_TESTER))

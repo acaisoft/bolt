@@ -139,9 +139,7 @@ CREATE TABLE public.configuration (
     is_deleted boolean DEFAULT false NOT NULL,
     has_pre_test boolean DEFAULT false NOT NULL,
     has_post_test boolean DEFAULT false NOT NULL,
-    has_load_tests boolean DEFAULT false NOT NULL,
-    has_monitoring boolean DEFAULT false NOT NULL,
-    monitoring_chart_configuration json
+    has_load_tests boolean DEFAULT false NOT NULL
 );
 CREATE TABLE public.configuration_envvars (
     configuration_id uuid NOT NULL,

@@ -1,0 +1,97 @@
+interactions:
+- request:
+    body: '{"query": "query ($userId: String!, $name: String!) {\n  project(where:
+      {name: {_eq: $name}, is_deleted: {_eq: false}, userProjects: {user_id: {_eq:
+      $userId}}}) {\n    name\n  }\n}\n", "variables": {"userId": "7f1aab7a-e941-46a2-b63a-5b28b80ad384",
+      "name": "test project 1"}}'
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate, br
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '275'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.27.1
+      X-Hasura-Access-Key:
+      - devaccess
+      X-Hasura-Role:
+      - admin
+      X-Hasura-User-Id:
+      - 7f1aab7a-e941-46a2-b63a-5b28b80ad384
+    method: POST
+    uri: http://localhost:8080/v1alpha1/graphql
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAEA6tWSkksSVSyqlYqKMrPSk0uUbKKjq2tBQDCRxdHFwAAAA==
+    headers:
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Mon, 28 Nov 2022 07:56:48 GMT
+      Server:
+      - Warp/3.3.19
+      Transfer-Encoding:
+      - chunked
+      x-request-id:
+      - 99ec7276-64f4-4d5c-beed-71d36368ee88
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"query": "mutation ($data: [project_insert_input!]!) {\n  insert_project(objects:
+      $data) {\n    returning {\n      id\n      name\n      description\n    }\n  }\n}\n",
+      "variables": {"data": {"name": "test project 1", "description": "test project
+      description", "image_url": null, "created_by_id": "7f1aab7a-e941-46a2-b63a-5b28b80ad384",
+      "userProjects": {"data": {"user_id": "7f1aab7a-e941-46a2-b63a-5b28b80ad384"}}}}}'
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate, br
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '417'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.27.1
+      X-Hasura-Access-Key:
+      - devaccess
+      X-Hasura-Role:
+      - admin
+      X-Hasura-User-Id:
+      - 7f1aab7a-e941-46a2-b63a-5b28b80ad384
+    method: POST
+    uri: http://localhost:8080/v1alpha1/graphql
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAEA12MywrDIBAAf0X2XME8G/2VUoqJa7HQTVi3p+C/x0APpdeZYXYIXjy4HRJlZHls
+        vL5wkZMwyocp0ROUU7daBHDQjh7NPHTaWxx030Srp8n02sYrmjHatpsNXID8G2stmEV9l6qpPGBe
+        OG2SVvrXv6rcSykHh6uv1pwAAAA=
+    headers:
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Mon, 28 Nov 2022 07:56:48 GMT
+      Server:
+      - Warp/3.3.19
+      Transfer-Encoding:
+      - chunked
+      x-request-id:
+      - 2d6e3acf-a2ca-4829-8c24-1af92be8aa48
+    status:
+      code: 200
+      message: OK
+version: 1

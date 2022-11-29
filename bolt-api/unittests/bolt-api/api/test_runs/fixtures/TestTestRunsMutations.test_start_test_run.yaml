@@ -1,0 +1,199 @@
+interactions:
+- request:
+    body: '{"query": "query ($conf_id: uuid!) {\n  parameter {\n    id\n    default_value\n    param_name\n    name\n    slug_name\n  }\n  configuration_by_pk(id:
+      $conf_id) {\n    id\n    name\n    has_load_tests\n    test_source {\n      source_type\n      project
+      {\n        userProjects {\n          user_id\n        }\n      }\n      repository
+      {\n        name\n        url\n        configuration_type {\n          slug_name\n        }\n        project
+      {\n          userProjects {\n            user_id\n          }\n        }\n      }\n      test_creator
+      {\n        name\n        data\n        min_wait\n        max_wait\n        project
+      {\n          userProjects {\n            user_id\n          }\n        }\n      }\n    }\n    configuration_parameters
+      {\n      value\n      parameter_slug\n    }\n    configuration_extensions {\n      type\n      extension_params
+      {\n        name\n        value\n      }\n    }\n  }\n}\n", "variables": {"conf_id":
+      "790b386a-51e0-4f6a-96db-52a3ac7b82e8"}}'
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate, br
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '986'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.27.1
+      X-Hasura-Access-Key:
+      - devaccess
+      X-Hasura-Role:
+      - admin
+      X-Hasura-User-Id:
+      - 7f1aab7a-e941-46a2-b63a-5b28b80ad384
+    method: POST
+    uri: http://localhost:8080/v1alpha1/graphql
+  response:
+    body:
+      string: '{"data":{"parameter":[{"id":"80237b27-4ae5-4be7-ba12-26e921467c8e","default_value":"10","param_name":"-t","name":"duration
+        (s)","slug_name":"load_tests_duration"}, {"id":"27a7af14-8071-4835-9fb1-e3962f766601","default_value":"500","param_name":"-r","name":"users/second","slug_name":"load_tests_rampup"},
+        {"id":"6cb2cfe4-f8ca-4389-b026-121ce8dfc005","default_value":"1000","param_name":"-u","name":"users","slug_name":"load_tests_users"},
+        {"id":"03e7f5c7-92ac-4f3d-b9ac-ad3ed6af4176","default_value":"10","param_name":"-md","name":"monitoring
+        duration","slug_name":"monitoring_duration"}, {"id":"80cc4ae6-ffd5-405c-93cc-1e07fe72a36d","default_value":"5","param_name":"-mi","name":"monitoring
+        interval","slug_name":"monitoring_interval"}, {"id":"44681dcc-da56-4f58-8bd4-a20d475a05a4","default_value":"","param_name":"-H","name":"host","slug_name":"load_tests_host"},
+        {"id":"a44fb5ca-6633-42a4-98b8-63cbd86f08de","default_value":"load_tests.py","param_name":"-f","name":"file
+        name","slug_name":"load_tests_file_name"}, {"id":"3ed461e2-1755-4fcf-bf55-056d152b9e8d","default_value":"master","param_name":"-b","name":"repository
+        branch","slug_name":"load_tests_repository_branch"}, {"id":"c2b6f179-9f30-4c80-9c73-c43d0ffdc21e","default_value":"1000","param_name":"n/a","name":"users/worker","slug_name":"load_tests_users_per_worker"}],"configuration_by_pk":{"id":"790b386a-51e0-4f6a-96db-52a3ac7b82e8","name":"updated
+        test config name 12345","has_load_tests":true,"test_source":{"source_type":"repository","project":{"userProjects":[{"user_id":"7f1aab7a-e941-46a2-b63a-5b28b80ad384"}]},"repository":{"name":"updated
+        repository","url":"git@mockbitbucket.org:repo/two.git","configuration_type":{"slug_name":"load_tests"},"project":{"userProjects":[{"user_id":"7f1aab7a-e941-46a2-b63a-5b28b80ad384"}]}},"test_creator":null},"configuration_parameters":[{"value":"https://test-target.dev.bolt.acaisoft.io","parameter_slug":"load_tests_host"},
+        {"value":"10","parameter_slug":"load_tests_duration"}, {"value":"500","parameter_slug":"load_tests_rampup"},
+        {"value":"1000","parameter_slug":"load_tests_users"}, {"value":"load_tests.py","parameter_slug":"load_tests_file_name"},
+        {"value":"master","parameter_slug":"load_tests_repository_branch"}, {"value":"1000","parameter_slug":"load_tests_users_per_worker"}],"configuration_extensions":[]}}}'
+    headers:
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Mon, 28 Nov 2022 08:11:04 GMT
+      Server:
+      - Warp/3.3.19
+      Transfer-Encoding:
+      - chunked
+      content-length:
+      - '2328'
+      x-request-id:
+      - 511d1878-89ca-47f4-a2bf-38655c0c3b13
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"query": "query ($confId: uuid!, $userId: String!) {\n  parameter {\n    id\n    default_value\n    param_name\n    name\n    slug_name\n  }\n  configuration(where:
+      {id: {_eq: $confId}, project: {userProjects: {user_id: {_eq: $userId}}, is_deleted:
+      {_eq: false}}}) {\n    name\n    project_id\n    instances\n    has_pre_test\n    has_post_test\n    has_load_tests\n    prometheus_url\n    configuration_parameters
+      {\n      parameter_slug\n      value\n      parameter {\n        name\n      }\n    }\n    configuration_extensions
+      {\n      type\n      extension_params {\n        name\n        value\n      }\n    }\n    configuration_envvars
+      {\n      name\n      value\n    }\n    configuration_monitorings {\n      query\n      chart_type\n    }\n    test_source
+      {\n      source_type\n      project {\n        userProjects {\n          user_id\n        }\n      }\n      repository
+      {\n        name\n        url\n        configuration_type {\n          slug_name\n        }\n        project
+      {\n          userProjects {\n            user_id\n          }\n        }\n      }\n      test_creator
+      {\n        name\n        data\n        min_wait\n        max_wait\n        project
+      {\n          userProjects {\n            user_id\n          }\n        }\n      }\n    }\n  }\n}\n",
+      "variables": {"confId": "790b386a-51e0-4f6a-96db-52a3ac7b82e8", "userId": "7f1aab7a-e941-46a2-b63a-5b28b80ad384"}}'
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate, br
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '1393'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.27.1
+      X-Hasura-Access-Key:
+      - devaccess
+      X-Hasura-Role:
+      - admin
+      X-Hasura-User-Id:
+      - 7f1aab7a-e941-46a2-b63a-5b28b80ad384
+    method: POST
+    uri: http://localhost:8080/v1alpha1/graphql
+  response:
+    body:
+      string: '{"data":{"parameter":[{"id":"80237b27-4ae5-4be7-ba12-26e921467c8e","default_value":"10","param_name":"-t","name":"duration
+        (s)","slug_name":"load_tests_duration"}, {"id":"27a7af14-8071-4835-9fb1-e3962f766601","default_value":"500","param_name":"-r","name":"users/second","slug_name":"load_tests_rampup"},
+        {"id":"6cb2cfe4-f8ca-4389-b026-121ce8dfc005","default_value":"1000","param_name":"-u","name":"users","slug_name":"load_tests_users"},
+        {"id":"03e7f5c7-92ac-4f3d-b9ac-ad3ed6af4176","default_value":"10","param_name":"-md","name":"monitoring
+        duration","slug_name":"monitoring_duration"}, {"id":"80cc4ae6-ffd5-405c-93cc-1e07fe72a36d","default_value":"5","param_name":"-mi","name":"monitoring
+        interval","slug_name":"monitoring_interval"}, {"id":"44681dcc-da56-4f58-8bd4-a20d475a05a4","default_value":"","param_name":"-H","name":"host","slug_name":"load_tests_host"},
+        {"id":"a44fb5ca-6633-42a4-98b8-63cbd86f08de","default_value":"load_tests.py","param_name":"-f","name":"file
+        name","slug_name":"load_tests_file_name"}, {"id":"3ed461e2-1755-4fcf-bf55-056d152b9e8d","default_value":"master","param_name":"-b","name":"repository
+        branch","slug_name":"load_tests_repository_branch"}, {"id":"c2b6f179-9f30-4c80-9c73-c43d0ffdc21e","default_value":"1000","param_name":"n/a","name":"users/worker","slug_name":"load_tests_users_per_worker"}],"configuration":[{"name":"updated
+        test config name 12345","project_id":"26ae0b53-a9e5-41f9-8804-9f7e06f923b0","instances":1,"has_pre_test":false,"has_post_test":false,"has_load_tests":true,"prometheus_url":null,"configuration_parameters":[{"parameter_slug":"load_tests_host","value":"https://test-target.dev.bolt.acaisoft.io","parameter":{"name":"host"}},
+        {"parameter_slug":"load_tests_duration","value":"10","parameter":{"name":"duration
+        (s)"}}, {"parameter_slug":"load_tests_rampup","value":"500","parameter":{"name":"users/second"}},
+        {"parameter_slug":"load_tests_users","value":"1000","parameter":{"name":"users"}},
+        {"parameter_slug":"load_tests_file_name","value":"load_tests.py","parameter":{"name":"file
+        name"}}, {"parameter_slug":"load_tests_repository_branch","value":"master","parameter":{"name":"repository
+        branch"}}, {"parameter_slug":"load_tests_users_per_worker","value":"1000","parameter":{"name":"users/worker"}}],"configuration_extensions":[],"configuration_envvars":[{"name":"testvar_2","value":"testvarvalue
+        2"}],"configuration_monitorings":[],"test_source":{"source_type":"repository","project":{"userProjects":[{"user_id":"7f1aab7a-e941-46a2-b63a-5b28b80ad384"}]},"repository":{"name":"updated
+        repository","url":"git@mockbitbucket.org:repo/two.git","configuration_type":{"slug_name":"load_tests"},"project":{"userProjects":[{"user_id":"7f1aab7a-e941-46a2-b63a-5b28b80ad384"}]}},"test_creator":null}}]}}'
+    headers:
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Mon, 28 Nov 2022 08:11:04 GMT
+      Server:
+      - Warp/3.3.19
+      Transfer-Encoding:
+      - chunked
+      content-length:
+      - '2753'
+      x-request-id:
+      - 37e3fdb4-9b21-4d72-884f-895701769a94
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"query": "mutation ($data: [execution_insert_input!]!) {\n  insert_execution(objects:
+      $data) {\n    returning {\n      id\n    }\n  }\n}\n", "variables": {"data":
+      {"configuration_id": "790b386a-51e0-4f6a-96db-52a3ac7b82e8", "status": "PENDING",
+      "argo_name": "bolt-0000", "argo_namespace": "argo_ns", "id": "0765dd5e-61b1-11ed-811c-000c299af887",
+      "configuration_snapshot": {"name": "updated test config name 12345", "project_id":
+      "26ae0b53-a9e5-41f9-8804-9f7e06f923b0", "instances": 1, "has_pre_test": false,
+      "has_post_test": false, "has_load_tests": true, "prometheus_url": null, "configuration_parameters":
+      [{"parameter_slug": "load_tests_host", "value": "https://test-target.dev.bolt.acaisoft.io",
+      "parameter": {"name": "host"}}, {"parameter_slug": "load_tests_duration", "value":
+      "10", "parameter": {"name": "duration (s)"}}, {"parameter_slug": "load_tests_rampup",
+      "value": "500", "parameter": {"name": "users/second"}}, {"parameter_slug": "load_tests_users",
+      "value": "1000", "parameter": {"name": "users"}}, {"parameter_slug": "load_tests_file_name",
+      "value": "load_tests.py", "parameter": {"name": "file name"}}, {"parameter_slug":
+      "load_tests_repository_branch", "value": "master", "parameter": {"name": "repository
+      branch"}}, {"parameter_slug": "load_tests_users_per_worker", "value": "1000",
+      "parameter": {"name": "users/worker"}}], "configuration_extensions": [], "configuration_envvars":
+      [{"name": "testvar_2", "value": "testvarvalue 2"}], "configuration_monitorings":
+      [], "test_source": {"source_type": "repository", "project": {"userProjects":
+      [{"user_id": "7f1aab7a-e941-46a2-b63a-5b28b80ad384"}]}, "repository": {"name":
+      "updated repository", "url": "git@mockbitbucket.org:repo/two.git", "configuration_type":
+      {"slug_name": "load_tests"}, "project": {"userProjects": [{"user_id": "7f1aab7a-e941-46a2-b63a-5b28b80ad384"}]}},
+      "test_creator": null}}}}}'
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate, br
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '1866'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.27.1
+      X-Hasura-Access-Key:
+      - devaccess
+      X-Hasura-Role:
+      - admin
+      X-Hasura-User-Id:
+      - 7f1aab7a-e941-46a2-b63a-5b28b80ad384
+    method: POST
+    uri: http://localhost:8080/v1alpha1/graphql
+  response:
+    body:
+      string: '{"data":{"insert_execution":{"returning" : [{"id":"0765dd5e-61b1-11ed-811c-000c299af887"}]}}}'
+    headers:
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Mon, 28 Nov 2022 08:11:04 GMT
+      Server:
+      - Warp/3.3.19
+      Transfer-Encoding:
+      - chunked
+      content-length:
+      - '93'
+      x-request-id:
+      - 64c2ce52-c549-4be1-9b1d-6810572252a8
+    status:
+      code: 200
+      message: OK
+version: 1

@@ -1,0 +1,206 @@
+interactions:
+- request:
+    body: '{"query": "query ($confId: uuid!, $userId: String!) {\n  configuration(where:
+      {id: {_eq: $confId}, project: {userProjects: {user_id: {_eq: $userId}}, is_deleted:
+      {_eq: false}}}) {\n    performed\n    name\n    type_slug\n    description\n    project_id\n    test_source_id\n    configuration_parameters
+      {\n      parameter_slug\n      value\n      configuration_id\n    }\n    configuration_envvars
+      {\n      name\n      value\n      configuration_id\n    }\n    has_pre_test\n    has_post_test\n    has_load_tests\n  }\n}\n",
+      "variables": {"confId": "790b386a-51e0-4f6a-96db-52a3ac7b82e8", "userId": "7f1aab7a-e941-46a2-b63a-5b28b80ad384"}}'
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate, br
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '639'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.27.1
+      X-Hasura-Access-Key:
+      - devaccess
+      X-Hasura-Role:
+      - admin
+      X-Hasura-User-Id:
+      - 7f1aab7a-e941-46a2-b63a-5b28b80ad384
+    method: POST
+    uri: http://localhost:8080/v1alpha1/graphql
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAEA7VUWW6DMBC9SuTvQNgDXKWKrAHGgdbBlm2oooi710BTSCJVqir+YGzPW2a5kQoM
+        kPxGStGy5twpMI1oSf52IxIVE+qCFckZcI170sIFSU4MarOb7+/8IIxisifmKpFq3p3tORdQ0fGS
+        tgcV6lI1cs7adpzviVTiHUtDG5uZBAmgV8ShAxnGTuSzzElTL3IydkQvYVkQFt6Y36ajWnSqxD+9
+        e5BFJSgrwaDSs8L77ytzWgttLG4PvBs118ZInR8OIw/HgDqjcSvs3UJw40IJjRbMuI2wTx4hJ5HH
+        zCvCNAEn9tFzIma/sqQqnDiAEMpjkQaYkmG/s6b/Qqm6V2ehFY7ebAZozZKdXLkQe5vidXqszKLO
+        97bFYw1HOjX1grk0ryuvm5qLUujGCHWlhYK2rFfCL6Btk26JPllN7YjTT6E+Jqx7q//X9dNzR2Lb
+        9/A9cqsVYmMryeNg2chM4jnDH4bIotegqVQ4raCf3TUF7Uy/RpeKk9yoDofTMHwBmN5BrhgFAAA=
+    headers:
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Mon, 28 Nov 2022 08:02:21 GMT
+      Server:
+      - Warp/3.3.19
+      Transfer-Encoding:
+      - chunked
+      x-request-id:
+      - 28825ff7-99c6-491e-a9b6-5761a04d3cfd
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"query": "query ($confId: uuid!, $confName: String, $sourceId: uuid!,
+      $fetchSource: Boolean!, $userId: String!, $type_slug: String!) {\n  test_source(where:
+      {id: {_eq: $sourceId}, is_deleted: {_eq: false}, project: {userProjects: {user_id:
+      {_eq: $userId}}, is_deleted: {_eq: false}}}) @include(if: $fetchSource) {\n    source_type\n    project
+      {\n      userProjects {\n        user_id\n      }\n    }\n    repository {\n      name\n      url\n      configuration_type
+      {\n        slug_name\n      }\n      project {\n        userProjects {\n          user_id\n        }\n      }\n    }\n    test_creator
+      {\n      name\n      data\n      min_wait\n      max_wait\n      project {\n        userProjects
+      {\n          user_id\n        }\n      }\n    }\n  }\n  parameter(where: {configuration_type:
+      {slug_name: {_eq: $type_slug}}}) {\n    id\n    default_value\n    param_name\n    name\n    slug_name\n  }\n  isNameUnique:
+      configuration(where: {name: {_eq: $confName}, project: {userProjects: {user_id:
+      {_eq: $userId}}, is_deleted: {_eq: false}}}) {\n    id\n  }\n  hasUserAccess:
+      configuration(where: {id: {_eq: $confId}, project: {userProjects: {user_id:
+      {_eq: $userId}}}}) {\n    id\n  }\n  monitoring: configuration(where: {id: {_eq:
+      $confId}}) {\n    configuration_monitorings {\n      id\n    }\n  }\n}\n", "variables":
+      {"type_slug": "load_tests", "confId": "790b386a-51e0-4f6a-96db-52a3ac7b82e8",
+      "confName": "updated test config name 12345", "userId": "7f1aab7a-e941-46a2-b63a-5b28b80ad384",
+      "sourceId": "None", "fetchSource": false}}'
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate, br
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '1539'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.27.1
+      X-Hasura-Access-Key:
+      - devaccess
+      X-Hasura-Role:
+      - admin
+      X-Hasura-User-Id:
+      - 7f1aab7a-e941-46a2-b63a-5b28b80ad384
+    method: POST
+    uri: http://localhost:8080/v1alpha1/graphql
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAEA3WUy27bQAxFf8XQqgXCZt4zyq67rrrLKggEzisRakuuHi2CwP9eynEyriPvBpwr
+        zhF5ydcq4oTV3Wu1xwF3aUpDdffwWrWxuqscE9J6YUFh0qB8suCRCxAm1YIrY4NL1U0VU8Z5OzV/
+        cDsn+owzCh7TNR2lpAhMFDmd4zzg1Pbd5sv4laLjdn56l217jM2Uxmls3lXV4WZzohEWLWauwDHL
+        QTmpoc6eQ5K1EdkaYxhfodHsM85QcOYxDePtmELfxes4VJr9vD+DMcGLkJOC7AKCkq4Gz4QBLnhI
+        LubAmF6B4WyFZr6guY5xhD2jYDLZrIOFWmAAlWUEX9MJo0zRYFbcmlUKCv7foN3y86cO7fqunfqh
+        7Z42H234v1FFsdYox0IgxxjIOZJtmA5QyxCAJ2ZzsgKlWV67tM1SrwuodhWq7cilZDa6PHfPGdSH
+        orhHKeN4JIqI2lCptAPnowIULCqrkWlUK1CfmH4UpOd+XHx9znDm4ONteR+Vyl6TV4yREpRABbXz
+        DowMPjqTmYtrs1QSftu/fILJBSa327Q5NvAq0SJ5G7WCRT5RhicB3GrqVQ4ZfKYT0yZyLXxNZqZH
+        Lnu1w3HZFJcN84VnSPt+XGz0svEDduGZrq5Uqkibk7TwBeFN5ramUZcMVHAM6mAlBCUjI38FwdfK
+        tjZn3S0WvLex/9sPv46/cYXsqGr2aWhOysPjTdWOP2mr3Xft72XbPVDkGcd7WiPfQ0jjWNanrZmX
+        ziBocj7Vlk61iR40TQAG651IrloyFuceP6ZVlNun05psyuWS+vHweDj8A06bYO+1BQAA
+    headers:
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Mon, 28 Nov 2022 08:02:21 GMT
+      Server:
+      - Warp/3.3.19
+      Transfer-Encoding:
+      - chunked
+      x-request-id:
+      - 35f9674d-b57d-4d86-a800-f1f39bdb8d07
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"query": "mutation ($id: uuid!, $data: configuration_set_input!, $params:
+      [configuration_parameter_insert_input!]!, $envs: [configuration_envvars_insert_input!]!,
+      $monitorings: [configuration_monitoring_insert_input!]!, $none: uuid, $ids:
+      [uuid]) {\n  delete_configuration_parameter(where: {configuration_id: {_eq:
+      $id}}) {\n    affected_rows\n  }\n  insert_configuration_parameter(objects:
+      $params, on_conflict: {constraint: configuration_parameter_pkey, update_columns:
+      [value]}) {\n    affected_rows\n  }\n  delete_configuration_envvars(where: {configuration_id:
+      {_eq: $id}}) {\n    affected_rows\n  }\n  insert_configuration_envvars(objects:
+      $envs, on_conflict: {constraint: configuration_envvars_pkey, update_columns:
+      [value]}) {\n    affected_rows\n  }\n  update_configuration_monitoring(where:
+      {id: {_in: $ids}}, _set: {configuration_id: $none}) {\n    affected_rows\n  }\n  insert_configuration_monitoring(objects:
+      $monitorings, on_conflict: {constraint: configuration_monitoring_pkey, update_columns:
+      [query]}) {\n    affected_rows\n  }\n  update_configuration(where: {id: {_eq:
+      $id}}, _set: $data) {\n    returning {\n      id\n      name\n      type_slug\n      description\n      project_id\n      test_source_id\n      has_pre_test\n      has_post_test\n      has_load_tests\n      configuration_envvars
+      {\n        name\n        value\n      }\n      configuration_parameters {\n        parameter_slug\n        value\n      }\n    }\n  }\n}\n",
+      "variables": {"id": "790b386a-51e0-4f6a-96db-52a3ac7b82e8", "data": {"has_load_tests":
+      true, "name": "updated test config name 12345", "type_slug": "load_tests", "prometheus_url":
+      null, "instances": 1}, "params": [{"parameter_slug": "load_tests_host", "value":
+      "https://test-target.dev.bolt.acaisoft.io", "configuration_id": "790b386a-51e0-4f6a-96db-52a3ac7b82e8"},
+      {"parameter_slug": "load_tests_duration", "value": "10", "configuration_id":
+      "790b386a-51e0-4f6a-96db-52a3ac7b82e8"}, {"parameter_slug": "load_tests_rampup",
+      "value": "500", "configuration_id": "790b386a-51e0-4f6a-96db-52a3ac7b82e8"},
+      {"parameter_slug": "load_tests_users", "value": "1000", "configuration_id":
+      "790b386a-51e0-4f6a-96db-52a3ac7b82e8"}, {"parameter_slug": "load_tests_file_name",
+      "value": "load_tests.py", "configuration_id": "790b386a-51e0-4f6a-96db-52a3ac7b82e8"},
+      {"parameter_slug": "load_tests_repository_branch", "value": "master", "configuration_id":
+      "790b386a-51e0-4f6a-96db-52a3ac7b82e8"}, {"parameter_slug": "load_tests_users_per_worker",
+      "value": "1000", "configuration_id": "790b386a-51e0-4f6a-96db-52a3ac7b82e8"}],
+      "envs": [{"name": "testvar_2", "value": "testvarvalue 2", "configuration_id":
+      "790b386a-51e0-4f6a-96db-52a3ac7b82e8"}], "monitorings": [], "none": null, "ids":
+      []}}'
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate, br
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '2731'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.27.1
+      X-Hasura-Access-Key:
+      - devaccess
+      X-Hasura-Role:
+      - admin
+      X-Hasura-User-Id:
+      - 7f1aab7a-e941-46a2-b63a-5b28b80ad384
+    method: POST
+    uri: http://localhost:8080/v1alpha1/graphql
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAEA5VU6ZKiMBB+FSq/geEQBV5ly0o10Gh2kaRyOGVZvPt20FVm1hmdfyTp7+iLM+vA
+        AqvPrMMBLfJWjr3YOQ1WyJEr0HCga+0joO+xtdhxLd8NC+pgM4VMjAa1/THsoRqOxyNo81Ar/Urr
+        GcgpyvBzXgc5Ciu1GHcPxZKvxL7D1R71SM1LaLROj16P6vbrzETHarapkiYv1xAVKSbRqqevat01
+        UZFBDu2mKTMsWchGagFFX6i7wKKxwaVNgX8K0ixfFRRnTwq5GRzlxAYJHfeRhh46NK0WyneU1aMb
+        hpApLX9TM/nsI1sDJk2RR1BhEa3SvorKMllFVb/BZN1XWd4knp/ouJFOt/gj3B4MVxpnO6zuYTAY
+        svlSEqFn/XC7sF5b7Sj240zeGk5lvJbGc9Dk8IxcHmFwvlzXu/kYZGzafua5zTYNHFHdjv+XkO/J
+        6IJ6b60y9dubl4gs6B3auMNj3MjBxtCCMLK3sZBsCoPvibvroi3I0+Q5jJZSObUAFckLKEeb6sfh
+        X4XS5BVULwbkc53vyHuLYnV6wS4qafy+nXijYWz3CxMHMP738rRSs3muUPN3qf8Q4u7mksd22k7T
+        9BfvMVC80AQAAA==
+    headers:
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Mon, 28 Nov 2022 08:02:21 GMT
+      Server:
+      - Warp/3.3.19
+      Transfer-Encoding:
+      - chunked
+      x-request-id:
+      - 2a0dabdf-7ff5-4967-8e1a-3291f3f437e4
+    status:
+      code: 200
+      message: OK
+version: 1

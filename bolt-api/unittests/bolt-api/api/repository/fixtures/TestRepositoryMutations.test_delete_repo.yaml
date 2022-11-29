@@ -1,0 +1,53 @@
+interactions:
+- request:
+    body: '{"query": "mutation ($pk: uuid!, $userId: String!) {\n  update_repository(where:
+      {id: {_eq: $pk}, is_deleted: {_eq: false}, project: {userProjects: {user_id:
+      {_eq: $userId}}}}, _set: {is_deleted: true}) {\n    affected_rows\n    returning
+      {\n      id\n      name\n      repository_url: url\n      project_id\n      type_slug\n    }\n  }\n  update_test_source(where:
+      {id: {_eq: $pk}}, _set: {is_deleted: true}) {\n    affected_rows\n  }\n}\n",
+      "variables": {"pk": "26ae0b53-a9e5-41f9-8804-9f7e06f923b0", "userId": "7f1aab7a-e941-46a2-b63a-5b28b80ad384"}}'
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate, br
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '553'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.27.1
+      X-Hasura-Access-Key:
+      - devaccess
+      X-Hasura-Role:
+      - admin
+      X-Hasura-User-Id:
+      - 7f1aab7a-e941-46a2-b63a-5b28b80ad384
+    method: POST
+    uri: http://localhost:8080/v1alpha1/graphql
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAEA5WQzYrDMAyEXyXonHTT321y6nssi3FiOXibRkGWKSX43atQCnvYy97EaJhvmAWc
+        FQvtAmnWCw3jTDEI8WMVrffYCzrDdI9QtMW2LIBREk9hGlbha4HgoIXdyWLdHfeVbfBYHba+qc7n
+        +lA1/hPrk292+66GEiZ7Q3W/YK74RSs19402iUd1DUEuN+qvXZAu9VeUDfHQrrYPudNG35o4M/1o
+        R/OfFvKY0cQxDQoZyTojGCVC/s7le4dVMZES99r3ryFyzk8+VNwYPQEAAA==
+    headers:
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Mon, 28 Nov 2022 08:01:05 GMT
+      Server:
+      - Warp/3.3.19
+      Transfer-Encoding:
+      - chunked
+      x-request-id:
+      - bbca344a-2f13-4284-834b-639f7b244110
+    status:
+      code: 200
+      message: OK
+version: 1

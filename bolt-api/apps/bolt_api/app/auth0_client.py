@@ -1,3 +1,22 @@
+# Copyright (c) 2022 Acaisoft
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy of
+# this software and associated documentation files (the "Software"), to deal in
+# the Software without restriction, including without limitation the rights to
+# use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+# the Software, and to permit persons to whom the Software is furnished to do so,
+# subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+# FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+# COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+# IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+# CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
 import logging
 import os
 import re
@@ -5,6 +24,7 @@ import requests
 import uuid
 
 from services import const
+from services.configure import ConfigurationError
 from services.hasura import hce
 from flask import current_app
 
@@ -12,7 +32,7 @@ logger = logging.getLogger(__name__)
 
 ALLOWED_EMAILS_DOMAINS = ["acaisoft.com"]
 CONNECTION_TYPE = "google-oauth2"
-ROLE_TO_ASSIGN = 'tenantadmin'
+ROLE_TO_ASSIGN = const.ROLE_TENANT_ADMIN
 
 PROCESSED_BY_SCRIPT = False
 
@@ -99,8 +119,8 @@ class Auth0Client:
         else:
             raise Exception(f"Role {ROLE_TO_ASSIGN} does not exists in auth0")
 
-    def assign_role_to_user(self, user_id, role):
-        role_id = role["id"]
+    def assign_role_to_user(self, user_id):
+        role_id = self.get_role()["id"]
         try:
             response = requests.post(
                 f"{self.url}/api/v2/roles/{role_id}/users",
@@ -160,7 +180,7 @@ class ProcessBoltUser:
     def process_user(self):
         if not all(self.hasura_config.values()):
             logger.error("Hasura config not provided")
-            return
+            raise ConfigurationError("Hasura is not properly configured")
         if not (users_list := self.auth0_client.get_users_list(self.email)):
             return
         user_google_list = list(filter(lambda u: u["identities"][0]["connection"] == CONNECTION_TYPE, users_list))
@@ -168,9 +188,7 @@ class ProcessBoltUser:
             raise ValueError(f"More then one google user for email {self.email}")
         user_id = user_google_list[0]["user_id"]
         # Current approach assumed that so far user can be assigned to one role
-        if not (role := self.auth0_client.get_role()):
-            return
-        self.auth0_client.assign_role_to_user(user_id, role)
+        self.auth0_client.assign_role_to_user(user_id)
         print(f"Role {ROLE_TO_ASSIGN} assigned to {self.email}")
         self.assign_user_to_project(user_id)
         print(f"User: {self.email} assigned to project {self.project_id} succesfully")

@@ -19,7 +19,6 @@
 
 import os
 
-from .upload_file import upload_file
 from . import users
 from .projects import project_setup_demo, project_teardown
 from .repositories import validate_repo
@@ -55,4 +54,3 @@ def register_commands(app):
     app.cli.add_command(project_setup_demo)
     app.cli.add_command(project_teardown)
     app.cli.add_command(validate_repo)
-    app.cli.add_command(upload_file)

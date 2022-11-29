@@ -21,7 +21,7 @@ import logging
 
 from flask import Flask, jsonify
 
-from apps.bolt_api.app import appgraph, healthcheck, webhooks, auth, remote_schema_check, external_tests
+from apps.bolt_api.app import appgraph, webhooks, auth, remote_schema_check, external_tests
 from apps.bolt_api.app.auth.requires_auth import AuthError
 from services.configure import configure, validate, validate_conditional_config
 from services.logger import setup_custom_logger
@@ -38,7 +38,7 @@ def handle_auth_error(ex):
     return response
 
 
-def create_app(test_config=None):
+def create_app(test=False):
 
     app = Flask(__name__, instance_relative_config=True)
 
@@ -58,9 +58,6 @@ def create_app(test_config=None):
         if ll:
             ll.addFilter(IgnoreGraphQLErrors(debug=app.debug))
 
-    if test_config:
-        app.config.from_object(test_config)
-
     validate(app, const.REQUIRED_BOLT_API_CONFIG_VARS, const.REQUIRED_ENV_VARS)
 
     validate_conditional_config(app, const.STORAGE_PROVIDERS, const.STORAGE_SERVICE, "Storage provider")
@@ -73,8 +70,8 @@ def create_app(test_config=None):
     appgraph.register_app(app)
 
     ## healthchecks
-    healthcheck.register_app(app)
-    remote_schema_check.verify_remote_schema_state(app)
+    if not test:
+        remote_schema_check.verify_remote_schema_state(app)
 
     ## webhooks
     webhooks.register_app(app)

@@ -71,14 +71,14 @@ class WorkflowSchema(Schema):
 
     duration_seconds = fields.Integer(required=True)
 
-    job_pre_start = fields.Nested(PreStartSchema, missing=None)
-    job_post_stop = fields.Nested(PostStopSchema, missing=None)
-    job_monitoring = fields.Nested(MonitoringSchema, missing=None)
-    job_load_tests = fields.Nested(LoadTestsSchema, missing=None)
-    job_metric_watcher = fields.Nested(MetricWatcherSchema, missing=None)
-    job_report = fields.Nested(JobReportSchema, missing=None)
+    job_pre_start = fields.Nested(PreStartSchema, load_default=None)
+    job_post_stop = fields.Nested(PostStopSchema, load_default=None)
+    job_monitoring = fields.Nested(MonitoringSchema, load_default=None)
+    job_load_tests = fields.Nested(LoadTestsSchema, load_default=None)
+    job_metric_watcher = fields.Nested(MetricWatcherSchema, load_default=None)
+    job_report = fields.Nested(JobReportSchema, load_default=None)
 
-    no_cache = fields.Boolean(required=False, missing=False)
+    no_cache = fields.Boolean(required=False, load_default=False)
 
     @post_load
     def make_workflow(self, data, **kwargs):

@@ -21,7 +21,7 @@ import graphene
 from services import const
 
 
-class ConfigurationParameterAbstractType(graphene.AbstractType):
+class ConfigurationParameterAbstractType(object):
     value = graphene.String()
     parameter_slug = graphene.String()
 
@@ -39,7 +39,7 @@ class ConfigurationParameterType(graphene.ObjectType):
         interfaces = (ConfigurationParameterInterface,)
 
 
-class ConfigurationEnvVarAbstractType(graphene.AbstractType):
+class ConfigurationEnvVarAbstractType(object):
     name = graphene.String()
     value = graphene.String()
 
@@ -57,7 +57,7 @@ class ConfigurationEnvVarType(graphene.ObjectType):
         interfaces = (ConfigurationEnvVarInterface,)
 
 
-class ConfigurationMonitoringAbstractType(graphene.AbstractType):
+class ConfigurationMonitoringAbstractType(object):
     query = graphene.String()
     chart_type = graphene.String()
 
@@ -90,19 +90,12 @@ class ConfigurationInterface(graphene.Interface):
     has_load_tests = graphene.Boolean(
         required=False,
         description='Test has load_tests hooks.')
-    has_monitoring = graphene.Boolean(
-        required=False,
-        description='Test has monitoring hooks.')
     test_source_id = graphene.UUID(
         required=False,
         description='Test source to fetch test definition from.')
     configuration_parameters = graphene.List(
         ConfigurationParameterInterface,
         description='Default parameter types overrides.')
-    monitoring_chart_configuration = graphene.JSONString(
-        required=False,
-        description='List of monitoring chart configurations'
-    )
     description = graphene.String(
         required=False,
         description='A few words summarizing the configuration'

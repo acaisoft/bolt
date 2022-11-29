@@ -12,7 +12,6 @@ bp = Blueprint('external-tests', __name__)
 
 
 @bp.route('/upload_external_tests', methods=['POST'])
-@requires_auth
 def upload_external_tests():
     try:
         data = ProcessTestSchema().loads(request.form.get('data'))

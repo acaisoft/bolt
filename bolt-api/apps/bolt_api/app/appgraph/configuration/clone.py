@@ -17,11 +17,11 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import datetime
 import graphene
 
 from flask import current_app
 
+from .utils import get_current_datetime
 from services.hasura import hce, hce_with_user
 from services import gql_util, const
 
@@ -53,8 +53,6 @@ class Clone(graphene.Mutation):
                 has_pre_test
                 has_post_test
                 has_load_tests
-                has_monitoring
-                monitoring_chart_configuration
                 configuration_envvars{
                   name
                   value
@@ -81,7 +79,6 @@ class Clone(graphene.Mutation):
                 $has_pre_test: Boolean, 
                 $has_post_test: Boolean, 
                 $has_load_tests: Boolean, 
-                $has_monitoring: Boolean
                 $configuration_envvars: [ConfigurationEnvVarInput], 
                 $configuration_monitorings: [ConfigurationMonitoringInput],
                 $configuration_parameters: [ConfigurationParameterInput]) {    
@@ -94,7 +91,6 @@ class Clone(graphene.Mutation):
                         has_pre_test: $has_pre_test, 
                         has_post_test: $has_post_test, 
                         has_load_tests: $has_load_tests, 
-                        has_monitoring: $has_monitoring,
                         configuration_envvars: $configuration_envvars,
                         configuration_monitorings: $configuration_monitorings
                         configuration_parameters: $configuration_parameters) {
@@ -106,7 +102,6 @@ class Clone(graphene.Mutation):
                     }
             }
         '''
-        del cloned_configuration_data["monitoring_chart_configuration"]
         response = hce_with_user(
             current_app.config, query, user_id=user_id, role=role, variable_values=cloned_configuration_data)
         return response['testrun_configuration_create']['returning'][0]
@@ -116,7 +111,7 @@ class Clone(graphene.Mutation):
             info, (const.ROLE_ADMIN, const.ROLE_TENANT_ADMIN, const.ROLE_MANAGER, const.ROLE_TESTER))
         cloned_configuration_data = Clone.get_cloned_configuration(configuration_id)
         if configuration_name is None:
-            date_now = datetime.datetime.now().strftime('%d/%m/%Y - %H:%M:%S')
+            date_now = get_current_datetime()
             configuration_name = '{0} (Cloned at {1})'.format(cloned_configuration_data['name'], date_now)
         cloned_configuration_data['name'] = configuration_name
         current_app.logger.info(cloned_configuration_data)

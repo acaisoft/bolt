@@ -204,7 +204,6 @@ describe('component: ConfigurationForm', () => {
     // checkCheckboxValue('Before scenario', has_pre_test)
     // checkCheckboxValue('After Scenario', has_post_test)
     // checkCheckboxValue('Load Tests', has_load_tests)
-    // checkCheckboxValue('Monitoring', has_monitoring)
 
     // test parameters and test source sections
     configuration_parameters.forEach(({ parameter_slug, value }) => {

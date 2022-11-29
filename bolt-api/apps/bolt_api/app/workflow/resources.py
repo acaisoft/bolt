@@ -41,7 +41,6 @@ class WorkflowsResource:
 
     def _prepare_workflow(self, workflow_data: Dict[str, Any]):
         schema = WorkflowSchema()
-        logger.info(f'Workflow creator data {workflow_data}')
         try:
             return schema.load(workflow_data)
         except Exception as ex:

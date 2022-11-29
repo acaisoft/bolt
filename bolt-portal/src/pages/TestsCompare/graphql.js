@@ -25,7 +25,6 @@ const EXECUTION_TIME_PARAMETER_FRAGMENT = gql`
   fragment executionTimeParameter on execution {
     configuration {
       id
-      has_monitoring
       configuration_parameters(where: { parameter: { name: { _eq: "time" } } }) {
         id
         value

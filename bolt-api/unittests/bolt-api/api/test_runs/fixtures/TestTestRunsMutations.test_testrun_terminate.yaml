@@ -1,0 +1,46 @@
+interactions:
+- request:
+    body: '{"query": "mutation ($argo_name: String, $status: String) {\n  update_execution(where:
+      {argo_name: {_eq: $argo_name}}, _set: {status: $status}) {\n    affected_rows\n  }\n}\n",
+      "variables": {"argo_name": "bolt-0000", "status": "TERMINATED"}}'
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate, br
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '241'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.27.1
+      X-Hasura-Access-Key:
+      - devaccess
+      X-Hasura-Role:
+      - admin
+      X-Hasura-User-Id:
+      - 7f1aab7a-e941-46a2-b63a-5b28b80ad384
+    method: POST
+    uri: http://localhost:8080/v1alpha1/graphql
+  response:
+    body:
+      string: '{"data":{"update_execution":{"affected_rows" : 1}}}'
+    headers:
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Mon, 28 Nov 2022 08:12:35 GMT
+      Server:
+      - Warp/3.3.19
+      Transfer-Encoding:
+      - chunked
+      content-length:
+      - '51'
+      x-request-id:
+      - edce0532-0dde-49a9-856e-7b73567bafaa
+    status:
+      code: 200
+      message: OK
+version: 1

@@ -1,0 +1,59 @@
+interactions:
+- request:
+    body: '{"query": "query ($uid: String!) {\n  project(where: {is_deleted: {_eq:
+      false}}) {\n    id\n    name\n    description\n    image_url\n    invitation_tokens:
+      user_registration_tokens {\n      invitation_token\n    }\n    scenarios: configurations_aggregate(where:
+      {is_deleted: {_eq: false}, project: {is_deleted: {_eq: false}, userProjects:
+      {user_id: {_eq: $uid}}}}) {\n      aggregate {\n        count\n      }\n    }\n    sources:
+      test_sources_aggregate(where: {is_deleted: {_eq: false}, project: {is_deleted:
+      {_eq: false}, userProjects: {user_id: {_eq: $uid}}}}) {\n      aggregate {\n        count\n      }\n    }\n  }\n  tests:
+      execution_aggregate(distinct_on: configuration_id, where: {configuration: {is_deleted:
+      {_eq: false}, project: {is_deleted: {_eq: false}, userProjects: {user_id: {_eq:
+      $uid}}}}}) {\n    nodes {\n      configuration {\n        project_id\n        executions_aggregate
+      {\n          aggregate {\n            sum {\n              passed_requests\n              failed_requests\n            }\n          }\n        }\n      }\n    }\n  }\n}\n",
+      "variables": {"uid": "7f1aab7a-e941-46a2-b63a-5b28b80ad384"}}'
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate, br
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '1132'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.27.1
+      X-Hasura-Access-Key:
+      - devaccess
+      X-Hasura-Role:
+      - admin
+      X-Hasura-User-Id:
+      - 7f1aab7a-e941-46a2-b63a-5b28b80ad384
+    method: POST
+    uri: http://localhost:8080/v1alpha1/graphql
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAEA4WOzQ7CIBCEX4XsuU2w1p/yKsaYLd02aAsNbL0Q3l0wHowXbzsz304mwoCMoCKs
+        3t1JM6hLBDOAguaIJPvDvsaODnW7G7v6fJZt3Y0nksexa/a9hAosLpRppsDi0yF22R8oaG9WNs7+
+        xt9RBWbBiW6bn0HZbZ6zYZ+GsTze2D3IhrzpWkHQZNEbl2UEnCZPEzKBUCKCdpvlcsqUMuk2r+kf
+        l3JnWf3mrMujSsHlmlJ6AXlT1SUWAQAA
+    headers:
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Mon, 28 Nov 2022 07:56:48 GMT
+      Server:
+      - Warp/3.3.19
+      Transfer-Encoding:
+      - chunked
+      x-request-id:
+      - a3c66da4-4d20-4e16-a538-5b7b0f079fbb
+    status:
+      code: 200
+      message: OK
+version: 1

@@ -41,7 +41,6 @@ export const GET_CONFIGURATION = gql`
       has_pre_test
       has_post_test
       has_load_tests
-      has_monitoring
       configuration_envvars {
         name
         value
@@ -65,7 +64,6 @@ export const ADD_CONFIGURATION_MUTATION = gql`
     $has_pre_test: Boolean
     $has_post_test: Boolean
     $has_load_tests: Boolean
-    $has_monitoring: Boolean
     $prometheus_url: String
     $configuration_envvars: [ConfigurationEnvVarInput]
     $configuration_monitorings: [ConfigurationMonitoringInput]
@@ -80,7 +78,6 @@ export const ADD_CONFIGURATION_MUTATION = gql`
       has_pre_test: $has_pre_test
       has_post_test: $has_post_test
       has_load_tests: $has_load_tests
-      has_monitoring: $has_monitoring
       prometheus_url: $prometheus_url
       configuration_envvars: $configuration_envvars
       configuration_monitorings: $configuration_monitorings
@@ -102,7 +99,6 @@ export const EDIT_CONFIGURATION_MUTATION = gql`
     $has_pre_test: Boolean
     $has_post_test: Boolean
     $has_load_tests: Boolean
-    $has_monitoring: Boolean
     $prometheus_url: String
     $configuration_envvars: [ConfigurationEnvVarInput]
     $configuration_monitorings: [ConfigurationMonitoringInput]
@@ -117,7 +113,6 @@ export const EDIT_CONFIGURATION_MUTATION = gql`
       has_pre_test: $has_pre_test
       has_post_test: $has_post_test
       has_load_tests: $has_load_tests
-      has_monitoring: $has_monitoring
       prometheus_url: $prometheus_url
       configuration_envvars: $configuration_envvars
       configuration_monitorings: $configuration_monitorings

@@ -109,10 +109,10 @@ def request_remote_schema_reload(url, access_key, debug=True):
             else:
                 raise Exception
         except Exception:
-            retry_count += 1
-            if retry_count >= retry_max:
+            if retry_count >= retry_max - 1:
                 logger.warn('Remote Schema load failed.\nThis is a high risk of severe functionality loss.')
         if debug:
-            logger.info(f"Attempt {retry_count}: {'no response.' if not response else response}")
+            logger.info(f"Attempt {retry_count + 1}: {'no response.' if not response else response}")
+        retry_count += 1
         lock.release()
         sleep(5)

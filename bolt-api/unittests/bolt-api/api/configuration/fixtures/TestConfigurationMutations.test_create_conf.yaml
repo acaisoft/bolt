@@ -1,0 +1,133 @@
+interactions:
+- request:
+    body: '{"query": "query ($confName: String, $sourceId: uuid!, $fetchSource: Boolean!,
+      $projId: uuid!, $userId: String!, $type_slug: String!) {\n  test_source(where:
+      {id: {_eq: $sourceId}, project: {userProjects: {user_id: {_eq: $userId}}, is_deleted:
+      {_eq: false}}}) @include(if: $fetchSource) {\n    source_type\n    project {\n      userProjects
+      {\n        user_id\n      }\n    }\n    repository {\n      name\n      url\n      configuration_type
+      {\n        slug_name\n      }\n      project {\n        userProjects {\n          user_id\n        }\n      }\n    }\n    test_creator
+      {\n      name\n      data\n      min_wait\n      max_wait\n      project {\n        userProjects
+      {\n          user_id\n        }\n      }\n    }\n  }\n  parameter(where: {configuration_type:
+      {slug_name: {_eq: $type_slug}}}) {\n    slug_name\n    default_value\n    param_name\n    name\n  }\n  user_project(where:
+      {user_id: {_eq: $userId}, project_id: {_eq: $projId}}) {\n    id\n  }\n  project_by_pk(id:
+      $projId) {\n    id\n  }\n  configuration(where: {is_deleted: {_eq: false}, name:
+      {_eq: $confName}, project_id: {_eq: $projId}, project: {userProjects: {user_id:
+      {_eq: $userId}}, is_deleted: {_eq: false}}}) {\n    id\n  }\n}\n", "variables":
+      {"type_slug": "load_tests", "confName": "test config 12345", "projId": "26ae0b53-a9e5-41f9-8804-9f7e06f923b0",
+      "userId": "7f1aab7a-e941-46a2-b63a-5b28b80ad384", "sourceId": "26ae0b53-a9e5-41f9-8804-9f7e06f923b0",
+      "fetchSource": true}}'
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate, br
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '1458'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.27.1
+      X-Hasura-Access-Key:
+      - devaccess
+      X-Hasura-Role:
+      - admin
+      X-Hasura-User-Id:
+      - 7f1aab7a-e941-46a2-b63a-5b28b80ad384
+    method: POST
+    uri: http://localhost:8080/v1alpha1/graphql
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAEA61UTY+bMBT8K8inVlonkJAEctrjHnuvIusZG5YGMPJHV1HEf+8zkKVJWKRKvYHt
+        N+OZN35XIsACOV6JlcYyo5zOJDn+vJLhk9lLi/9Ey1aZ0ip9IS+k1eqXzKyvckbqH8Ov6cv8AisF
+        lhzyCIAfgMo0jmi8hw3l+y3QHd8kPAlBbJOYdKfu5W9whGyg9oyuxZtJEdwxO13hVlHa11plZ15a
+        7rKztCuli6M/uLYfaoXbeMlMNXlZOA22VM0oA1VVrmAjQ6VAMC/bELzE/xWFgL2hmZaArpFj46qq
+        OyENaNRnJS55k2evw8R4bZQhZA6usuw3VM7bEoW+AR7kJoN6taOkW2HwzXxHUcGXDFjfunYGfxc+
+        E+iJwLfXrI1Ed8UiQX9wBj8KZwjcA8Ezcq0an76yKf7RnFpM2BNIcDNqkalssE9o/IyMHa7dd6Eu
+        Z4k+MZa68a6Mb+Jjr5843iaKvmQJMy8rOUTkGXhK/qrtH/RdnvKJxYMEfbaWqKYnyriGJnuf0VKD
+        8aF/dI1PXBNKMKIscfb5Yi0Omw+lzz3yo31zUWvWMDEOYR7r/eP0C+xzEOD77AdZKngSJXlGeSxT
+        GkdiQyHkO3oIE0iyNEpFfMBBhtKGQcj4hbVnPx378s0eJB7fUkjlDsvzlCZJGNM0P8hwn6ebLQ8x
+        hvcDC6fDqev+AL1PBKmeBQAA
+    headers:
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Mon, 28 Nov 2022 08:01:52 GMT
+      Server:
+      - Warp/3.3.19
+      Transfer-Encoding:
+      - chunked
+      x-request-id:
+      - 4d8cb429-fbd1-49a7-b006-7c6c2e602626
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"query": "mutation ($data: [configuration_insert_input!]!) {\n  insert_configuration(objects:
+      $data) {\n    returning {\n      id\n      name\n      type_slug\n      description\n      project_id\n      test_source_id\n      has_pre_test\n      has_post_test\n      has_load_tests\n      configuration_parameters
+      {\n        parameter_slug\n        value\n      }\n      configuration_envvars
+      {\n        name\n        value\n      }\n      configuration_monitorings {\n        query\n        chart_type\n      }\n    }\n  }\n}\n",
+      "variables": {"data": {"name": "test config 12345", "project_id": "26ae0b53-a9e5-41f9-8804-9f7e06f923b0",
+      "has_pre_test": false, "has_post_test": false, "has_load_tests": true, "created_by_id":
+      "7f1aab7a-e941-46a2-b63a-5b28b80ad384", "type_slug": "load_tests", "configuration_envvars":
+      {"data": [{"name": "testvar", "value": "testvarvalue"}]}, "configuration_parameters":
+      {"data": [{"parameter_slug": "load_tests_host", "value": "https://test-target.dev.bolt.acaisoft.io"},
+      {"parameter_slug": "load_tests_duration", "value": "30"}, {"parameter_slug":
+      "load_tests_rampup", "value": "500"}, {"parameter_slug": "load_tests_users",
+      "value": "1000"}, {"parameter_slug": "load_tests_file_name", "value": "load_tests.py"},
+      {"parameter_slug": "load_tests_repository_branch", "value": "master"}, {"parameter_slug":
+      "load_tests_users_per_worker", "value": "1000"}]}, "instances": 1, "test_source_id":
+      "26ae0b53-a9e5-41f9-8804-9f7e06f923b0"}}}'
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate, br
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '1463'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.27.1
+      X-Hasura-Access-Key:
+      - devaccess
+      X-Hasura-Role:
+      - admin
+      X-Hasura-User-Id:
+      - 7f1aab7a-e941-46a2-b63a-5b28b80ad384
+    method: POST
+    uri: http://localhost:8080/v1alpha1/graphql
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAEA5VT7W6DMAx8FZTfhaVQWuBVpioyYNpsNIny0amaePc5dFvZJm3dP2L7zuezeWU9
+        eGDNK5PKofWi02qQh2DBS61i3KIPVkl1YEmTPFJdzxq2q3lbVFtIyzXydDPQV73t27TMoYBu11Y5
+        VmzFFJyQqj06n1yJk3VebEpK+YtB4cZwoPyooRexyFGiR9dZaa7tVRjHFTNWP2Hnxdw63wLytixS
+        qLFMN+uhTquKb9J62CHfDnVetDzyE51wOtgO/4U7ghPG4iyHNQOMDldsDmoijKxfogvpjbeBar8Y
+        KAxY8sCjdawh8z6fP0cXR2pAws8whmja0XvjmoeH2DL1YA/osx7PWatHn0EH0unBZ1KzaZX8Ttx/
+        bPNGXvC/YSTcBLNQVPI7UIGuKK7xY4w1vwc1yBHFfC035M3azFzukItGO+m1vYjWguqOCxEncLSC
+        vzlm8cKgFS/aPhPipuY6x/77flGdz/C+3MW1U2yBjSukyNWS6QfHSauom36xeCT7aT9N0xto/CgM
+        mAMAAA==
+    headers:
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Mon, 28 Nov 2022 08:01:52 GMT
+      Server:
+      - Warp/3.3.19
+      Transfer-Encoding:
+      - chunked
+      x-request-id:
+      - 771c7f36-d512-4b74-82a4-807ddf71a9c7
+    status:
+      code: 200
+      message: OK
+version: 1

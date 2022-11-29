@@ -1,0 +1,138 @@
+interactions:
+- request:
+    body: '{"query": "query ($executionId: uuid!) {\n  execution(where: {id: {_eq:
+      $executionId}}) {\n    report\n  }\n}\n", "variables": {"executionId": "0765dd5e-61b1-11ed-811c-000c299af887"}}'
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate, br
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '183'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.27.1
+      X-Hasura-Access-Key:
+      - devaccess
+      X-Hasura-Role:
+      - admin
+      X-Hasura-User-Id:
+      - 7f1aab7a-e941-46a2-b63a-5b28b80ad384
+    method: POST
+    uri: http://localhost:8080/v1alpha1/graphql
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAEA6tWSkksSVSyqlZKrUhNLi3JzM9TsoquVipKLcgvKlGyUsrLL4lPT81LLUosSU1R
+        qo2trQUAo+JrETMAAAA=
+    headers:
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Mon, 14 Nov 2022 16:05:11 GMT
+      Server:
+      - Warp/3.3.19
+      Transfer-Encoding:
+      - chunked
+      x-request-id:
+      - 02f795c4-ed57-47a3-bcd1-cedeae2ab624
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"query": "mutation update($id: uuid!, $status: String) {\n  update_execution_by_pk(pk_columns:
+      {id: $id}, _set: {report: $status}) {\n    id\n  }\n}\n", "variables": {"id":
+      "0765dd5e-61b1-11ed-811c-000c299af887", "status": "generating"}}'
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate, br
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '238'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.27.1
+      X-Hasura-Access-Key:
+      - devaccess
+      X-Hasura-Role:
+      - admin
+      X-Hasura-User-Id:
+      - 7f1aab7a-e941-46a2-b63a-5b28b80ad384
+    method: POST
+    uri: http://localhost:8080/v1alpha1/graphql
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAEAxXJSwqAIBAA0LvMXpgJ/F5G1JlAgnKhUIh3r3YP3gROPUGYMNoniXJLGb1eZ8xP
+        bMc/lSEAWqOZtShDmRSRsHJERSFi2bxPu3MW1lovgnxmaVEAAAA=
+    headers:
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Mon, 14 Nov 2022 16:05:11 GMT
+      Server:
+      - Warp/3.3.19
+      Transfer-Encoding:
+      - chunked
+      x-request-id:
+      - 1fd37d6d-cebf-4dd0-bdcf-40a773727b8a
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"query": "query ($id: uuid!) {\n  execution_by_pk(id: $id) {\n    report\n  }\n}\n",
+      "variables": {"id": "0765dd5e-61b1-11ed-811c-000c299af887"}}'
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate, br
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '146'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.27.1
+      X-Hasura-Access-Key:
+      - devaccess
+      X-Hasura-Role:
+      - admin
+      X-Hasura-User-Id:
+      - 7f1aab7a-e941-46a2-b63a-5b28b80ad384
+    method: POST
+    uri: http://localhost:8080/v1alpha1/graphql
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAEA6tWSkksSVSyqlZKrUhNLi3JzM+LT6qML8gGCRWlFuQXlShZKaWn5qUWJZZk5qUr
+        1dbWAgDv8GsVNAAAAA==
+    headers:
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Mon, 14 Nov 2022 16:05:11 GMT
+      Server:
+      - Warp/3.3.19
+      Transfer-Encoding:
+      - chunked
+      x-request-id:
+      - 83f4566e-ab19-4354-9dc6-63ff0838ddb3
+    status:
+      code: 200
+      message: OK
+version: 1
