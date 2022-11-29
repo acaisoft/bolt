@@ -87,13 +87,6 @@ def list_of_params(conf):
         params['load']['host'] = list(filter(lambda d: d['parameter_slug'] in 'load_tests_host', cp))[0]['value']
     else:
         del (params['load'])
-    if conf['has_monitoring']:
-        params['monitoring']['duration'] = list(filter(lambda d: d['parameter_slug'] in 'monitoring_duration', cp))[0][
-            'value']
-        params['monitoring']['interval'] = list(filter(lambda d: d['parameter_slug'] in 'monitoring_interval', cp))[0][
-            'value']
-    else:
-        del (params['monitoring'])
     if conf['has_pre_test']:
         params['pre'] = "TODO"
     else:
