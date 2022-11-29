@@ -49,8 +49,6 @@ def to_field(gqlClass):
 
 
 class TestrunMutations(graphene.ObjectType):
-    # uploads
-    # testrun_upload = to_field(uploads.UploadUrl)
 
     # configurations
     testrun_configuration_create = to_field(configuration.Create)
