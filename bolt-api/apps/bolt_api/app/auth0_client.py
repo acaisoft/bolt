@@ -119,8 +119,8 @@ class Auth0Client:
         else:
             raise Exception(f"Role {ROLE_TO_ASSIGN} does not exists in auth0")
 
-    def assign_role_to_user(self, user_id, role):
-        role_id = role["id"]
+    def assign_role_to_user(self, user_id):
+        role_id = self.get_role()["id"]
         try:
             response = requests.post(
                 f"{self.url}/api/v2/roles/{role_id}/users",
@@ -188,8 +188,7 @@ class ProcessBoltUser:
             raise ValueError(f"More then one google user for email {self.email}")
         user_id = user_google_list[0]["user_id"]
         # Current approach assumed that so far user can be assigned to one role
-        role = self.auth0_client.get_role()
-        self.auth0_client.assign_role_to_user(user_id, role)
+        self.auth0_client.assign_role_to_user(user_id)
         print(f"Role {ROLE_TO_ASSIGN} assigned to {self.email}")
         self.assign_user_to_project(user_id)
         print(f"User: {self.email} assigned to project {self.project_id} succesfully")
