@@ -21,7 +21,7 @@ import logging
 
 from flask import Flask, jsonify
 
-from apps.bolt_api.app import appgraph, webhooks, auth, remote_schema_check, external_tests
+from apps.bolt_api.app import appgraph, webhooks, auth, remote_schema_check, external_tests, healthcheck
 from apps.bolt_api.app.auth.requires_auth import AuthError
 from services.configure import configure, validate, validate_conditional_config
 from services.logger import setup_custom_logger
@@ -72,6 +72,7 @@ def create_app(test=False):
     ## healthchecks
     if not test:
         remote_schema_check.verify_remote_schema_state(app)
+    healthcheck.register_app(app)
 
     ## webhooks
     webhooks.register_app(app)
