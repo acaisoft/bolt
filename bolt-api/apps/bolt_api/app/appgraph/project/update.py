@@ -94,19 +94,6 @@ class Update(UpdateValidate):
 
     Output = gql_util.OutputInterfaceFactory(types.ProjectInterface, 'Update')
 
-    # leaving out since we disabled image upload
-    # @staticmethod
-    # def process_upload(image_url) -> str:
-    #     # example download_url passed in image_url
-    #     # https://storage.googleapis.com/uploads-bolt-acaisoft/67111fcf-f35d-418f-96e3-524db4b9e679?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=bolt-api-service%40acai-bolt.iam.gserviceaccount.com%2F20190527%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20190527T094545Z&X-Goog-Expires=93599&X-Goog-SignedHeaders=host&X-Goog-Signature=648da53b05efb279ca4ac8c4473bcf6c1b85a479b401cf644993f46bc1ed6b3b48357f2e7be1ce0d0c7aad62c6150cfd6f060f6d48b238b6a43c147b0b24c553c1198ca2fae17419f5f29046157069ddf8c31da2b49ca387a5983756b574a8c582c90f1651337309013c0c881f5da46358b0f83394d747cffd7c043338cf389ccf607bd5da431697fe66ac1ef11f94cb19225ad4265c854e92203b00b4f72214d595b430244ba0f9acbebc844049cd52ce3ac1d31aa205cc95390126a9e855b2f6b3b95d43bdefaca39f750e70b1be5bd0bc7b4574ccb53731641733d8b0671f8b22ad32295e0b3710f3dee1d12062d7afb7b6a52431e5fe129d4cc16d50acb6
-    #     # do nothing if image url does not point to uploads temporary bucket
-    #     src_bucket = const.BUCKET_PRIVATE_STORAGE
-    #     if src_bucket not in image_url:
-    #         return image_url
-    #     upload_id = image_url.split('?')[0].rsplit('/')[-1]
-    #     uploads.process_image(upload_id, upload_id)
-    #     return uploads.get_object_public_url(upload_id)
-
     def mutate(self, info, id, name=None, description=None, image_url=None):
 
         query_params = UpdateValidate.validate(info, id, name, description, image_url)
