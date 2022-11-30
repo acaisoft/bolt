@@ -177,7 +177,7 @@ def single_execution_plots_svg(ex_data):
 def endpoint_details_svg(data):
     print('Started Endpoint Details SVG creation.')
     errors_kinds = list(set([e['exception_data'] for e in data['errors']]))
-    timestamps = list(set([e['timestamp'] for e in data['errors']]))
+    timestamps = list(set([e['timestamp'] for e in data['detailed']]))
     raw_timestamps = sorted(list(map(
         lambda millis: get_epoch(millis),
         timestamps
@@ -211,11 +211,15 @@ def endpoint_details_svg(data):
     for kind in errors_kinds:
         data_to_frame[kind] = []
         for i in range(0, len(raw_timestamps)):
+            found_match = False
             for er in data['errors']:
                 if er['timestamp'] == raw_timestamps[i] and er['exception_data'] == kind:
                     data_to_frame[kind].append(er['number_of_occurrences'])
                     num_requests[i] -= er['number_of_occurrences']
+                    found_match = True
                     break
+            if not found_match:
+                data_to_frame[kind].append(0)
         diff = len(data_to_frame['timestamp']) - len(data_to_frame[kind])
         for i in range(0, diff):
             data_to_frame[kind].append(0)

@@ -49,7 +49,7 @@ def detailed_endpoint_data(ex_id):
     fields = ['timestamp', 'identifier', 'name', 'method', 'average_response_time', 'min_response_time',
               'max_response_time', 'total_content_length', 'num_requests', 'id']
     table = 'execution_requests'
-    conditions = f'where: {{execution_id: {{_eq: "{ex_id}"}}}}'
+    conditions = f'where: {{execution_id: {{_eq: "{ex_id}"}}}}, order_by: {{timestamp: asc}}'
     return query(query_content(fields=fields, table=table, conditions=conditions))
 
 
