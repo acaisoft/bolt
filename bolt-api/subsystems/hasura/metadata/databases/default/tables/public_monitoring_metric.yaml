@@ -19,7 +19,26 @@ insert_permissions:
         - id
         - monitoring_id
       backend_only: false
+  - role: testrunner
+    permission:
+      check: {}
+      columns:
+        - metric_value
+        - timestamp
+        - execution_id
+        - id
+        - monitoring_id
+      backend_only: false
 select_permissions:
+  - role: reportgenerator
+    permission:
+      columns:
+        - metric_value
+        - timestamp
+        - execution_id
+        - id
+        - monitoring_id
+      filter: {}
   - role: tenantadmin
     permission:
       columns:

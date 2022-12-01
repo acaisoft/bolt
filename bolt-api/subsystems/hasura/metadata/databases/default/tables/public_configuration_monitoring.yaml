@@ -37,6 +37,15 @@ insert_permissions:
         - id
       backend_only: false
 select_permissions:
+  - role: reportgenerator
+    permission:
+      columns:
+        - chart_type
+        - query
+        - unit
+        - configuration_id
+        - id
+      filter: {}
   - role: tenantadmin
     permission:
       columns:
