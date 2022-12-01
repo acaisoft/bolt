@@ -78,7 +78,7 @@ def list_of_envars(cd):
 
 def list_of_params(conf):
     cp = conf['configuration_parameters']
-    params = {'load': {}, 'pre': {}, 'post': {}, 'monitoring': {}}
+    params = {'load': {}, 'pre': {}, 'post': {}}
     if conf['has_load_tests']:
         params['load']['duration'] = list(filter(lambda d: d['parameter_slug'] in 'load_tests_duration', cp))[0][
             'value']

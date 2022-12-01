@@ -67,21 +67,6 @@
             </tbody>
         </table>
         {% endif %}
-        {% if model['config']['params']['monitoring']%}
-        <p class="subtitle">Monitoring<p>
-        <table class="table-steps">
-            <tbody>
-            <tr class="odd">
-            <td class="param_name">Duration:</td>
-            <td class="param_value">{{model['config']['params']['monitoring']['duration']}}</td>
-            </tr>
-            <tr class="even">
-            <td class="param_name">Interval:</td>
-            <td class="param_value">{{model['config']['params']['monitoring']['interval']}}</td>
-            </tr>
-            </tbody>
-        </table>
-        {% endif %}
         {% if model['config']['envvars'] %}
         <p class="subtitle">Environment variables<p>
         <table class="table-steps">
@@ -184,11 +169,17 @@
             <p class="subtitle"><b>{{r['method']}}</b>: {{r['name']}} detailed time data</p>
             <img src="{{r['endpoint_details_svg']}}" style="max-width: 100%">
         </div>
-        <div class="breaker"></div>
         <hr>
         {% endfor %}
         {% if model['metrics_plots'] %}
-        <img src="{{model['metrics_plots']}}" style="max-width: 100%">
+        <div class="breaker"></div>
+            <h3>Monitoring Metrics</h3>
+            <div>
+                {% for m_svg in model['metrics_plots'] %}
+                    <img src="{{m_svg}}" style="max-width: 100%">
+                {% endfor %}
+            </div>
+        <div class="breaker"></div>
         {% endif %}
     </div>
 </div>

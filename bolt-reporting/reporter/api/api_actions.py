@@ -86,14 +86,10 @@ class APIClient:
         print('Get config data ended.')
         return data
 
-
     def get_execution_metrics(self, execution_id):
-        return self.__graphQL(payload=execution_metrics(execution_id))
-
-    def get_execution_metrics_metadata(self, execution_id):
-        print('Get metrics metadata started.')
-        data = self.__graphQL(payload=execution_metrics_metadata(execution_id))
-        print('Get metrics metadata ended.')
+        print('Get metrics data started.')
+        data = self.__graphQL(payload=execution_metrics(execution_id))
+        print('Get metrics data ended.')
         return data
 
     def update_report_status(self, execution_id, status):

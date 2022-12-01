@@ -24,19 +24,9 @@ from plots.plot_builder import single_execution_plots_svg, request_distribution_
 from dateutil import parser
 
 
-def get_metrics_data(execution_id: str, api: APIClient):
-    print('Get metrics data started.')
-    metrics_data = api.get_execution_metrics(execution_id)['data']['execution_metrics_data']
-    for md in metrics_data:
-        md['data']['timestamp'] = md['timestamp']
-    print('Get metrics data ended.')
-    return metrics_data
-
-
-def prepare_single_execution_model(execution_id: str, api: APIClient, notes=None, metrics_charts=None):
+def prepare_single_execution_model(execution_id: str, api: APIClient, notes=None):
     # REGION GETTING DATA
     requests_data = api.get_execution_endpoints(execution_id)['data']['execution_request_totals']
-    #requests_errors = api.get_endpoint_errors(execution_id)['data']['result_error']
     distribution_data = {
         r['identifier']: api.get_request_distribution(r['identifier'])['data']['execution_distribution']
         for r in requests_data}
@@ -44,18 +34,11 @@ def prepare_single_execution_model(execution_id: str, api: APIClient, notes=None
     errors_cumulated_data = api.get_errors_details(execution_id)['data']['execution_errors']
     exec_users_data = api.get_execution_results(execution_id)['data']['result_aggregate']
     config_data = api.get_execution_config(execution_id)['data']['execution_by_pk']
-    if metrics_charts:
-        metrics_data = get_metrics_data(execution_id)
-        metrics_meta_data = api.get_execution_metrics_metadata(execution_id)['data']['execution_metrics_metadata'][0][
-            'chart_configuration']
-        metrics_svg = metrics_svg_plots(metrics_data, metrics_meta_data, metrics_charts)
+    metrics_data = api.get_execution_metrics(execution_id)['data']['configuration_monitoring']
+    if metrics_data:
+        metrics_svgs = metrics_svg_plots(metrics_data)
     else:
-        metrics_svg = None
-
-    # Uncomment it when DB will be ready
-    # errors_in_time_data = {
-    #    r['identifier']: API.get_endpoint_failures_in_time(r['identifier']).JSON for r in requests_data
-    # }
+        metrics_svgs = None
     # ENDREGION
     time_svg = single_execution_plots_svg(exec_users_data)
     requests = [
@@ -65,7 +48,7 @@ def prepare_single_execution_model(execution_id: str, api: APIClient, notes=None
     ]
     start_date = parser.parse(exec_users_data[0]['timestamp']).strftime("%Y/%m/%d, %H:%M:%S")
     return report_model(config_data=config_data, date=start_date, time_svg=time_svg, requests=requests,
-                        execution_id=execution_id, notes=notes, metrics_svg=metrics_svg,
+                        execution_id=execution_id, notes=notes, metrics_svg=metrics_svgs,
                         distribution=[v[0] for k, v in distribution_data.items()])
 
 

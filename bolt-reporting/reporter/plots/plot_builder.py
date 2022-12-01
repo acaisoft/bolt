@@ -50,74 +50,78 @@ def get_hms(epoch):
     return datetime.fromtimestamp(epoch).strftime('%H:%M:%S')
 
 
-def get_metrics_data(metrics_data, charts_to_perform):
+def get_metrics_data(metrics_data):
     total = []
     m_pool = ThreadPool()
     for metric in metrics_data:
-        m_pool.apply_async(func=metrics_in_thread, args=(metric, charts_to_perform, total))
+        m_pool.apply_async(func=metrics_in_thread, args=(metric, total))
     m_pool.close()
     m_pool.join()
     return total
 
 
-def metrics_in_thread(metric, charts_to_perform, container):
-    for m_name, values in metric['data']['data'].items():
-        tmp = [{'timestamp': parser.parse(metric['data']['timestamp']), 'name': entry['name'],
-                'value': entry['value'],
-                'type': m_name} for entry in values if
-               (m_name in charts_to_perform.keys()) and (entry['name'] in charts_to_perform[m_name] or 'ALL' in charts_to_perform[m_name])]
-        container.extend(tmp)
+def metrics_in_thread(metric, container):
+    full = metric['monitoring_metrics'][0]['metric_value']
+    full_length = len(full)
+    for point in metric['monitoring_metrics'][1:]:
+        if len(point['metric_value']) > full_length:
+            full = point
+            full_length = len(point)
+    # finding the key fields
+    candidates = list(full[0]['metric'].items())
+    positive = []
+    for item in full[1:]:
+        for key in list(item['metric'].items()):
+            if key not in candidates:
+                positive.append(key)
+    positive = list(dict.fromkeys(item[0] for item in positive))
+    frame = {'timestamp': [], 'names': [], 'query': metric['query'], 'unit': metric['unit']}
+    # building the frame
+    for point in metric['monitoring_metrics']:
+        frame['timestamp'].append(get_hms(get_epoch(point['timestamp'])))
+        for combined in point['metric_value']:
+            name = ', '.join((': '.join([e, combined['metric'][e]]) for e in positive)).upper()
+            if name not in frame:
+                frame['names'].append(name)
+                frame[name] = []
+            frame[name].append(float(combined['value'][1]))
+    container.append(frame)
 
 
-def format_chart_to_title(chart_name):
-    try:
-        return charts[chart_name]
-    except KeyError:
-        return chart_name.replace('_', ' ').title()
-
-
-def metrics_svg_plots(metrics_data, metrics_meta_data, charts_to_perform):
+def metrics_svg_plots(metrics_data):
     print('Started Metrics SVG creation.')
-    data = get_metrics_data(metrics_data, charts_to_perform)
-    fig, axis = plt.subplots(len(charts_to_perform))
-    if len(charts_to_perform) == 1:
-        axis = [axis]
-    fig.set_size_inches(11, 15)
-    formate_axis_threads(axis)
-    axis_index = 0
-    plots_pool = ThreadPool()
-    for chart in charts_to_perform:
-        plots_pool.apply_async(func=plot_in_thread, args=(axis, axis_index, chart, metrics_meta_data, data))
-        axis_index += 1
-    plots_pool.close()
-    plots_pool.join()
-    rotate_ticks(axis)
-    fig.tight_layout(pad=3.0)
-    svg = svg_path()
-    plt.savefig(svg, format="svg")
-    plt.clf()
-    plt.cla()
+    data = get_metrics_data(metrics_data)
+    svgs = []
+    for item in data:
+        names = item.pop('names')
+        unit = item.pop('unit')
+        query = item.pop('query').replace('_', ' ').upper()
+        df = pd.DataFrame(item)
+        fig, ax = plt.subplots(1)
+        fig.set_size_inches(11, 5)
+        formate_axis_threads([ax], item)
+        apply_style_to_axes([ax])
+        ax.set_title(label=query, fontdict=TITLE_STYLE, loc='left')
+        df.plot.line(
+            x='timestamp',
+            y=names,
+            ax=ax,
+            label=names,
+            alpha=0.9
+        )
+        ax.legend(frameon=False, labelcolor=CALM_WHITE)
+        ax.yaxis.set_major_formatter(mtick.StrMethodFormatter(f'{{x}}{unit}'))
+        rotate_ticks([ax])
+        apply_y_grid([ax])
+        remove_gaol_spines([ax])
+        fig.tight_layout(pad=3.0)
+        svg = svg_path()
+        plt.savefig(svg, format="svg", transparent=True)
+        plt.clf()
+        plt.cla()
+        svgs.append(svg)
     print('Ended Metrics SVG creation.')
-    return svg
-
-
-def plot_in_thread(axis, axis_index, chart, metrics_meta_data, data):
-    print(f'Started chart: {chart} preparing')
-    axis[axis_index].set_title(label=format_chart_to_title(chart), fontdict=TITLE_STYLE,
-                               loc='left')
-    metadata = list(filter(lambda x: x['node_name'] == chart, metrics_meta_data['charts']))[0]
-    chart_type = metadata['type']
-    if 'percent' in metadata['y_format']:
-        axis[axis_index].yaxis.set_major_formatter(mtick.PercentFormatter(xmax=1))
-    if 'stacked' in chart_type:
-        chart_type = 'area'
-    f_d = list(filter(lambda x: x['type'] == chart, data))
-    names = list(set(x['name'] for x in f_d))
-    values = {n: [float(f['value']) for f in f_d if f['name'] == n] for n in names}
-    df = pd.DataFrame(data=values, index=[f['timestamp'] for f in f_d if f['name'] == names[0]])
-    df.plot(kind=chart_type, ax=axis[axis_index], stacked='area' in chart_type)
-    axis[axis_index].legend(frameon=False)
-    print(f'Ended chart: {chart} preparing')
+    return svgs
 
 
 def single_execution_plots_svg(ex_data):
@@ -265,7 +269,8 @@ def endpoint_details_svg(data):
         alpha=0.9
     )
     handles1, labels1 = ax1.get_legend_handles_labels()
-    ax1.legend(reversed(handles1), reversed(labels1), frameon=False, labelcolor=CALM_WHITE, loc='lower left')
+    ax1.legend(reversed(handles1), reversed(list(f'{lbl[:50]}(...)' for lbl in labels1)),
+               frameon=False, labelcolor=CALM_WHITE, loc='lower left')
     ax2.legend(frameon=False, labelcolor=CALM_WHITE, loc='upper left')
     ax3.legend(frameon=False, labelcolor=CALM_WHITE, loc='upper left')
     rotate_ticks(axis)

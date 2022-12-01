@@ -83,17 +83,28 @@ def execution_config(execution_id):
 
 
 def execution_metrics(execution_id):
-    fields = ['data', 'timestamp']
-    table = 'execution_metrics_data'
-    conditions = f'where: {{execution_id: {{_eq: "{execution_id}"}}}}'
-    return query(query_content(fields=fields, table=table, conditions=conditions))
-
-
-def execution_metrics_metadata(execution_id):
-    fields = ['chart_configuration']
-    table = 'execution_metrics_metadata'
-    conditions = f'where: {{execution_id: {{_eq: "{execution_id}"}}}}'
-    return query(query_content(fields=fields, table=table, conditions=conditions))
+    raw_query_content = f'''
+        query monitoring{{
+            configuration_monitoring (where: 
+                {{monitoring_metrics: 
+                    {{execution_id: 
+                        {{_eq: "{execution_id}"
+                        }}
+                    }}
+                }}
+            ) {{
+                query
+                unit
+                id
+                monitoring_metrics (order_by: {{timestamp: asc}}) {{
+                    monitoring_id
+                    timestamp
+                    metric_value 
+                }}
+            }}
+        }}
+    '''
+    return query(raw_query_content)
 
 
 def set_report_generation_status(ex_id, status):
