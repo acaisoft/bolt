@@ -1,6 +1,6 @@
 import json
 import requests
-from flask import Blueprint, request, render_template, flash, redirect, current_app, make_response, jsonify
+from flask import Blueprint, request, render_template, flash, redirect, current_app, make_response, jsonify, abort, g
 from urllib.parse import urlparse
 
 from apps.bolt_api.app.utils.token import generate_token
@@ -37,6 +37,8 @@ def value_error_handler(ex: ValueError):
 def login():
     redirect_url = request.args.get('redirect_url', False)
     priv_key = current_app.config.get(const.JWT_AUTH_PRIV_KEY, False)
+    g.__setattr__('errors', [])
+    code = 200
 
     if request.method == 'POST':
         login = request.form['login']
@@ -44,7 +46,8 @@ def login():
 
         if login != current_app.config.get(const.AUTH_LOGIN) or \
                 password != current_app.config.get(const.AUTH_PASSWORD):
-            flash('Invalid credentials', 'error')
+            g.get('errors').append('Invalid credentials')
+            code = 401
         else:
             token = generate_token(current_app.config, priv_key)
 
@@ -64,12 +67,12 @@ def login():
             return response
 
     if not priv_key:
-        flash('Service is not configured properly', 'error')
+        g.get('errors').append('Service is not configured properly')
 
     if not redirect_url:
-        flash('Expected "redirect_url" parameter in URL', 'error')
+        g.get('errors').append('Expected "redirect_url" parameter in URL')
 
-    return render_template('auth/login.html')
+    return render_template('auth/login.html'), code
 
 
 @bp.route('/process_user', methods=['POST'])

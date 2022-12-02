@@ -29,7 +29,7 @@
 
             <div id="content">
               <div id="content-wrapper">
-                {% for message in get_flashed_messages() %}
+                {% for message in g.get("errors") %}
                   <div class="alert alert-error">
                     <span class="pficon pficon-error-circle-o"></span>
                     <span class="feedback-text">{{ message }}</span>
