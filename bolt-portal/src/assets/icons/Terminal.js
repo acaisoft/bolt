@@ -19,21 +19,24 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { generatePath } from 'react-router-dom'
+import React from 'react'
 
-export const getUrl = (path, params) => generatePath(path, params)
-
-export const getSubpageUrl = (match, relativePath, params = {}) => {
-  return generatePath(`${match.path}${relativePath}`, {
-    ...match.params,
-    ...params,
-  })
+function Terminal(props) {
+  return (
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      xmlns="http://www.w3.org/2000/svg"
+      data-testid="terminalIcon"
+      {...props}
+    >
+      <path
+        d="M20 4H4c-1.11 0-2 .9-2 2v12c0 1.1.89 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.89-2-2-2zm0 14H4V8h16v10zm-2-1h-6v-2h6v2zM7.5 17l-1.41-1.41L8.67 13l-2.59-2.59L7.5 9l4 4-4 4z"        fill="currentColor"
+      />
+    </svg>
+  )
 }
 
-export const getParentUrl = (url, steps = 1) =>
-  url.split('/').slice(0, -steps).join('/')
-
-export const redirectToExternalLoginPage = (fromUrl = window.location.href) => {
-  window.location.href = `${process.env.REACT_APP_API_SERVICE_BASE_URL}/auth/login?redirect_url=${fromUrl}`
-  return null
-}
+export default Terminal
