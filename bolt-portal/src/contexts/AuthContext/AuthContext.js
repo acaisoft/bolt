@@ -30,11 +30,12 @@ import {
   AuthKeycloakProvider,
 } from './providers'
 import { Auth0Provider } from '@auth0/auth0-react'
+import { AUTH_SERVICE, AUTH0_AUDIENCE, AUTH0_CLIENT_ID, AUTH0_DOMAIN } from "utils/values";
 
 const keycloak = new AuthKeycloak(Config.keycloak)
 
 export function AuthProvider({ children }) {
-  const authService = process.env.REACT_APP_AUTH_SERVICE || AuthServiceName.BOLT
+  const authService = process.env.REACT_APP_AUTH_SERVICE || AUTH_SERVICE || AuthServiceName.BOLT
 
   if (authService === AuthServiceName.KEYCLOAK)
     return <AuthKeycloakProvider client={keycloak}>{children}</AuthKeycloakProvider>
@@ -43,9 +44,9 @@ export function AuthProvider({ children }) {
   if (authService === AuthServiceName.AUTH0) {
     return (
       <Auth0Provider
-        domain={process.env.REACT_APP_AUTH0_DOMAIN}
-        clientId={process.env.REACT_APP_AUTH0_CLIENT_ID}
-        audience={process.env.REACT_APP_AUTH0_AUDIENCE}
+        domain={process.env.REACT_APP_AUTH0_DOMAIN || AUTH0_DOMAIN}
+        clientId={process.env.REACT_APP_AUTH0_CLIENT_ID || AUTH0_CLIENT_ID}
+        audience={process.env.REACT_APP_AUTH0_AUDIENCE || AUTH0_AUDIENCE}
         redirectUri={window.location.origin + '/projects'}
       >
         {children}
@@ -57,7 +58,7 @@ export function AuthProvider({ children }) {
 }
 
 export function useAuth() {
-  const authService = process.env.REACT_APP_AUTH_SERVICE || AuthServiceName.BOLT
+  const authService = process.env.REACT_APP_AUTH_SERVICE || AUTH_SERVICE || AuthServiceName.BOLT
 
   const authContext =
     authService === AuthServiceName.KEYCLOAK ? AuthKeycloakContext : AuthBoltContext

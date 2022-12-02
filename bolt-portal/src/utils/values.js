@@ -19,23 +19,24 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { generatePath } from 'react-router-dom'
-import { REACT_APP_API_SERVICE_BASE_URL } from "./values";
-
-export const getUrl = (path, params) => generatePath(path, params)
-
-export const getSubpageUrl = (match, relativePath, params = {}) => {
-  return generatePath(`${match.path}${relativePath}`, {
-    ...match.params,
-    ...params,
-  })
+const getValue = (name) => {
+  return window.bolt_values?.[name]
 }
 
-export const getParentUrl = (url, steps = 1) =>
-  url.split('/').slice(0, -steps).join('/')
+const REACT_APP_API_SERVICE_BASE_URL = getValue('REACT_APP_API_SERVICE_BASE_URL')
+const HASURA_API_URL = getValue('REACT_APP_HASURA_API_URL')
+const AUTH_SERVICE = getValue('REACT_APP_AUTH_SERVICE')
+const ARGO_URL = getValue('REACT_APP_ARGO_URL')
+const AUTH0_AUDIENCE = getValue('REACT_APP_AUTH0_AUDIENCE')
+const AUTH0_CLIENT_ID = getValue('REACT_APP_AUTH0_CLIENT_ID')
+const AUTH0_DOMAIN = getValue('REACT_APP_AUTH0_DOMAIN')
 
-export const redirectToExternalLoginPage = (fromUrl = window.location.href) => {
-  window.location.href =
-    `${process.env.REACT_APP_API_SERVICE_BASE_URL || REACT_APP_API_SERVICE_BASE_URL}/auth/login?redirect_url=${fromUrl}`
-  return null
+export  {
+  REACT_APP_API_SERVICE_BASE_URL,
+  HASURA_API_URL,
+  AUTH_SERVICE,
+  ARGO_URL,
+  AUTH0_AUDIENCE,
+  AUTH0_CLIENT_ID,
+  AUTH0_DOMAIN
 }

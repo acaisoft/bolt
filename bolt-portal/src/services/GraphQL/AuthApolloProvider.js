@@ -34,6 +34,7 @@ import {
   makeTransportLinks,
 } from './handlers'
 import { useAuth0 } from '@auth0/auth0-react'
+import { AUTH0_AUDIENCE } from "utils/values";
 
 const cache = new InMemoryCache()
 
@@ -44,7 +45,7 @@ function AuthApolloProvider({ children }) {
     let token = localStorage.getItem('AUTH_TOKEN')
     if (!token)
       token = await getAccessTokenSilently({
-        audience: process.env.REACT_APP_AUTH0_AUDIENCE,
+        audience: process.env.REACT_APP_AUTH0_AUDIENCE || AUTH0_AUDIENCE,
       })
     try {
       localStorage.setItem('AUTH_TOKEN', token)

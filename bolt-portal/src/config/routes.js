@@ -19,10 +19,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import { ARGO_URL } from "utils/values";
+
 const routes = {
   argo: {
     workflows: {
-      details: `${process.env.REACT_APP_ARGO_URL}/workflows/:argo_namespace/:argo_name`,
+      details: `${process.env.REACT_APP_ARGO_URL || ARGO_URL}/workflows/:argo_namespace/:argo_name`,
     },
   },
   projects: {

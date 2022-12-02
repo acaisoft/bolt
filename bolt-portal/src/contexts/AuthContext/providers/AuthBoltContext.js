@@ -30,12 +30,13 @@ import axios from 'axios'
 import jwtDecode from 'jwt-decode'
 import { AUTH_TOKEN_NAME } from 'config/constants'
 import { redirectToExternalLoginPage } from 'utils/router'
+import { REACT_APP_API_SERVICE_BASE_URL } from "utils/values";
 
 const AuthBoltContext = createContext(null)
 
 const fetchToken = async logout => {
   return await axios
-    .get(`${process.env.REACT_APP_API_SERVICE_BASE_URL}/auth/session`, {
+    .get(`${process.env.REACT_APP_API_SERVICE_BASE_URL || REACT_APP_API_SERVICE_BASE_URL}/auth/session`, {
       withCredentials: true,
     })
     .then(({ data }) => data)

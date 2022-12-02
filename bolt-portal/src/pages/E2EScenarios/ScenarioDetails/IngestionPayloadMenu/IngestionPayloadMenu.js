@@ -27,6 +27,7 @@ import { CopyToClipboard, PopoverMenu } from 'components'
 import { useNotification } from 'hooks'
 import { CurlyBraces, Terminal } from "assets/icons";
 import PreviewPayloadModal from "./PreviewPayloadModal";
+import { REACT_APP_API_SERVICE_BASE_URL } from "utils/values";
 
 function IngestionPayloadMenu({ scenarioId, projectId }) {
   const notify = useNotification()
@@ -49,7 +50,7 @@ function IngestionPayloadMenu({ scenarioId, projectId }) {
         return getJSONPayload()
       case "CURL":
         return "curl --request POST \\\n" +
-          "  --url " + `${process.env.REACT_APP_API_SERVICE_BASE_URL}/external_tests/upload_external_tests` + " \\\n" +
+          "  --url " + `${process.env.REACT_APP_API_SERVICE_BASE_URL || REACT_APP_API_SERVICE_BASE_URL}/external_tests/upload_external_tests` + " \\\n" +
           "  --header 'Content-Type: multipart/form-data' \\\n" +
           "  --form 'data=" + getJSONPayload() +"' \\\n" +
           "  --form file="

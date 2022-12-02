@@ -19,6 +19,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import { HASURA_API_URL } from "utils/values";
+
 export class Config {
   constructor() {
     this.stage = process.env.REACT_APP_STAGE || ''
@@ -32,7 +34,9 @@ export class Config {
     }
     this.hasura = {
       wsUri: process.env.REACT_APP_HASURA_WS_URL || 'ws://localhost:8080/v1alpha1/graphql',
-      apiUri: process.env.REACT_APP_HASURA_API_URL || 'http://localhost:8080/v1alpha1/graphql',
+      apiUri: process.env.REACT_APP_HASURA_API_URL ||
+        HASURA_API_URL ||
+        'http://localhost:8080/v1alpha1/graphql',
     }
 
     // switch (this.stage.toLowerCase()) {
