@@ -43,7 +43,7 @@ function IngestionPayloadMenu({ scenarioId, projectId }) {
           }, null, 2)
   }
 
-  const handleGenerate = (dataType) => {
+  const generatePayload = (dataType) => {
     switch(dataType) {
       case "JSON":
         return getJSONPayload()
@@ -53,6 +53,8 @@ function IngestionPayloadMenu({ scenarioId, projectId }) {
           "  --header 'Content-Type: multipart/form-data' \\\n" +
           "  --form 'data=" + getJSONPayload() +"' \\\n" +
           "  --form file="
+      default:
+        return ""
     }
   }
 
@@ -69,7 +71,7 @@ function IngestionPayloadMenu({ scenarioId, projectId }) {
         }
       >
         <MenuItem
-          onClick={() => togglePreviewModal({open: true, data: "JSON"})}
+          onClick={() => togglePreviewModal({open: true, data: generatePayload("JSON")})}
           title="JSON payload"
         >
           <ListItemIcon>
@@ -78,7 +80,7 @@ function IngestionPayloadMenu({ scenarioId, projectId }) {
           <ListItemText>Get JSON payload</ListItemText>
         </MenuItem>
         <MenuItem
-          onClick={() => togglePreviewModal({open: true, data: "CURL"})}
+          onClick={() => togglePreviewModal({open: true, data: generatePayload("CURL")})}
           title="ingestion CURL"
         >
           <ListItemIcon>
@@ -89,11 +91,11 @@ function IngestionPayloadMenu({ scenarioId, projectId }) {
       </PopoverMenu>
       <PreviewPayloadModal
         isOpen={previewModalState.open}
-        onClose={() => togglePreviewModal({open: false, data: ""})}
+        onClose={() => togglePreviewModal({...previewModalState, open: false})}
       >
         <CopyToClipboard
-          text={handleGenerate(previewModalState.data)}
-          label={previewModalState.data}
+          text={previewModalState.data}
+          label="Ingestion Payload"
           margin="normal"
           variant="filled"
           multiline
