@@ -35,7 +35,7 @@ const AuthBoltContext = createContext(null)
 
 const fetchToken = async logout => {
   return await axios
-    .get(`${process.env.REACT_APP_AUTH_SERVICE_BASE_URL}/session`, {
+    .get(`${process.env.REACT_APP_API_SERVICE_BASE_URL}/auth/session`, {
       withCredentials: true,
     })
     .then(({ data }) => data)

@@ -27,11 +27,11 @@ REACT_APP_KEYCLOAK_URL=https://keycloak.bolt-us.acaisoft.io/auth
 REACT_APP_HASURA_WS_URL=wss://www.hasura.dev.bolt.acaisoft.io/v1/graphql
 REACT_APP_HASURA_API_URL=https://www.hasura.dev.bolt.acaisoft.io/v1/graphql
 REACT_APP_AUTH_SERVICE=<auth service name>
-REACT_APP_AUTH_SERVICE_BASE_URL=<base url to auth service>
+REACT_APP_API_SERVICE_BASE_URL=<base url to API service>
 REACT_APP_ARGO_URL=<argo url>
 ```
 
-`REACT_APP_AUTH_SERVICE` currently supports two options: `bolt` and `keycloak`. If no value will be specified, application by default will use bolt auth service. If value is set to `keycloak`, `REACT_APP_AUTH_SERVICE_BASE_URL` will not have any effect on the app because Keycloak handles login and redirecting to its login page by itself.
+`REACT_APP_AUTH_SERVICE` currently supports two options: `bolt` and `keycloak`. If no value will be specified, application by default will use bolt auth service.
 
 4. Run command `yarn start` or `yarn start:local`. Application should be available on [port 3000](http://localhost:3000/). The page will reaload if you will make any edits. You will also see error/warning messages in the console.
 

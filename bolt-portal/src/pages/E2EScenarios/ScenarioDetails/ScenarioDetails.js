@@ -34,6 +34,7 @@ import ScenarioEvolutionGraph from './ScenarioEvolutionGraph'
 import { useListFilters } from 'hooks'
 
 import { Pagination } from 'containers'
+import IngestionPayloadMenu from "./IngestionPayloadMenu";
 
 const TestScenarioDetails = () => {
   const params = useParams()
@@ -68,15 +69,17 @@ const TestScenarioDetails = () => {
           <SectionHeader
             title={externalTestScenario?.name || ''}
             description={`${externalTestScenario?.configuration_type?.name} Scenario`}
-          ></SectionHeader>
-          <Typography
-            color="textSecondary"
-            component="p"
-            variant="body1"
-            className={classes.marginTop}
           >
-            {externalTestScenario?.description || ''}
-          </Typography>
+            <Typography
+              color="textSecondary"
+              component="p"
+              variant="body1"
+              className={classes.marginTop}
+            >
+              {externalTestScenario?.description || ''}
+            </Typography>
+            <IngestionPayloadMenu scenarioId={scenarioId} projectId={projectId}/>
+          </SectionHeader>
         </Grid>
         {externalTestScenario?.test_runs?.length > 0 && (
           <Grid item xs={12}>
