@@ -39,30 +39,28 @@ interactions:
     uri: http://localhost:8080/v1alpha1/graphql
   response:
     body:
-      string: !!binary |
-        H4sIAAAAAAAEA61UTY+bMBT8K8inVlonkJAEctrjHnuvIusZG5YGMPJHV1HEf+8zkKVJWKRKvYHt
-        N+OZN35XIsACOV6JlcYyo5zOJDn+vJLhk9lLi/9Ey1aZ0ip9IS+k1eqXzKyvckbqH8Ov6cv8AisF
-        lhzyCIAfgMo0jmi8hw3l+y3QHd8kPAlBbJOYdKfu5W9whGyg9oyuxZtJEdwxO13hVlHa11plZ15a
-        7rKztCuli6M/uLYfaoXbeMlMNXlZOA22VM0oA1VVrmAjQ6VAMC/bELzE/xWFgL2hmZaArpFj46qq
-        OyENaNRnJS55k2evw8R4bZQhZA6usuw3VM7bEoW+AR7kJoN6taOkW2HwzXxHUcGXDFjfunYGfxc+
-        E+iJwLfXrI1Ed8UiQX9wBj8KZwjcA8Ezcq0an76yKf7RnFpM2BNIcDNqkalssE9o/IyMHa7dd6Eu
-        Z4k+MZa68a6Mb+Jjr5843iaKvmQJMy8rOUTkGXhK/qrtH/RdnvKJxYMEfbaWqKYnyriGJnuf0VKD
-        8aF/dI1PXBNKMKIscfb5Yi0Omw+lzz3yo31zUWvWMDEOYR7r/eP0C+xzEOD77AdZKngSJXlGeSxT
-        GkdiQyHkO3oIE0iyNEpFfMBBhtKGQcj4hbVnPx378s0eJB7fUkjlDsvzlCZJGNM0P8hwn6ebLQ8x
-        hvcDC6fDqev+AL1PBKmeBQAA
+      string: '{"data":{"test_source":[{"source_type":"repository","project":{"userProjects":[{"user_id":"7f1aab7a-e941-46a2-b63a-5b28b80ad384"}]},"repository":{"name":"asdasd","url":"git@mockbitbucket.org:repo/k.git","configuration_type":{"slug_name":"load_tests"},"project":{"userProjects":[{"user_id":"7f1aab7a-e941-46a2-b63a-5b28b80ad384"}]}},"test_creator":null}],"parameter":[{"slug_name":"load_tests_duration","default_value":"10","param_name":"-t","name":"duration
+        (s)"}, {"slug_name":"load_tests_rampup","default_value":"500","param_name":"-r","name":"users/second"},
+        {"slug_name":"load_tests_users","default_value":"1000","param_name":"-u","name":"users"},
+        {"slug_name":"monitoring_duration","default_value":"10","param_name":"-md","name":"monitoring
+        duration"}, {"slug_name":"monitoring_interval","default_value":"5","param_name":"-mi","name":"monitoring
+        interval"}, {"slug_name":"load_tests_host","default_value":"","param_name":"-H","name":"host"},
+        {"slug_name":"load_tests_file_name","default_value":"load_tests.py","param_name":"-f","name":"file
+        name"}, {"slug_name":"load_tests_repository_branch","default_value":"master","param_name":"-b","name":"repository
+        branch"}, {"slug_name":"load_tests_users_per_worker","default_value":"1000","param_name":"n/a","name":"users/worker"}],"user_project":[{"id":"0282ed4f-0288-45c8-ba9d-fcb9111ce457"}],"project_by_pk":{"id":"26ae0b53-a9e5-41f9-8804-9f7e06f923b0"},"configuration":[]}}'
     headers:
-      Content-Encoding:
-      - gzip
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Mon, 28 Nov 2022 08:01:52 GMT
+      - Fri, 02 Dec 2022 14:53:21 GMT
       Server:
       - Warp/3.3.19
       Transfer-Encoding:
       - chunked
+      content-length:
+      - '1424'
       x-request-id:
-      - 4d8cb429-fbd1-49a7-b006-7c6c2e602626
+      - 37b78bd2-e030-4ac3-97a6-9593d1097a0a
     status:
       code: 200
       message: OK
@@ -70,7 +68,7 @@ interactions:
     body: '{"query": "mutation ($data: [configuration_insert_input!]!) {\n  insert_configuration(objects:
       $data) {\n    returning {\n      id\n      name\n      type_slug\n      description\n      project_id\n      test_source_id\n      has_pre_test\n      has_post_test\n      has_load_tests\n      configuration_parameters
       {\n        parameter_slug\n        value\n      }\n      configuration_envvars
-      {\n        name\n        value\n      }\n      configuration_monitorings {\n        query\n        chart_type\n      }\n    }\n  }\n}\n",
+      {\n        name\n        value\n      }\n      configuration_monitorings {\n        query\n        chart_type\n        unit\n      }\n    }\n  }\n}\n",
       "variables": {"data": {"name": "test config 12345", "project_id": "26ae0b53-a9e5-41f9-8804-9f7e06f923b0",
       "has_pre_test": false, "has_post_test": false, "has_load_tests": true, "created_by_id":
       "7f1aab7a-e941-46a2-b63a-5b28b80ad384", "type_slug": "load_tests", "configuration_envvars":
@@ -90,7 +88,7 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '1463'
+      - '1477'
       Content-Type:
       - application/json
       User-Agent:
@@ -105,28 +103,24 @@ interactions:
     uri: http://localhost:8080/v1alpha1/graphql
   response:
     body:
-      string: !!binary |
-        H4sIAAAAAAAEA5VT7W6DMAx8FZTfhaVQWuBVpioyYNpsNIny0amaePc5dFvZJm3dP2L7zuezeWU9
-        eGDNK5PKofWi02qQh2DBS61i3KIPVkl1YEmTPFJdzxq2q3lbVFtIyzXydDPQV73t27TMoYBu11Y5
-        VmzFFJyQqj06n1yJk3VebEpK+YtB4cZwoPyooRexyFGiR9dZaa7tVRjHFTNWP2Hnxdw63wLytixS
-        qLFMN+uhTquKb9J62CHfDnVetDzyE51wOtgO/4U7ghPG4iyHNQOMDldsDmoijKxfogvpjbeBar8Y
-        KAxY8sCjdawh8z6fP0cXR2pAws8whmja0XvjmoeH2DL1YA/osx7PWatHn0EH0unBZ1KzaZX8Ttx/
-        bPNGXvC/YSTcBLNQVPI7UIGuKK7xY4w1vwc1yBHFfC035M3azFzukItGO+m1vYjWguqOCxEncLSC
-        vzlm8cKgFS/aPhPipuY6x/77flGdz/C+3MW1U2yBjSukyNWS6QfHSauom36xeCT7aT9N0xto/CgM
-        mAMAAA==
+      string: '{"data":{"insert_configuration":{"returning" : [{"id":"80262684-90a6-4643-bbf1-53c67b8426fb","name":"test
+        config 12345","type_slug":"load_tests","description":null,"project_id":"26ae0b53-a9e5-41f9-8804-9f7e06f923b0","test_source_id":"26ae0b53-a9e5-41f9-8804-9f7e06f923b0","has_pre_test":false,"has_post_test":false,"has_load_tests":true,"configuration_parameters":[{"parameter_slug":"load_tests_host","value":"https://test-target.dev.bolt.acaisoft.io"},
+        {"parameter_slug":"load_tests_duration","value":"30"}, {"parameter_slug":"load_tests_rampup","value":"500"},
+        {"parameter_slug":"load_tests_users","value":"1000"}, {"parameter_slug":"load_tests_file_name","value":"load_tests.py"},
+        {"parameter_slug":"load_tests_repository_branch","value":"master"}, {"parameter_slug":"load_tests_users_per_worker","value":"1000"}],"configuration_envvars":[{"name":"testvar","value":"testvarvalue"}],"configuration_monitorings":[]}]}}}'
     headers:
-      Content-Encoding:
-      - gzip
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Mon, 28 Nov 2022 08:01:52 GMT
+      - Fri, 02 Dec 2022 14:53:21 GMT
       Server:
       - Warp/3.3.19
       Transfer-Encoding:
       - chunked
+      content-length:
+      - '920'
       x-request-id:
-      - 771c7f36-d512-4b74-82a4-807ddf71a9c7
+      - bc3b1eb3-a3ee-403e-b3cb-f4aff7168539
     status:
       code: 200
       message: OK
