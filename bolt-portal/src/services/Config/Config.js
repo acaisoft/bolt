@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { HASURA_API_URL } from "utils/values";
+import { HASURA_API_URL, HASURA_WS_URL } from "utils/values";
 
 export class Config {
   constructor() {
@@ -33,7 +33,7 @@ export class Config {
       clientId: 'bolt-portal',
     }
     this.hasura = {
-      wsUri: process.env.REACT_APP_HASURA_WS_URL || 'ws://localhost:8080/v1alpha1/graphql',
+      wsUri: process.env.REACT_APP_HASURA_WS_URL || HASURA_WS_URL || 'ws://localhost:8080/v1alpha1/graphql',
       apiUri: process.env.REACT_APP_HASURA_API_URL ||
         HASURA_API_URL ||
         'http://localhost:8080/v1alpha1/graphql',
