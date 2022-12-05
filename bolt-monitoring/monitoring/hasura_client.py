@@ -65,12 +65,14 @@ class HasuraClient(object):
         if hasattr(result, "errors") and result.errors:
             logger.error(f"{message}: {result.errors[0]['message']}")
 
-    def get_prometheus_url_and_queries(self):
+    def get_configuration(self):
         query = gql("""
             query ($execution_id: uuid!) {
                 execution_by_pk(id: $execution_id) {
                     configuration {
                         prometheus_url
+                        prometheus_user
+                        prometheus_password
                         configuration_monitorings {
                             query
                             id   
@@ -82,8 +84,7 @@ class HasuraClient(object):
         result = self.gql_client.transport.execute(query, variable_values={"execution_id": EXECUTION_ID}) or {}
         self.log_error(result, message="Fetch queries failed")
         if result.data:
-            configuration = result.formatted['data']["execution_by_pk"]["configuration"]
-            return configuration['prometheus_url'], configuration["configuration_monitorings"]
+            return result.formatted['data']["execution_by_pk"]["configuration"]
         raise Exception(result.errors)
 
     def insert_metrics(self, data):

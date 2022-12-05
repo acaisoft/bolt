@@ -31,6 +31,7 @@ export function useConfigurationSubmit({
   configurationId,
   projectId,
   isMonitoring,
+  isPrometheusCredentialForm,
   preparePayload,
   onSubmit,
 }) {
@@ -51,6 +52,7 @@ export function useConfigurationSubmit({
         configurationId,
         projectId,
         isMonitoring,
+        isPrometheusCredentialForm,
       })
       const { errorMessage } = await submitMutation({ variables })
       onSubmit({ values, errorMessage })
@@ -63,6 +65,7 @@ export function useConfigurationSubmit({
       preparePayload,
       onSubmit,
       isMonitoring,
+      isPrometheusCredentialForm,
     ]
   )
 

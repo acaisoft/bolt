@@ -49,6 +49,8 @@ class Argo:
         self.IMAGE_REPORT_BUILDER = app_config.get(const.IMAGE_REPORT_BUILDER, const.DEFAULT_IMAGE_REPORT_BUILDER)
         self.IMAGE_METRIC_WATCHER = app_config.get(const.IMAGE_METRIC_WATCHER, const.DEFAULT_IMAGE_METRIC_WATCHER)
         self.STAT_GATHER_INTERVAL = const.STAT_GATHER_INTERVAL
+        self.BOLT_WS_URL = app_config.get(const.BOLT_WS_URL)
+        self.FERNET_KEY = app_config.get(const.FERNET_KEY)
 
     def create_argo_tests_workflow(self, workflow: Workflow) -> Dict[str, Any]:
         """
@@ -359,7 +361,9 @@ class Argo:
                             *self._map_envs(workflow.job_metric_watcher.env_vars),
                             {"name": "EXECUTION_ID", "value": workflow.execution_id},
                             {"name": "BOLT_GRAPHQL_URL", "value": self.HASURA_GQL},
-                            {"name": "BOLT_HASURA_TOKEN", "value": workflow.auth_token}
+                            {"name": "BOLT_HASURA_TOKEN", "value": workflow.auth_token},
+                            {"name": "BOLT_WS_URL", "value": self.BOLT_WS_URL},
+                            {"name": "FERNET_KEY", "value": self.FERNET_KEY}
                         ],
                         "resources": self.CONTAINER_RESOURCES["master"],
                     },

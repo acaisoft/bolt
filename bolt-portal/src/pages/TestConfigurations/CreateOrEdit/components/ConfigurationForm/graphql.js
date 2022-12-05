@@ -29,6 +29,8 @@ export const GET_CONFIGURATION = gql`
       description
       performed
       prometheus_url
+      prometheus_password
+      prometheus_user
       configuration_parameters {
         parameter_slug
         value
@@ -66,6 +68,8 @@ export const ADD_CONFIGURATION_MUTATION = gql`
     $has_post_test: Boolean
     $has_load_tests: Boolean
     $prometheus_url: String
+    $prometheus_password: String
+    $prometheus_user: String
     $configuration_envvars: [ConfigurationEnvVarInput]
     $configuration_monitorings: [ConfigurationMonitoringInput]
   ) {
@@ -80,6 +84,8 @@ export const ADD_CONFIGURATION_MUTATION = gql`
       has_post_test: $has_post_test
       has_load_tests: $has_load_tests
       prometheus_url: $prometheus_url
+      prometheus_password: $prometheus_password
+      prometheus_user: $prometheus_user
       configuration_envvars: $configuration_envvars
       configuration_monitorings: $configuration_monitorings
     ) {
@@ -101,6 +107,8 @@ export const EDIT_CONFIGURATION_MUTATION = gql`
     $has_post_test: Boolean
     $has_load_tests: Boolean
     $prometheus_url: String
+    $prometheus_password: String
+    $prometheus_user: String
     $configuration_envvars: [ConfigurationEnvVarInput]
     $configuration_monitorings: [ConfigurationMonitoringInput]
   ) {
@@ -115,6 +123,8 @@ export const EDIT_CONFIGURATION_MUTATION = gql`
       has_post_test: $has_post_test
       has_load_tests: $has_load_tests
       prometheus_url: $prometheus_url
+      prometheus_password: $prometheus_password
+      prometheus_user: $prometheus_user
       configuration_envvars: $configuration_envvars
       configuration_monitorings: $configuration_monitorings
     ) {

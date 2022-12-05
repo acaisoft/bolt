@@ -3,3 +3,4 @@ graphql-core==3.2.1
 requests_toolbelt==0.9.1
 requests==2.28.1
 websockets==10.4
+cryptography==2.5

@@ -17,12 +17,14 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+import os
 import graphene
 
 from flask import current_app
 
 from apps.bolt_api.app.appgraph.configuration import types
 from apps.bolt_api.app.appgraph.configuration import utils
+from apps.bolt_api.app.utils.hasher import encrypt_prometheus_password
 from services import const, gql_util
 from services import validators
 from services.hasura import hce
@@ -73,6 +75,14 @@ class UpdateValidate(graphene.Mutation):
             required=False,
             description='Endpoint for metrics fetching'
         )
+        prometheus_user = graphene.String(
+            required=False,
+            description='User for metric endpoint'
+        )
+        prometheus_password = graphene.String(
+            required=False,
+            description='Password for metric endpoint'
+        )
 
     Output = gql_util.ValidationInterface
 
@@ -80,7 +90,8 @@ class UpdateValidate(graphene.Mutation):
     def validate(
             info, id, name=None, type_slug=None, test_source_id=None, configuration_parameters=None,
             configuration_envvars=None, has_pre_test=None, has_post_test=None, has_load_tests=None,
-            description=None, configuration_monitorings=None, prometheus_url=None
+            description=None, configuration_monitorings=None, prometheus_url=None, prometheus_user=None,
+            prometheus_password=None
     ):
 
         role, user_id = gql_util.get_request_role_userid(
@@ -217,6 +228,10 @@ class UpdateValidate(graphene.Mutation):
             query_data['type_slug'] = type_slug
 
         query_data['prometheus_url'] = prometheus_url
+        query_data['prometheus_password'] = encrypt_prometheus_password(
+            prometheus_password, current_app.config.get("FERNET_KEY")
+        ) if prometheus_password else None
+        query_data['prometheus_user'] = prometheus_user
         query_data['configuration_monitorings_to_update'] = list(
             map(lambda x: x['id'], repo.get('monitoring', {})[0].get('configuration_monitorings'))
         )
@@ -285,11 +300,13 @@ class UpdateValidate(graphene.Mutation):
 
     def mutate(self, info, id, name=None, type_slug=None, test_source_id=None, configuration_parameters=None,
                configuration_envvars=None, has_pre_test=None, has_post_test=None, has_load_tests=None,
-               description=None, configuration_monitorings=None, prometheus_url=None):
+               description=None, configuration_monitorings=None, prometheus_url=None, prometheus_password=None,
+               prometheus_user=None
+            ):
         UpdateValidate.validate(
             info, id, name, type_slug, test_source_id, configuration_parameters, configuration_envvars,
             has_pre_test, has_post_test, has_load_tests, description, configuration_monitorings,
-            prometheus_url
+            prometheus_url, prometheus_password, prometheus_user
         )
         return gql_util.ValidationResponse(ok=True)
 
@@ -302,11 +319,14 @@ class Update(UpdateValidate):
     def mutate(
             self, info, id, name=None, type_slug=None, test_source_id=None, configuration_parameters=None,
             configuration_envvars=None, has_pre_test=None, has_post_test=None, has_load_tests=None,
-            description=None, configuration_monitorings=None, prometheus_url=None
+            description=None, configuration_monitorings=None, prometheus_url=None, prometheus_user=None,
+            prometheus_password=None
+
     ):
         query_params = UpdateValidate.validate(
             info, id, name, type_slug, test_source_id, configuration_parameters, configuration_envvars,
-            has_pre_test, has_post_test, has_load_tests, description, configuration_monitorings, prometheus_url
+            has_pre_test, has_post_test, has_load_tests, description, configuration_monitorings, prometheus_url,
+            prometheus_user, prometheus_password
         )
 
         params = query_params.pop('configuration_parameters', {'data': []})['data']

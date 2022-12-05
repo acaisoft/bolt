@@ -16,13 +16,14 @@
 # COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
+import os
 import graphene
 
 from flask import current_app
 
 from apps.bolt_api.app.appgraph.configuration import types
 from apps.bolt_api.app.appgraph.configuration import utils
+from apps.bolt_api.app.utils.hasher import encrypt_prometheus_password
 from services import const, gql_util
 from services import validators
 from services.hasura import hce
@@ -71,6 +72,14 @@ class CreateValidate(graphene.Mutation):
         prometheus_url = graphene.String(
             required=False,
             description='Endpoint for metrics fetching')
+        prometheus_user = graphene.String(
+            required=False,
+            description='User for metric endpoint'
+        )
+        prometheus_password = graphene.String(
+            required=False,
+            description='Password for metric endpoint'
+        )
 
     Output = gql_util.ValidationInterface
 
@@ -79,7 +88,8 @@ class CreateValidate(graphene.Mutation):
             info, name, type_slug, project_id,
             test_source_id=None, configuration_parameters=None, configuration_envvars=None,
             has_pre_test=False, has_post_test=False, has_load_tests=False, description=None,
-            configuration_monitorings=None, prometheus_url=None
+            configuration_monitorings=None, prometheus_url=None, prometheus_user=None,
+            prometheus_password=None
     ):
         project_id = str(project_id)
         assert type_slug in const.TESTTYPE_CHOICE, \
@@ -193,6 +203,11 @@ class CreateValidate(graphene.Mutation):
         if prometheus_url is not None:
             query_data['prometheus_url'] = prometheus_url
 
+        query_data['prometheus_password'] = encrypt_prometheus_password(
+            prometheus_password, current_app.config.get("FERNET_KEY")
+        ) if prometheus_password else None
+        query_data['prometheus_user'] = prometheus_user
+
         if configuration_envvars:
             for rp in configuration_envvars:
                 assert rp['name'].replace('_', '').isalnum(), \
@@ -224,7 +239,7 @@ class CreateValidate(graphene.Mutation):
                 query_data['configuration_monitorings']['data'].append({
                     'query': item['query'],
                     'chart_type': item['chart_type'],
-                    'unit': item['unit'],
+                    'unit': item.get('unit'),
                 })
 
         if test_source_id:
@@ -256,11 +271,12 @@ class CreateValidate(graphene.Mutation):
     def mutate(
             self, info, name, type_slug, project_id, test_source_id=None, configuration_parameters=None,
             configuration_envvars=None, has_pre_test=False, has_post_test=False, has_load_tests=False,
-            description=None, configuration_monitorings=None, prometheus_url=None):
+            description=None, configuration_monitorings=None, prometheus_url=None, prometheus_user=None,
+            prometheus_password=None):
         CreateValidate.validate(
             info, name, type_slug, project_id, test_source_id, configuration_parameters,
             configuration_envvars, has_pre_test, has_post_test, has_load_tests, description,
-            configuration_monitorings, prometheus_url
+            configuration_monitorings, prometheus_url, prometheus_user, prometheus_password
         )
         return gql_util.ValidationResponse(ok=True)
 
@@ -273,11 +289,12 @@ class Create(CreateValidate):
     def mutate(
             self, info, name, type_slug, project_id, test_source_id=None, configuration_parameters=None,
             configuration_envvars=None, has_pre_test=False, has_post_test=False, has_load_tests=False,
-            description=None, configuration_monitorings=None, prometheus_url=None):
+            description=None, configuration_monitorings=None, prometheus_url=None, prometheus_user=None,
+            prometheus_password=None):
         query_params = CreateValidate.validate(
             info, name, type_slug, project_id, test_source_id, configuration_parameters, configuration_envvars,
             has_pre_test, has_post_test, has_load_tests, description, configuration_monitorings,
-            prometheus_url
+            prometheus_url, prometheus_user, prometheus_password
         )
 
         query = '''mutation ($data:[configuration_insert_input!]!) {

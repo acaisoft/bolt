@@ -9,8 +9,10 @@ from exceptions import (
 from hasura_client import HasuraClient
 from monitoring_watcher import MonitoringWatcher
 from prometheus_client import PrometheusClient
+from utils import decrypt_prometheus_password
 
 HASURA_TOKEN = os.getenv("BOLT_HASURA_TOKEN")
+FERNET_KEY = os.getenv("FERNET_KEY")
 MONITORING_INTERVAL = int(os.environ.get("MONITORING_INTERVAL", 2))
 WATCHER = None
 
@@ -21,15 +23,19 @@ if __name__ == "__main__":
         raise EnvironmentError(f"{diff} variables are not provided")
 
     hasura_client = HasuraClient()
-    prometheus_url, queries_resp = hasura_client.get_prometheus_url_and_queries()
-    status_generator = hasura_client.subscribe_execution_status()
-    if not prometheus_url:
+    configuration = hasura_client.get_configuration()
+    if not (prometheus_url := configuration.get('prometheus_url')):
         raise PrometheusUrlException()
-    if not queries_resp:
+    if not (queries_resp := configuration.get('configuration_monitorings')):
         raise QueriesException()
+    status_generator = hasura_client.subscribe_execution_status()
     queries = list(map(lambda x: x["query"], queries_resp))
     concatenated_queries = "|".join(queries)
-    prometheus_client = PrometheusClient(prometheus_url)
+    prometheus_client = PrometheusClient(
+        prometheus_url,
+        configuration.get('prometheus_user'),
+        decrypt_prometheus_password(configuration.get('prometheus_password'), FERNET_KEY),
+    )
     metrics_object_list = []
 
     def job():
@@ -51,7 +57,7 @@ if __name__ == "__main__":
     while True:
         try:
             status = next(status_generator)['execution'][0]['status']
-            if status in [ExecutionStatuses.TERMINATED.value, ExecutionStatuses.FINNISHED.value]:
+            if status in [ExecutionStatuses.TERMINATED.value, ExecutionStatuses.FINISHED.value]:
                 WATCHER.stop()
                 break
 

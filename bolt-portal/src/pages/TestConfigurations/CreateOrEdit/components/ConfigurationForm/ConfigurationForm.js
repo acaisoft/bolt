@@ -60,6 +60,7 @@ export function ConfigurationForm(
 
   const [isExternalScenario, setIsExternalScenario] = useState(false)
   const [isMonitoring, setIsMonitoring] = useState(false)
+  const [isPrometheusCredentialForm, setIsPrometheusCredentialForm] = useState(false)
 
   const { fields, loading: fieldsLoading } = useFormSchema({ projectId })
   const { fields: externalFields, loading: externalFieldsLoading } =
@@ -70,6 +71,7 @@ export function ConfigurationForm(
     projectId,
     mode,
     isMonitoring,
+    isPrometheusCredentialForm,
     preparePayload: isExternalScenario ? prepareExternalPayload : preparePayload,
     onSubmit,
   })
@@ -151,6 +153,9 @@ export function ConfigurationForm(
               key="monitoringFields"
               setIsMonitoring={setIsMonitoring}
               isMonitoring={isMonitoring}
+              isPrometheusCredentialForm={isPrometheusCredentialForm}
+              setIsPrometheusCredentialForm={setIsPrometheusCredentialForm}
+              configuration={configuration}
             />
           )}
         </form>

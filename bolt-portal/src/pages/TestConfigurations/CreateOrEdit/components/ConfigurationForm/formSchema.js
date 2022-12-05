@@ -343,7 +343,7 @@ function prepareInitialValues(data) {
 
 function preparePayload(
   formValues,
-  { mode, configurationId, projectId, isMonitoring }
+  { mode, configurationId, projectId, isMonitoring, isPrometheusCredentialForm }
 ) {
   if (!formValues) {
     return {}
@@ -359,6 +359,8 @@ function preparePayload(
     test_source,
     configuration_envvars,
     prometheus_url,
+    prometheus_password,
+    prometheus_user,
   } = formValues
 
   const loadTestsSourceParams = Object.entries(test_source)
@@ -383,7 +385,6 @@ function preparePayload(
   } else {
     variables.id = configurationId
   }
-
   Object.assign(variables, {
     type_slug: configuration_type,
     has_pre_test,
@@ -401,7 +402,7 @@ function preparePayload(
       // Skip parameters for not checked scenario parts
       .filter(
         ({ parameter_slug }) =>
-          (has_load_tests && parameter_slug.includes('load_tests'))
+          has_load_tests && parameter_slug.includes('load_tests')
       ),
     test_source_id: test_source[test_source_type],
   })
@@ -411,6 +412,11 @@ function preparePayload(
     ...(isMonitoring && {
       configuration_monitorings: formValues.configuration_monitorings,
     }),
+    ...(isMonitoring &&
+      isPrometheusCredentialForm && {
+        prometheus_password,
+        prometheus_user,
+      }),
   }
 }
 

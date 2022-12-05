@@ -3,3 +3,7 @@ CREATE TABLE "public"."monitoring_metric" ("id" uuid NOT NULL DEFAULT gen_random
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 alter table "public"."configuration" add column "prometheus_url" text
  null;
+alter table "public"."configuration" add column "prometheus_password" text
+ null;
+alter table "public"."configuration" add column "prometheus_user" text
+ null;

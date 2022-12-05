@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   Grid,
   MenuItem,
@@ -40,8 +40,22 @@ import {
   validatePrometheusUrl,
 } from 'utils/forms'
 
-function MonitoringFields({ isMonitoring, setIsMonitoring }) {
+function MonitoringFields({
+  isMonitoring,
+  setIsMonitoring,
+  isPrometheusCredentialForm,
+  setIsPrometheusCredentialForm,
+
+  configuration: { prometheus_user = null, prometheus_password = null } = {},
+}) {
   const { mutators } = useForm()
+  useEffect(() => {
+    if (prometheus_user && prometheus_password) {
+      setIsPrometheusCredentialForm(false)
+    } else {
+      setIsPrometheusCredentialForm(true)
+    }
+  }, [])
 
   const chartTypes = [{ value: 'line_chart', label: 'Line Chart' }]
   return (
@@ -58,7 +72,7 @@ function MonitoringFields({ isMonitoring, setIsMonitoring }) {
       {isMonitoring && (
         <>
           <Grid container spacing={4}>
-            <Grid item xs={5}>
+            <Grid item xs={4}>
               <FormField
                 data-testid="prometheus_url"
                 id="prometheus_url"
@@ -72,13 +86,54 @@ function MonitoringFields({ isMonitoring, setIsMonitoring }) {
                 )}
               />
             </Grid>
+            <Grid item xs={4}>
+              {prometheus_user && prometheus_password && (
+                <Button
+                  data-testid="add-envvar-button"
+                  onClick={() =>
+                    setIsPrometheusCredentialForm(!isPrometheusCredentialForm)
+                  }
+                  variant="contained"
+                  color="secondary"
+                >
+                  Set new credentials
+                </Button>
+              )}
+            </Grid>
           </Grid>
-          <FieldArray name="configuration_monitorings">
+          {isPrometheusCredentialForm && (
+            <Grid container spacing={4}>
+              <Grid item xs={4}>
+                <FormField
+                  data-testid="prometheus_user"
+                  id="prometheus_user"
+                  fontSize="16px"
+                  name="prometheus_user"
+                  field={{ inputProps: { label: 'Prometheus User' } }}
+                  variant="filled"
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={4}>
+                <FormField
+                  data-testid="prometheus_password"
+                  id="prometheus_password"
+                  fontSize="16px"
+                  name="prometheus_password"
+                  field={{ inputProps: { label: 'Prometheus Password' } }}
+                  variant="filled"
+                  fullWidth
+                  type="password"
+                />
+              </Grid>
+            </Grid>
+          )}
+          <FieldArray name="configuration_monitorings" key="field-array">
             {({ fields: arrayFields }) => (
-              <Grid container spacing={4}>
+              <Grid container spacing={4} key="yyy">
                 {arrayFields.map((name, index) => (
-                  <>
-                    <Grid item xs={5} key={name}>
+                  <React.Fragment>
+                    <Grid item xs={5}>
                       <FormField
                         data-testid="query"
                         id="query"
@@ -130,7 +185,7 @@ function MonitoringFields({ isMonitoring, setIsMonitoring }) {
                         <Delete />
                       </IconButton>
                     </Grid>
-                  </>
+                  </React.Fragment>
                 ))}
                 <Grid item xs={12}>
                   <Button
