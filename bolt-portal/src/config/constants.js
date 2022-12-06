@@ -63,4 +63,4 @@ export const AuthServiceName = {
 }
 
 export const isAuth0AuthService =
-  AuthServiceName.AUTH0 in [process.env.REACT_APP_AUTH_SERVICE, AUTH_SERVICE]
+  [process.env.REACT_APP_AUTH_SERVICE, AUTH_SERVICE].includes(AuthServiceName.AUTH0)

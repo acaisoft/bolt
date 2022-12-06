@@ -42,6 +42,7 @@ export function AuthProvider({ children }) {
   if (authService === AuthServiceName.BOLT)
     return <AuthBoltProvider>{children}</AuthBoltProvider>
   if (authService === AuthServiceName.AUTH0) {
+    console.log(AUTH0_DOMAIN, AUTH0_CLIENT_ID, AUTH0_AUDIENCE, window.location.origin)
     return (
       <Auth0Provider
         domain={process.env.REACT_APP_AUTH0_DOMAIN || AUTH0_DOMAIN}
