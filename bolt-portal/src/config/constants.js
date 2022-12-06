@@ -19,6 +19,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import { AUTH_SERVICE } from "utils/values";
+
 export const TestSourceType = {
   REPOSITORY: 'repository',
   TEST_CREATOR: 'test_creator',
@@ -61,4 +63,4 @@ export const AuthServiceName = {
 }
 
 export const isAuth0AuthService =
-  process.env.REACT_APP_AUTH_SERVICE === AuthServiceName.AUTH0
+  AuthServiceName.AUTH0 in [process.env.REACT_APP_AUTH_SERVICE, AUTH_SERVICE]
