@@ -61,11 +61,14 @@ def get_metrics_data(metrics_data):
 
 
 def metrics_in_thread(metric, container):
+    def get_metric_name(pt, scheme):
+        return ', '.join((': '.join([e, pt['metric'][e]]) for e in scheme)).upper()
+
     full = metric['monitoring_metrics'][0]['metric_value']
     full_length = len(full)
     for point in metric['monitoring_metrics'][1:]:
         if len(point['metric_value']) > full_length:
-            full = point
+            full = point['metric_value']
             full_length = len(point)
     # finding the key fields
     candidates = list(full[0]['metric'].items())
@@ -75,16 +78,23 @@ def metrics_in_thread(metric, container):
             if key not in candidates:
                 positive.append(key)
     positive = list(dict.fromkeys(item[0] for item in positive))
+    full_metrics = [get_metric_name(p, positive) for p in full]
     frame = {'timestamp': [], 'names': [], 'query': metric['query'], 'unit': metric['unit']}
     # building the frame
     for point in metric['monitoring_metrics']:
         frame['timestamp'].append(get_hms(get_epoch(point['timestamp'])))
         for combined in point['metric_value']:
-            name = ', '.join((': '.join([e, combined['metric'][e]]) for e in positive)).upper()
+            name = get_metric_name(combined, positive)
             if name not in frame:
                 frame['names'].append(name)
                 frame[name] = []
             frame[name].append(float(combined['value'][1]))
+        diff = set(full_metrics) - set([get_metric_name(p, positive) for p in point['metric_value']])
+        for name in list(diff):
+            if name not in frame:
+                frame['names'].append(name)
+                frame[name] = []
+            frame[name].append(None)
     container.append(frame)
 
 
