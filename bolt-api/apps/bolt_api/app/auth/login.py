@@ -15,9 +15,10 @@ bp = Blueprint('auth-login', __name__)
 
 @bp.errorhandler(requests.exceptions.HTTPError)
 def http_error_handler(ex: requests.exceptions.HTTPError):
-    # TODO format error response message, now returns string with full auth0 err message
+    # Extracting error message from the exception
+    error_message = ex.response.json().get('error_description', 'Unknown error')
     return current_app.response_class(
-        response=json.dumps({"errors": ex.response.text}),
+        response=json.dumps({"errors": error_message}),
         status=400,
         mimetype="application/json",
     )
@@ -25,9 +26,9 @@ def http_error_handler(ex: requests.exceptions.HTTPError):
 
 @bp.errorhandler(ValueError)
 def value_error_handler(ex: ValueError):
-    # TODO format error response message, now returns string with full auth0 err message
+    # Format error response message, now returns a dictionary with error message
     return current_app.response_class(
-        response=json.dumps({"errors": str(ex)}),
+        response=json.dumps({"errors": {"message": str(ex)}}),
         status=400,
         mimetype="application/json",
     )
@@ -82,4 +83,3 @@ def process_user():
     project_id = request.get_json().get('project_id')
     ProcessBoltUser(email, project_id, current_app.config).process_user()
     return jsonify({'messages': f'User: {email} successfully assigned to project {project_id}'})
-
