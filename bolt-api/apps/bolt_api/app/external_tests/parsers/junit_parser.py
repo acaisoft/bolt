@@ -44,15 +44,14 @@ class JunitParser(BaseXMLParser):
     def get_group(self, test_case):
         group_name = test_case.attrib.get("classname").split(".")[-1]
         if not self.existing_groups_dict.get(group_name):
-            if group_name not in self.groups_objects.keys():
+            group_object = self.groups_objects.get(group_name)
+            if group_object is None:
                 group_object = {
                     "id": str(uuid.uuid4()),
                     "name": group_name
                 }
                 self.groups_objects[group_name] = group_object
-                return group_object
-            else:
-                return self.groups_objects.get(group_name)
+            return group_object
         else:
             return self.existing_groups_dict[group_name]
 
