@@ -175,7 +175,7 @@ class ProcessBoltUser:
             hce(self.hasura_config, query, {"data": {"user_id": user_id, "project_id": self.project_id}})
         except Exception as err:
             logger.error(err)
-            raise ValueError(err)
+            raise ConfigurationError("Error while assigning user to project")
 
     def process_user(self):
         if not all(self.hasura_config.values()):
