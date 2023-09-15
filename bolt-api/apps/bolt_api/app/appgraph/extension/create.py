@@ -47,7 +47,7 @@ class CreateValidate(graphene.Mutation):
 
         assert type_slug in const.EXTENSION_CHOICE, f'invalid choice of type_slug (valid choices: {const.EXTENSION_CHOICE})'
 
-        role, user_id = gql_util.get_request_role_userid(info, (const.ROLE_ADMIN, const.ROLE_TENANT_ADMIN, const.ROLE_MANAGER))
+        _, user_id = gql_util.get_request_role_userid(info, (const.ROLE_ADMIN, const.ROLE_TENANT_ADMIN, const.ROLE_MANAGER))
 
         resp = hce(current_app.config, '''query ($conf_id:uuid!, $user_id:String!) {
             configuration(where:{
@@ -118,6 +118,6 @@ class Create(CreateValidate):
         }'''
 
         resp = hce(current_app.config, query, variable_values={'data': query_params})
-        assert resp['insert_configuration_extension'], f'cannot save extension configuration ({str(resp)})'
+        assert resp['insert_configuration_extension'], 'cannot save extension configuration ({})'.format(str(resp))
 
         return gql_util.OutputValueFromFactory(Create, resp['insert_configuration_extension'])
