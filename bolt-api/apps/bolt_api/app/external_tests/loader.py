@@ -52,6 +52,9 @@ class ExternalTestsLoader:
               insert_custom_field (objects: $custom_fields) {affected_rows}
             }
                 """
-        # TODO add error handling
-        hce(current_app.config, query, variable_values=objects)
+        try:
+            hce(current_app.config, query, variable_values=objects)
+        except Exception as e:
+            logger.error(f"Error occurred while bulk inserting: {str(e)}")
+            raise e
 
