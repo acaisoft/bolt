@@ -1,11 +1,11 @@
-FROM python:3.10.0b3-slim as base
+FROM python:3.10.0b3-slim AS base
 RUN apt-get update &&\
     apt-get install -y curl gcc libjpeg62-turbo-dev zlib1g-dev musl musl-dev libffi-dev openssh-client libjpeg62  \
     libmagic1
 
 RUN pip install --no-cache-dir --upgrade -U pip
 
-FROM base as builder
+FROM base AS builder
 
 RUN mkdir /install
 WORKDIR /install
@@ -20,7 +20,7 @@ RUN pip install --prefix=/install -r /requirements_core.txt
 COPY apps/bolt_api/requirements/upload_processing.txt /requirements_upload_processing.txt
 RUN pip install --prefix=/install -r /requirements_upload_processing.txt
 
-FROM base
+FROM base AS builder
 COPY --from=builder /install /usr/local
 COPY --from=builder /usr/bin/argo /usr/bin/argo
 
