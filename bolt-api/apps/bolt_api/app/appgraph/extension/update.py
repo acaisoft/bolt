@@ -42,7 +42,7 @@ class UpdateValidate(graphene.Mutation):
     def validate(info, id, params):
         obj_id = str(id)
 
-        role, user_id = gql_util.get_request_role_userid(info, (const.ROLE_ADMIN, const.ROLE_TENANT_ADMIN, const.ROLE_MANAGER))
+        _, user_id = gql_util.get_request_role_userid(info, (const.ROLE_ADMIN, const.ROLE_TENANT_ADMIN, const.ROLE_MANAGER))
 
         resp = hce(current_app.config, '''query ($obj_id:uuid!, $user_id:String!) {
             configuration_extension(where:{
@@ -61,7 +61,7 @@ class UpdateValidate(graphene.Mutation):
             'user_id': user_id,
             'obj_id': obj_id,
         })
-        assert resp['configuration_extension'], f'configuration extension not found'
+        assert resp['configuration_extension'], 'configuration extension not found'
 
         validators.validate_single_extension({
             'type': resp['configuration_extension'][0]['type'],
@@ -108,7 +108,7 @@ class Update(UpdateValidate):
         }'''
 
         resp = hce(current_app.config, query, variable_values={'oid': str(id), 'data': query_params})
-        assert resp['insert_extension_params'], f'cannot update parameters ({str(resp)})'
+        assert resp['insert_extension_params'], 'cannot update parameters'
 
         resp = hce(current_app.config, '''query ($oid:uuid!) {
             configuration_extension(where:{id:{ _eq:$oid }}) {
