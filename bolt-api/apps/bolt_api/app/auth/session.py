@@ -22,6 +22,7 @@ def session():
         response.set_cookie('AUTH_TOKEN', expires=0)
         response.set_cookie('APP_URL', expires=0)
 
-    response.headers.add("Access-Control-Allow-Origin", app_url)
+    # Removed user-controlled data from Access-Control-Allow-Origin header
+    response.headers.add("Access-Control-Allow-Origin", "*")
     response.headers.add("Access-Control-Allow-Credentials", "true")
     return response
