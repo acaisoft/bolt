@@ -47,17 +47,17 @@ class GetProjectInvitationToken(graphene.Mutation):
 
         req_role, req_user_id = gql_util.get_request_role_userid(info, (const.ROLE_ADMIN, const.ROLE_TENANT_ADMIN, const.ROLE_MANAGER))
 
-        assert role != const.ROLE_ADMIN, f'cannot register superadmin accounts'
+        assert role != const.ROLE_ADMIN, 'cannot register superadmin accounts'
 
         if req_role == const.ROLE_MANAGER:
             # manager cant allow registration of admins or other managers
             assert role not in (const.ROLE_ADMIN, const.ROLE_TENANT_ADMIN, const.ROLE_MANAGER), \
-                f'manager can only allow registration of non-managerial roles'
+                'manager can only allow registration of non-managerial roles'
 
         if req_role == const.ROLE_TENANT_ADMIN:
             # admins still cannot allow registration of other admins, admins should only be assignable manually
             assert role not in (const.ROLE_ADMIN, const.ROLE_TENANT_ADMIN), \
-                f'admins can not allow registration of admin roles'
+                'admins can not allow registration of admin roles'
 
         projects = hce(current_app.config, '''query ($pid:uuid!, $uid:String!) {
             project(where:{
@@ -69,9 +69,9 @@ class GetProjectInvitationToken(graphene.Mutation):
             'pid': project_id,
             'uid': req_user_id,
         })
-        assert len(projects['project']) == 1, f'invalid project id {project_id}'
+        assert len(projects['project']) == 1, 'invalid project id'
 
-        full_token, short_token = user_management.user_create_registration_token(str(project_id), role, requested_by_uuid=req_user_id)
+        _, short_token = user_management.user_create_registration_token(str(project_id), role, requested_by_uuid=req_user_id)
 
         return gql_util.OutputValueFromFactory(GetProjectInvitationToken, {'returning': [{
             'token': short_token,
@@ -94,7 +94,7 @@ class RegisterUser(graphene.Mutation):
     def mutate(self, info, email, token):
 
         user_id = user_management.user_register(email, token)
-        logger.info(f'successfully registered new user {user_id} for token {token} and email {email}')
+        logger.info('successfully registered new user for token and email')
 
         return gql_util.OutputValueFromFactory(RegisterUser, {'returning': [{
             'success': True,
@@ -114,7 +114,7 @@ class DisableInvitation(graphene.Mutation):
     def mutate(self, info, project_id):
         project_id = str(project_id)
 
-        req_role, req_user_id = gql_util.get_request_role_userid(info, (const.ROLE_ADMIN, const.ROLE_TENANT_ADMIN, const.ROLE_MANAGER))
+        _, req_user_id = gql_util.get_request_role_userid(info, (const.ROLE_ADMIN, const.ROLE_TENANT_ADMIN, const.ROLE_MANAGER))
 
         projects = hce(current_app.config, '''query ($pid:uuid!, $uid:String!) {
             project(where:{
@@ -126,10 +126,10 @@ class DisableInvitation(graphene.Mutation):
             'pid': project_id,
             'uid': req_user_id,
         })
-        assert len(projects['project']) == 1, f'invalid project id {project_id}'
+        assert len(projects['project']) == 1, 'invalid project id'
 
         user_management.disable_registration(project_id)
-        logger.info(f'successfully closed registration for {project_id}')
+        logger.info('successfully closed registration for project')
 
         return gql_util.OutputValueFromFactory(DisableInvitation, {'returning': [{
             'success': True,
