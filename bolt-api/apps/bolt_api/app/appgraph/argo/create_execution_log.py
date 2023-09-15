@@ -41,7 +41,7 @@ class CreateExecutionLog(graphene.Mutation):
 
     @staticmethod
     def validate(argo_id):
-        assert type(argo_id) is str, f'argo_id must be string'
+        assert type(argo_id) is str, 'argo_id must be string'
 
     def mutate(self, info, data, argo_id):
         CreateExecutionLog.validate(argo_id)
