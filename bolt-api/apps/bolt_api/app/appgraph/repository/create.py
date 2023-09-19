@@ -49,7 +49,7 @@ class CreateValidate(graphene.Mutation):
 
     @staticmethod
     def validate(info, name, repository_url, project_id, type_slug):
-        role, user_id = gql_util.get_request_role_userid(info, (const.ROLE_ADMIN, const.ROLE_TENANT_ADMIN, const.ROLE_MANAGER, const.ROLE_TESTER))
+        _, user_id = gql_util.get_request_role_userid(info, (const.ROLE_ADMIN, const.ROLE_TENANT_ADMIN, const.ROLE_MANAGER, const.ROLE_TESTER))
 
         project_id = str(project_id)
 
@@ -84,13 +84,13 @@ class CreateValidate(graphene.Mutation):
             'confType': type_slug,
 
         })
-        assert query.get('project'), f'project does not exist'
+        assert query.get('project'), 'project does not exist'
 
-        assert len(query.get('uniqueName')) == 0, f'repository with this name already exists'
+        assert len(query.get('uniqueName')) == 0, 'repository with this name already exists'
 
-        assert len(query.get('uniqueUrl')) == 0, f'repository with this url already exists'
+        assert len(query.get('uniqueUrl')) == 0, 'repository with this url already exists'
 
-        assert len(query.get('configuration_type', [])) == 1, f'configuration type does not exist'
+        assert len(query.get('configuration_type', [])) == 1, 'configuration type does not exist'
 
         validators.validate_accessibility(current_app.config, repository_url)
 
@@ -143,6 +143,6 @@ class Create(CreateValidate):
             'data': query_params,
             'test_source_params': test_source_params,
         })
-        assert query_response['insert_repository'], f'cannot save repository ({str(query_response)})'
+        assert query_response['insert_repository'], 'cannot save repository'
 
         return gql_util.OutputValueFromFactory(Create, query_response['insert_repository'])
