@@ -30,28 +30,42 @@ class ConfigurationError(OSError):
     ...
 
 
-def configure(app: Flask):
-    # common flask app configuration
+def check_missing_vars(var_names, getter):
+    return [var_name for var_name in var_names if getter(var_name) is None]
+
+
+def configure_logging(app: Flask):
     app.logger.setLevel(logging.DEBUG if app.debug else logging.INFO)
 
+
+def load_config_files(app: Flask):
     conf_file_path = os.environ.get("CONFIG_FILE_PATH", "localhost-config.py")
     app.config.from_pyfile(conf_file_path)
 
     secrets_file_path = os.environ.get("SECRETS_FILE_PATH", "localhost-secrets.py")
     app.config.from_pyfile(secrets_file_path)
 
-    google_service_account = app.config.get("GOOGLE_APPLICATION_CREDENTIALS")
-    if google_service_account:
-        os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = google_service_account
+    return conf_file_path, secrets_file_path
 
-    os.environ["DEBUG_METRICS"] = "1"
+
+def configure_metrics(app: Flask):
+    os.environ["DEBUG_METRICS"] = app.config.get("DEBUG_METRICS", "1")
     metrics = PrometheusMetrics(app, defaults_prefix="bolt_api")
     app.extensions["metrics"] = metrics
 
+
+def configure_sentry(app: Flask):
     sentry_dsn = app.config.get("SENTRY_DSN")
     if sentry_dsn and not app.debug:
         logging.info(f"sentry logging to {sentry_dsn.split('@')[-1]}")
         sentry_sdk.init(sentry_dsn, integrations=[FlaskIntegration()])
+
+
+def configure(app: Flask):
+    configure_logging(app)
+    conf_file_path, secrets_file_path = load_config_files(app)
+    configure_metrics(app)
+    configure_sentry(app)
 
     config_ver = app.config.get("CONFIG_VERSION")
     secrets_ver = app.config.get("SECRETS_VERSION")
@@ -60,23 +74,19 @@ def configure(app: Flask):
 
 
 def validate(app, required_config_vars, required_env_vars):
-    missing = []
-    missing_env = []
-    for var_name in required_config_vars:
-        if app.config.get(var_name) is None:
-            missing.append(var_name)
-    for var_name in required_env_vars:
-        if os.environ.get(var_name) is None:
-            missing_env.append(var_name)
+    missing = check_missing_vars(required_config_vars, app.config.get)
+    missing_env = check_missing_vars(required_env_vars, os.environ.get)
+
     if missing:
-        raise EnvironmentError(
-            f"{len(missing)} undefined config variable{'s' if len(missing) > 1 else ''}: {', '.join(missing)}"
-        )
+        error_message = f"{len(missing)} undefined config variable{'s' if len(missing) > 1 else ''}: {', '.join(missing)}"
+        app.logger.error(error_message)
+        raise EnvironmentError(error_message)
+
     if missing_env:
-        raise EnvironmentError(
-            f"{len(missing_env)} undefined ENV variable{'s' if len(missing_env) > 1 else ''}: "
-            f"{', '.join(missing_env)}"
-        )
+        error_message = f"{len(missing_env)} undefined ENV variable{'s' if len(missing_env) > 1 else ''}: {', '.join(missing_env)}"
+        app.logger.error(error_message)
+        raise EnvironmentError(error_message)
+
     for env_var in required_env_vars:
         app.config[env_var] = os.environ.get(env_var)
 
@@ -89,42 +99,28 @@ def validate_conditional_config(
         chosen_variant_var: str,
         config_kind: str
 ):
-    """
-    Validate grouped configuration variables, like storage or auth provider, that change depending on chosen variant.
-
-    :param app: Flask | application object instance, post-configuration
-    :param supported_choices: const nested dictionary containing supported choices for given config group
-    :param chosen_variant_var: config string representing desired configuration group
-    :param config_kind: string defining config group, just for logging purposes
-
-    :raises: EnvironmentError
-    :raises: ConfigurationError
-    """
     missing_vars = []
     missing_env = []
     chosen_variant = app.config.get(chosen_variant_var)
     if chosen_variant not in supported_choices:
-        raise ConfigurationError(
-            f"{chosen_variant_var} config variable needs to be one of: {', '.join(list(supported_choices))}"
-        )
+        error_message = f"{chosen_variant_var} config variable needs to be one of: {', '.join(list(supported_choices))}"
+        app.logger.error(error_message)
+        raise ConfigurationError(error_message)
+
     if "vars" in supported_choices[chosen_variant]:
-        for var_name in supported_choices[chosen_variant]["vars"]:
-            if app.config.get(var_name) is None:
-                missing_vars.append(var_name)
+        missing_vars = check_missing_vars(supported_choices[chosen_variant]["vars"], app.config.get)
+
     if "env" in supported_choices[chosen_variant]:
-        for env_name in supported_choices[chosen_variant]["env"]:
-            if not os.environ.get(env_name):
-                missing_env.append(env_name)
+        missing_env = check_missing_vars(supported_choices[chosen_variant]["env"], os.environ.get)
+
     if missing_env:
-        raise EnvironmentError(
-            f"{len(missing_env)} undefined environment variable{'s' if len(missing_env) > 1 else ''} "
-            f"for {chosen_variant}:\n"
-            f"{', '.join(missing_env)}"
-        )
+        error_message = f"{len(missing_env)} undefined environment variable{'s' if len(missing_env) > 1 else ''} for {chosen_variant}:\n{', '.join(missing_env)}"
+        app.logger.error(error_message)
+        raise EnvironmentError(error_message)
+
     if missing_vars:
-        raise ConfigurationError(
-            f"{len(missing_vars)} undefined configuration variable{'s' if len(missing_vars) > 1 else ''} "
-            f"for {chosen_variant}:\n"
-            f"{', '.join(missing_vars)}"
-        )
+        error_message = f"{len(missing_vars)} undefined configuration variable{'s' if len(missing_vars) > 1 else ''} for {chosen_variant}:\n{', '.join(missing_vars)}"
+        app.logger.error(error_message)
+        raise ConfigurationError(error_message)
+
     app.logger.info(f"{config_kind} config valid")
