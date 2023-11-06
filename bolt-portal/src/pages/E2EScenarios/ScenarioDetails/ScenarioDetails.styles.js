@@ -31,6 +31,9 @@ export default makeStyles(({ spacing, palette }) => ({
   failure: {
     color: palette.text.error,
   },
+  error: {
+    color: palette.chart.color.errors[0],
+  },
   paper: {
     padding: spacing(4),
     width: '100%',

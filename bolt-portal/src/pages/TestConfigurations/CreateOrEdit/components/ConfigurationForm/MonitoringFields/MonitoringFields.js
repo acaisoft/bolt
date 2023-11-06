@@ -36,10 +36,7 @@ import { Button } from 'components'
 function MonitoringFields({ isMonitoring, setIsMonitoring }) {
   const { mutators } = useForm()
 
-  const chartTypes = [
-    { value: 'default_chart', label: 'Default Chart' },
-    { value: 'second_chart', label: 'Second Chart' },
-  ]
+  const chartTypes = [{ value: 'line_chart', label: 'Line Chart' }]
   return (
     <>
       <FormControlLabel
