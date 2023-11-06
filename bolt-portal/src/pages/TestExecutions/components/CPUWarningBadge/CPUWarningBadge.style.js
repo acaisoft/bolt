@@ -19,24 +19,28 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { gql } from '@apollo/client'
+import { makeStyles } from '@material-ui/core'
 
-export const GET_ENDPOINT = gql`
-  query getEndpoint($endpointId: String!) {
-    endpoint: execution_requests(
-      where: { identifier: { _eq: $endpointId } }
-      order_by: { timestamp: desc }
-      limit: 1
-    ) {
-      id
-      identifier
-      timestamp
-      method
-      name
-      execution_id
-      execution {
-        cpu_warning
-      }
-    }
+export default makeStyles(({ palette, spacing }) => ({
+  icon: {
+    margin: spacing(1.2),
+    fontSize: '2.4rem',
+    color: palette.text.warning
+  },
+  text: {
+    margin: spacing(2),
+    fontSize: '0.9rem',
+    color: palette.text.primary,
+    whiteSpace: 'pre-wrap'
+  },
+  wrapper: {
+    padding: spacing(0.5, 1),
+    borderRadius: spacing(0.5),
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  title: {
+    padding: spacing(5),
   }
-`
+}))
